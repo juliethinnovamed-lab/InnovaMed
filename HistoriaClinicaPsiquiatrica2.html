@@ -1,9 +1,8 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historia Clínica Psiquiátrica</title>
 
     <style>
@@ -410,10 +409,12 @@
             const q = new URLSearchParams(location.search);
             const g = k => q.get(k) || '';
             const C = v => String(v ?? '').trim();
+
             const A = k => {
                 const x = g(k);
                 return x === '' ? [] : x.split('|');
             };
+
             const V = (a, i) => C(a[i]);
 
             /* ESCAPE HTML */
@@ -482,12 +483,14 @@
             ].filter(x => C(x[1]));
 
             document.getElementById('patient').innerHTML =
-                pi.map(x =>
-                    `<div class="pi">
-                        <span class="lab">${E(x[0])}</span>
-                        <span class="val">${E(x[1])}</span>
-                    </div>`
-                ).join('');
+                pi
+                    .map(x =>
+                        `<div class="pi">
+                            <span class="lab">${E(x[0])}</span>
+                            <span class="val">${E(x[1])}</span>
+                        </div>`
+                    )
+                    .join('');
 
             /* ARRAYS PRINCIPALES */
             const p1 = A('P1');
@@ -629,7 +632,9 @@
 
             a += SS(
                 'Perinatales y desarrollo (solo para menores de 18 años)',
-                per ? `<div class="grid">${per}</div>` : ''
+                per
+                    ? `<div class="grid">${per}</div>`
+                    : ''
             );
 
             /* ANTECEDENTES MÉDICOS PATOLÓGICOS */
@@ -651,7 +656,9 @@
 
             a += SS(
                 'Antecedentes médicos patológicos (APP)',
-                app ? `<div class="grid">${app}</div>` : ''
+                app
+                    ? `<div class="grid">${app}</div>`
+                    : ''
             );
 
             /* ANTECEDENTES GINECOOBSTÉTRICOS */
@@ -687,7 +694,9 @@
 
             a += SS(
                 'Antecedentes ginecoobstétricos (AGO)',
-                ago ? `<div class="grid">${ago}</div>` : ''
+                ago
+                    ? `<div class="grid">${ago}</div>`
+                    : ''
             );
 
             h += SEC(
@@ -701,13 +710,16 @@
 
             let ps = '';
 
-            ps += SS(
-                'Primera vez en Psiquiatría',
-                `<div class="grid">
-                    ${F('Primera vez en Psiquiatría', V(p3, 0), true)}
-                    ${F('Nota', V(p3, 1), true)}
-                </div>`
-            );
+            /* SOLO MOSTRAR PRIMERA VEZ EN PSIQUIATRÍA Y NOTA SI FUE SELECCIONADA */
+            if (C(V(p3, 0))) {
+                ps += SS(
+                    'Primera vez en Psiquiatría',
+                    `<div class="grid">
+                        ${F('Primera vez en Psiquiatría', V(p3, 0), true)}
+                        ${F('Nota', V(p3, 1), true)}
+                    </div>`
+                );
+            }
 
             /* DIAGNÓSTICOS PREVIOS */
             let dx =
@@ -725,7 +737,9 @@
 
             ps += SS(
                 'Historial de diagnósticos previos',
-                dx ? `<div class="grid">${dx}</div>` : ''
+                dx
+                    ? `<div class="grid">${dx}</div>`
+                    : ''
             );
 
             /* TRATAMIENTOS ANTERIORES */
@@ -737,7 +751,9 @@
 
             ps += SS(
                 'Historial de tratamientos anteriores',
-                tr ? `<div class="grid">${tr}</div>` : ''
+                tr
+                    ? `<div class="grid">${tr}</div>`
+                    : ''
             );
 
             /* SUICIDIO Y AUTOLESIONES */
@@ -752,7 +768,9 @@
 
             ps += SS(
                 'Intentos de suicidio y conductas de autolesión',
-                su ? `<div class="grid">${su}</div>` : ''
+                su
+                    ? `<div class="grid">${su}</div>`
+                    : ''
             );
 
             /* INTERNAMIENTOS PSIQUIÁTRICOS */
@@ -765,7 +783,9 @@
 
             ps += SS(
                 'Historial de internamientos psiquiátricos',
-                inx ? `<div class="grid">${inx}</div>` : ''
+                inx
+                    ? `<div class="grid">${inx}</div>`
+                    : ''
             );
 
             /* TRATAMIENTOS BIOLÓGICOS */
@@ -776,7 +796,9 @@
 
             ps += SS(
                 'Tratamientos biológicos no farmacológicos',
-                bio ? `<div class="grid">${bio}</div>` : ''
+                bio
+                    ? `<div class="grid">${bio}</div>`
+                    : ''
             );
 
             h += SEC(
@@ -835,7 +857,9 @@
 
                 h += SEC(
                     'Antecedentes heredofamiliares (AHF)',
-                    ah ? `<div class="grid">${ah}</div>` : ''
+                    ah
+                        ? `<div class="grid">${ah}</div>`
+                        : ''
                 );
             }
 
@@ -1028,4 +1052,3 @@
     </script>
 </body>
 </html>
-```
