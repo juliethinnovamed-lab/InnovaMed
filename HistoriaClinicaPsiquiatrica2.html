@@ -1,11 +1,9 @@
 ```html
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Historia Clínica Psiquiátrica</title>
 
     <style>
@@ -47,10 +45,7 @@
             position: relative;
         }
 
-        /* =========================
-           ENCABEZADO
-        ========================= */
-
+        /* ENCABEZADO */
         .header {
             display: flex;
             gap: 13px;
@@ -100,10 +95,7 @@
             color: var(--pd);
         }
 
-        /* =========================
-           DATOS DEL PACIENTE
-        ========================= */
-
+        /* DATOS DEL PACIENTE */
         .patient {
             display: grid;
             grid-template-columns: 2fr 1fr 1.2fr 1fr 1.5fr;
@@ -136,10 +128,7 @@
             word-break: break-word;
         }
 
-        /* =========================
-           SECCIONES
-        ========================= */
-
+        /* SECCIONES */
         .sec {
             margin: 11px 0;
         }
@@ -165,10 +154,7 @@
             break-after: avoid;
         }
 
-        /* =========================
-           GRID Y CAMPOS
-        ========================= */
-
+        /* CAMPOS */
         .grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -178,9 +164,10 @@
         .f {
             border: 1px solid var(--b);
             border-radius: 5px;
-            padding: 5px 7px;
+            padding: 4px 7px;
             break-inside: avoid;
             min-width: 0;
+            text-align: left;
         }
 
         .f.full {
@@ -192,18 +179,18 @@
             color: var(--m);
             font-size: 8.5px;
             font-weight: 700;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
+            text-align: left;
         }
 
         .fv {
             white-space: pre-wrap;
             word-break: break-word;
+            text-align: left;
+            line-height: 1.3;
         }
 
-        /* =========================
-           EXAMEN MENTAL
-        ========================= */
-
+        /* EXAMEN MENTAL */
         .mental {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -227,12 +214,10 @@
             white-space: pre-wrap;
             word-break: break-word;
             margin-top: 2px;
+            text-align: left;
         }
 
-        /* =========================
-           FÓRMULA OBSTÉTRICA
-        ========================= */
-
+        /* FÓRMULA OBSTÉTRICA */
         .formula {
             display: flex;
             gap: 5px;
@@ -255,10 +240,41 @@
             font-weight: 700;
         }
 
-        /* =========================
-           FOOTER
-        ========================= */
+        /* TABLAS */
+        .tbl {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 4px 0 8px;
+            font-size: 10.5px;
+            background: #fff;
+        }
 
+        .tbl th {
+            background: var(--p);
+            color: #fff;
+            font-weight: 700;
+            padding: 5px 8px;
+            border: 1px solid var(--b);
+            text-align: left;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .tbl td {
+            padding: 5px 8px;
+            border: 1px solid var(--b);
+            color: #26343d;
+            word-break: break-word;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .tbl tr:nth-child(even) {
+            background: #f8fbfc;
+        }
+
+        /* FOOTER */
         .footer {
             position: fixed;
             left: 14mm;
@@ -277,10 +293,7 @@
             margin: 0 5px;
         }
 
-        /* =========================
-           BOTONES
-        ========================= */
-
+        /* BOTONES */
         .buttons {
             position: fixed;
             right: 12px;
@@ -304,17 +317,13 @@
             padding: 30px;
         }
 
-        /* =========================
-           IMPRESIÓN
-        ========================= */
-
+        /* IMPRESIÓN */
         @page {
             size: A4;
             margin: 12mm 14mm 17mm;
         }
 
         @media print {
-
             html,
             body {
                 background: #fff;
@@ -347,7 +356,8 @@
 
             .f,
             .mi,
-            .pi {
+            .pi,
+            .tbl {
                 break-inside: avoid;
             }
         }
@@ -356,63 +366,34 @@
 
 <body>
 
-    <!-- =========================
-         BOTÓN DE IMPRESIÓN
-    ========================= -->
-
     <div class="buttons">
-        <button onclick="window.print()">
-            Imprimir / PDF
-        </button>
+        <button onclick="window.print()">Imprimir / PDF</button>
     </div>
-
-
-    <!-- =========================
-         DOCUMENTO
-    ========================= -->
 
     <main class="doc">
 
-        <!-- ENCABEZADO -->
-
         <header class="header">
-
             <div class="logo" id="logo">
                 LOGO<br>AQUÍ
             </div>
 
             <div class="hm">
-
                 <h1 class="title" id="titulo"></h1>
-
                 <div class="sub" id="subtitulo"></div>
 
                 <div class="docline">
                     <strong>Médico tratante:</strong>
                     <span id="medico"></span>
-
                     &nbsp;|&nbsp;
-
                     <strong>Especialidad:</strong>
                     <span id="especialidad"></span>
                 </div>
-
             </div>
-
         </header>
-
-
-        <!-- DATOS DEL PACIENTE -->
 
         <div class="patient" id="patient"></div>
 
-
-        <!-- CONTENIDO CLÍNICO -->
-
         <div id="content"></div>
-
-
-        <!-- MENSAJE SIN DATOS -->
 
         <div id="empty" class="empty" style="display:none">
             No se encontraron datos clínicos para mostrar.
@@ -420,47 +401,22 @@
 
     </main>
 
-
-    <!-- =========================
-         FOOTER
-    ========================= -->
-
     <footer class="footer" id="footer"></footer>
 
-
-    <!-- =========================
-         JAVASCRIPT
-    ========================= -->
-
     <script>
-
         (() => {
 
-            /* =====================================================
-               PARÁMETROS DE URL
-            ===================================================== */
-
+            /* PARÁMETROS DE URL */
             const q = new URLSearchParams(location.search);
-
             const g = k => q.get(k) || '';
-
             const C = v => String(v ?? '').trim();
-
             const A = k => {
                 const x = g(k);
-
-                return x === ''
-                    ? []
-                    : x.split('|');
+                return x === '' ? [] : x.split('|');
             };
-
             const V = (a, i) => C(a[i]);
 
-
-            /* =====================================================
-               ESCAPE HTML
-            ===================================================== */
-
+            /* ESCAPE HTML */
             const E = v =>
                 String(v ?? '')
                     .replace(/&/g, '&amp;')
@@ -469,470 +425,185 @@
                     .replace(/"/g, '&quot;')
                     .replace(/'/g, '&#039;');
 
+            /* GENERADORES DE CONTENIDO */
+            const F = (l, v, full = false) =>
+                C(v)
+                    ? `<div class="f ${full ? 'full' : ''}">
+                        <span class="fl">${E(l)}</span>
+                        <div class="fv">${E(v)}</div>
+                    </div>`
+                    : '';
 
-            /* =====================================================
-               GENERADOR DE CAMPOS
-            ===================================================== */
+            const M = (l, v) =>
+                C(v)
+                    ? `<div class="mi">
+                        <div class="mil">${E(l)}</div>
+                        <div class="miv">${E(v)}</div>
+                    </div>`
+                    : '';
 
-            const F = (l, v, full = false) => {
+            const SS = (t, h) =>
+                h.trim()
+                    ? `<div class="sst">${E(t)}</div>${h}`
+                    : '';
 
-                if (!C(v)) {
-                    return '';
-                }
-
-                return `
-                    <div class="f ${full ? 'full' : ''}">
-                        <span class="fl">
-                            ${E(l)}
-                        </span>
-
-                        <div class="fv">
-                            ${E(v)}
-                        </div>
-                    </div>
-                `;
-            };
-
-
-            /* =====================================================
-               GENERADOR DE CAMPOS DEL EXAMEN MENTAL
-            ===================================================== */
-
-            const M = (l, v) => {
-
-                if (!C(v)) {
-                    return '';
-                }
-
-                return `
-                    <div class="mi">
-
-                        <div class="mil">
-                            ${E(l)}
-                        </div>
-
-                        <div class="miv">
-                            ${E(v)}
-                        </div>
-
-                    </div>
-                `;
-            };
-
-
-            /* =====================================================
-               SUBSECCIÓN
-            ===================================================== */
-
-            const SS = (t, h) => {
-
-                return h.trim()
-                    ? `
-                        <div class="sst">
-                            ${E(t)}
-                        </div>
-
+            const SEC = (t, h) =>
+                h.trim()
+                    ? `<section class="sec">
+                        <div class="st">${E(t)}</div>
                         ${h}
-                    `
+                    </section>`
                     : '';
+
+            /* PARSEO DE TABLAS */
+            const parseRows = v => {
+                if (!C(v)) return [];
+
+                const r = v.split(/\|\||\n|~~/);
+
+                return r
+                    .map(x => x.split('|').map(C))
+                    .filter(x => x.some(Boolean));
             };
 
+            /* ENCABEZADO */
+            document.getElementById('titulo').textContent = g('Titulo');
+            document.getElementById('subtitulo').textContent = g('Subtitulo');
+            document.getElementById('medico').textContent = g('Medico+tratante');
+            document.getElementById('especialidad').textContent = g('Especialidad+Medica');
 
-            /* =====================================================
-               SECCIÓN PRINCIPAL
-            ===================================================== */
-
-            const SEC = (t, h) => {
-
-                return h.trim()
-                    ? `
-                        <section class="sec">
-
-                            <div class="st">
-                                ${E(t)}
-                            </div>
-
-                            ${h}
-
-                        </section>
-                    `
-                    : '';
-            };
-
-
-            /* =====================================================
-               ENCABEZADO
-            ===================================================== */
-
-            document.getElementById('titulo').textContent =
-                g('Titulo');
-
-            document.getElementById('subtitulo').textContent =
-                g('Subtitulo');
-
-            document.getElementById('medico').textContent =
-                g('Medico+tratante');
-
-            document.getElementById('especialidad').textContent =
-                g('Especialidad+Medica');
-
-
-            /* =====================================================
-               DATOS DEL PACIENTE
-            ===================================================== */
-
+            /* DATOS DEL PACIENTE */
             const pi = [
                 ['Paciente', g('Paciente')],
                 ['Sexo', g('Sexo')],
                 ['Cédula', g('Cedula')],
                 ['Edad', g('Edad')],
                 ['Teléfono', g('Telefono')]
-            ]
-            .filter(x => C(x[1]));
-
+            ].filter(x => C(x[1]));
 
             document.getElementById('patient').innerHTML =
-                pi
-                    .map(x => `
-                        <div class="pi">
+                pi.map(x =>
+                    `<div class="pi">
+                        <span class="lab">${E(x[0])}</span>
+                        <span class="val">${E(x[1])}</span>
+                    </div>`
+                ).join('');
 
-                            <span class="lab">
-                                ${E(x[0])}
-                            </span>
-
-                            <span class="val">
-                                ${E(x[1])}
-                            </span>
-
-                        </div>
-                    `)
-                    .join('');
-
-
-            /* =====================================================
-               ARRAYS DE INFORMACIÓN
-            ===================================================== */
-
+            /* ARRAYS PRINCIPALES */
             const p1 = A('P1');
             const p2 = A('P2');
             const p3 = A('P3');
-            const p4 = A('P4');
-            const p5 = A('P5');
-            const p6 = A('P6');
 
             let h = '';
-
 
             /* =====================================================
                P1 — MOTIVO DE CONSULTA Y ENFERMEDAD ACTUAL
             ===================================================== */
 
             let x =
-                F(
-                    'Motivo de consulta',
-                    V(p1, 0),
-                    true
-                )
-
-                +
-
-                F(
-                    'Enfermedad actual',
-                    V(p1, 1),
-                    true
-                );
-
+                F('Motivo de consulta', V(p1, 0), true) +
+                F('Enfermedad actual', V(p1, 1), true);
 
             let v =
-                F('TA', V(p1, 2))
-                +
-                F('FC', V(p1, 3))
-                +
-                F('FR', V(p1, 4))
-                +
-                F(
-                    'Circunferencia abdominal',
-                    V(p1, 5)
-                )
-                +
-                F('Peso', V(p1, 6))
-                +
-                F('Talla', V(p1, 7))
-                +
+                F('TA', V(p1, 2)) +
+                F('FC', V(p1, 3)) +
+                F('FR', V(p1, 4)) +
+                F('Circunferencia abdominal', V(p1, 5)) +
+                F('Peso', V(p1, 6)) +
+                F('Talla', V(p1, 7)) +
                 F('IMC', V(p1, 8));
 
-
             if (v) {
-
                 x += SS(
                     'Constantes vitales y somatometría',
-
-                    `<div class="grid">
-                        ${v}
-                    </div>`
+                    `<div class="grid">${v}</div>`
                 );
             }
-
 
             h += SEC(
                 'Motivo de consulta y enfermedad actual',
                 x
             );
 
-
-            /* =====================================================
-               P1 — EXAMEN MENTAL ACTUAL
-            ===================================================== */
-
+            /* P1 — EXAMEN MENTAL ACTUAL */
             let m = '';
-
-
-            /* 1. Aspecto */
 
             m += SS(
                 '1. Aspecto, porte, conación y actitud',
-
-                `
-                <div class="mental">
-
-                    ${M(
-                        'Aspecto general',
-                        V(p1, 9)
-                    )}
-
-                    ${M(
-                        'Presentación y vestimenta',
-                        V(p1, 10)
-                    )}
-
-                    ${M(
-                        'Actitud ante la entrevista',
-                        V(p1, 11)
-                    )}
-
-                    ${M(
-                        'Conación / Psicomotricidad',
-                        V(p1, 12)
-                    )}
-
-                </div>
-                `
+                `<div class="mental">
+                    ${M('Aspecto general', V(p1, 9))}
+                    ${M('Presentación y vestimenta', V(p1, 10))}
+                    ${M('Actitud ante la entrevista', V(p1, 11))}
+                    ${M('Conación / Psicomotricidad', V(p1, 12))}
+                </div>`
             );
-
-
-            /* 2. Conciencia */
 
             m += SS(
                 '2. Conciencia y funciones cognitivas',
-
-                `
-                <div class="mental">
-
-                    ${M(
-                        'Nivel de conciencia',
-                        V(p1, 13)
-                    )}
-
-                    ${M(
-                        'Orientación',
-                        V(p1, 14)
-                    )}
-
-                    ${M(
-                        'Atención',
-                        V(p1, 15)
-                    )}
-
-                    ${M(
-                        'Concentración',
-                        V(p1, 16)
-                    )}
-
-                    ${M(
-                        'Memoria',
-                        V(p1, 17)
-                    )}
-
-                    ${M(
-                        'Cálculo y abstracción',
-                        V(p1, 18)
-                    )}
-
-                </div>
-                `
+                `<div class="mental">
+                    ${M('Nivel de conciencia', V(p1, 13))}
+                    ${M('Orientación', V(p1, 14))}
+                    ${M('Atención', V(p1, 15))}
+                    ${M('Concentración', V(p1, 16))}
+                    ${M('Memoria', V(p1, 17))}
+                    ${M('Cálculo y abstracción', V(p1, 18))}
+                </div>`
             );
-
-
-            /* 3. Lenguaje */
 
             m += SS(
                 '3. Lenguaje',
-
-                `
-                <div class="mental">
-
-                    ${M(
-                        'Expresión / Emisión',
-                        V(p1, 19)
-                    )}
-
-                    ${M(
-                        'Comprensión',
-                        V(p1, 20)
-                    )}
-
-                    ${M(
-                        'Velocidad y Ritmo',
-                        V(p1, 21)
-                    )}
-
-                    ${M(
-                        'Alteraciones de la Estructura y Semántica',
-                        V(p1, 22)
-                    )}
-
-                </div>
-                `
+                `<div class="mental">
+                    ${M('Expresión / Emisión', V(p1, 19))}
+                    ${M('Comprensión', V(p1, 20))}
+                    ${M('Velocidad y Ritmo', V(p1, 21))}
+                    ${M('Alteraciones de la Estructura y Semántica', V(p1, 22))}
+                </div>`
             );
-
-
-            /* 4. Afecto */
 
             m += SS(
                 '4. Afecto y estado de ánimo',
-
-                `
-                <div class="mental">
-
-                    ${M(
-                        'Expresión o Intensidad',
-                        V(p1, 23)
-                    )}
-
-                    ${M(
-                        'Modulación',
-                        V(p1, 24)
-                    )}
-
-                    ${M(
-                        'Resonante',
-                        V(p1, 25)
-                    )}
-
-                </div>
-                `
+                `<div class="mental">
+                    ${M('Expresión o Intensidad', V(p1, 23))}
+                    ${M('Modulación', V(p1, 24))}
+                    ${M('Resonante', V(p1, 25))}
+                </div>`
             );
-
-
-            /* 5. Pensamiento */
 
             m += SS(
                 '5. Pensamiento — curso, forma y contenido',
-
-                `
-                <div class="mental">
-
-                    ${M(
-                        'Curso / Velocidad',
-                        V(p1, 26)
-                    )}
-
-                    ${M(
-                        'Forma / Lógica',
-                        V(p1, 27)
-                    )}
-
-                    ${M(
-                        'Contenido / Ideación',
-                        V(p1, 28)
-                    )}
-
-                    ${M(
-                        'Ideas sobrevaloradas',
-                        V(p1, 29)
-                    )}
-
-                    ${M(
-                        'Ideas delirantes',
-                        V(p1, 30)
-                    )}
-
-                    ${M(
-                        'Ideas de muerte',
-                        V(p1, 31)
-                    )}
-
-                    ${M(
-                        'Ideación suicida',
-                        V(p1, 32)
-                    )}
-
-                    ${M(
-                        'Ideación suicida activa',
-                        V(p1, 33)
-                    )}
-
-                    ${M(
-                        'Ideas obsesivas / Fóbicas',
-                        V(p1, 34)
-                    )}
-
-                    ${M(
-                        'Ideas de minusvalía / Culpa / Desesperanza',
-                        V(p1, 35)
-                    )}
-
-                </div>
-                `
+                `<div class="mental">
+                    ${M('Curso / Velocidad', V(p1, 26))}
+                    ${M('Forma / Lógica', V(p1, 27))}
+                    ${M('Contenido / Ideación', V(p1, 28))}
+                    ${M('Ideas sobrevaloradas', V(p1, 29))}
+                    ${M('Ideas delirantes', V(p1, 30))}
+                    ${M('Ideas de muerte', V(p1, 31))}
+                    ${M('Ideación suicida', V(p1, 32))}
+                    ${M('Ideación suicida activa', V(p1, 33))}
+                    ${M('Ideas obsesivas / Fóbicas', V(p1, 34))}
+                    ${M('Ideas de minusvalía / Culpa / Desesperanza', V(p1, 35))}
+                </div>`
             );
-
-
-            /* 6. Percepción */
 
             m += SS(
                 '6. Percepción (Sensopercepción)',
-
-                `
-                <div class="mental">
-
-                    ${M(
-                        'Alteraciones',
-                        V(p1, 36)
-                    )}
-
-                </div>
-                `
+                `<div class="mental">
+                    ${M('Alteraciones', V(p1, 36))}
+                </div>`
             );
-
-
-            /* 7. Juicio */
 
             m += SS(
                 '7. Juicio de realidad e introspección (Insight)',
-
-                `
-                <div class="mental">
-
-                    ${M(
-                        'Juicio de realidad',
-                        V(p1, 37)
-                    )}
-
-                    ${M(
-                        'Introspección (Conciencia de enfermedad)',
-                        V(p1, 38)
-                    )}
-
-                </div>
-                `
+                `<div class="mental">
+                    ${M('Juicio de realidad', V(p1, 37))}
+                    ${M('Introspección (Conciencia de enfermedad)', V(p1, 38))}
+                </div>`
             );
-
 
             h += SEC(
                 'Examen Mental Actual (EMA)',
                 m
             );
-
 
             /* =====================================================
                P2 — ANTECEDENTES PERSONALES
@@ -940,344 +611,89 @@
 
             let a = '';
 
-
-            /* -------------------------
-               PERINATALES
-            ------------------------- */
-
+            /* PERINATALES Y DESARROLLO */
             let per =
-                F(
-                    'Producto de embarazo',
-                    V(p2, 0)
-                )
-
-                +
-                F(
-                    'Semanas de embarazo',
-                    V(p2, 1)
-                )
-
-                +
-                F(
-                    'Respiró y lloró al nacer',
-                    V(p2, 2)
-                )
-
-                +
-                F(
-                    'Alimentación',
-                    V(p2, 3)
-                )
-
-                +
-                F(
-                    'Desarrollo psicomotor',
-                    V(p2, 4)
-                )
-
-                +
-                F(
-                    'Control postural',
-                    V(p2, 5)
-                )
-
-                +
-                F(
-                    'Sostener la cabeza',
-                    V(p2, 6)
-                )
-
-                +
-                F(
-                    'Sentarse sin apoyo y ponerse de pie',
-                    V(p2, 7)
-                )
-
-                +
-                F(
-                    'Gatear',
-                    V(p2, 8)
-                )
-
-                +
-                F(
-                    'Caminar',
-                    V(p2, 9)
-                )
-
-                +
-                F(
-                    'Correr y saltar con uno o ambos pies',
-                    V(p2, 10)
-                )
-
-                +
-                F(
-                    'Equilibrio',
-                    V(p2, 11)
-                )
-
-                +
-                F(
-                    'Caminar en línea recta',
-                    V(p2, 12)
-                );
-
+                F('Producto de embarazo', V(p2, 0)) +
+                F('Semanas de embarazo', V(p2, 1)) +
+                F('Respiró y lloró al nacer', V(p2, 2)) +
+                F('Alimentación', V(p2, 3)) +
+                F('Desarrollo psicomotor', V(p2, 4)) +
+                F('Control postural', V(p2, 5)) +
+                F('Sostener la cabeza', V(p2, 6)) +
+                F('Sentarse sin apoyo y ponerse de pie', V(p2, 7)) +
+                F('Gatear', V(p2, 8)) +
+                F('Caminar', V(p2, 9)) +
+                F('Correr y saltar con uno o ambos pies', V(p2, 10)) +
+                F('Equilibrio', V(p2, 11)) +
+                F('Caminar en línea recta', V(p2, 12));
 
             a += SS(
                 'Perinatales y desarrollo (solo para menores de 18 años)',
-
-                per
-                    ? `
-                        <div class="grid">
-                            ${per}
-                        </div>
-                    `
-                    : ''
+                per ? `<div class="grid">${per}</div>` : ''
             );
 
-
-            /* -------------------------
-               APP
-            ------------------------- */
-
+            /* ANTECEDENTES MÉDICOS PATOLÓGICOS */
             let app =
-                F(
-                    'Traumatismo Craneoencefálico (TCE)',
-                    V(p2, 13)
-                )
-
-                +
-                F(
-                    'Pérdida de conciencia',
-                    V(p2, 14)
-                )
-
-                +
-                F(
-                    'Duración',
-                    V(p2, 15)
-                )
-
-                +
-                F(
-                    'Epilepsia / Crisis convulsivas',
-                    V(p2, 16)
-                )
-
-                +
-                F(
-                    'Endocrinos / Metabólicos',
-                    V(p2, 17)
-                )
-
-                +
-                F(
-                    'Cardiovasculares',
-                    V(p2, 18)
-                )
-
-                +
-                F(
-                    'Renales y Hepáticos',
-                    V(p2, 19)
-                )
-
-                +
-                F(
-                    'Tipo de Cirugía / causa',
-                    V(p2, 20)
-                )
-
-                +
-                F(
-                    'Año',
-                    V(p2, 21)
-                )
-
-                +
-                F(
-                    'Cirugía Bariátrica',
-                    V(p2, 22)
-                )
-
-                +
-                F(
-                    'Delirium postoperatorio previo',
-                    V(p2, 23)
-                )
-
-                +
-                F(
-                    'Alergias a medicamentos generales',
-                    V(p2, 24),
-                    true
-                )
-
-                +
-                F(
-                    'Reacciones graves a psicofármacos previos',
-                    V(p2, 25),
-                    true
-                )
-
-                +
-                F(
-                    'Negar APP',
-                    V(p2, 26),
-                    true
-                );
-
+                F('Traumatismo Craneoencefálico (TCE)', V(p2, 13)) +
+                F('Pérdida de conciencia', V(p2, 14)) +
+                F('Duración', V(p2, 15)) +
+                F('Epilepsia / Crisis convulsivas', V(p2, 16)) +
+                F('Endocrinos / Metabólicos', V(p2, 17)) +
+                F('Cardiovasculares', V(p2, 18)) +
+                F('Renales y Hepáticos', V(p2, 19)) +
+                F('Tipo de Cirugía / causa', V(p2, 20)) +
+                F('Año', V(p2, 21)) +
+                F('Cirugía Bariátrica', V(p2, 22)) +
+                F('Delirium postoperatorio previo', V(p2, 23)) +
+                F('Alergias a medicamentos generales', V(p2, 24), true) +
+                F('Reacciones graves a psicofármacos previos', V(p2, 25), true) +
+                F('Negar APP', V(p2, 26), true);
 
             a += SS(
                 'Antecedentes médicos patológicos (APP)',
-
-                app
-                    ? `
-                        <div class="grid">
-                            ${app}
-                        </div>
-                    `
-                    : ''
+                app ? `<div class="grid">${app}</div>` : ''
             );
 
-
-            /* -------------------------
-               AGO
-            ------------------------- */
-
+            /* ANTECEDENTES GINECOOBSTÉTRICOS */
             let ago =
-                F(
-                    'Menarca (edad de primera menstruación)',
-                    V(p2, 27)
-                )
-
-                +
-                F(
-                    'Ciclos menstruales',
-                    V(p2, 28)
-                )
-
-                +
-                F(
-                    'Duración y frecuencia',
-                    V(p2, 29)
-                )
-
-                +
-                F(
-                    'Fecha de última menstruación (FUM)',
-                    V(p2, 30)
-                )
-
-                +
-                F(
-                    'Hijos vivos',
-                    V(p2, 35)
-                )
-
-                +
-                F(
-                    'Complicaciones obstétricas de interés psiquiátrico',
-                    V(p2, 36),
-                    true
-                )
-
-                +
-                F(
-                    'Estado actual',
-                    V(p2, 37)
-                )
-
-                +
-                F(
-                    'Embarazo actual',
-                    V(p2, 38)
-                )
-
-                +
-                F(
-                    'Semanas de gestación',
-                    V(p2, 39)
-                )
-
-                +
-                F(
-                    'Lactancia activa',
-                    V(p2, 40)
-                )
-
-                +
-                F(
-                    'Uso de anticonceptivos hormonales',
-                    V(p2, 41)
-                )
-
-                +
-                F(
-                    'Nombre / Tipo',
-                    V(p2, 42)
-                )
-
-                +
-                F(
-                    'Paciente niega AGO',
-                    V(p2, 43),
-                    true
-                );
-
-
-            /* Fórmula obstétrica */
+                F('Menarca (edad de primera menstruación)', V(p2, 27)) +
+                F('Ciclos menstruales', V(p2, 28)) +
+                F('Duración y frecuencia', V(p2, 29)) +
+                F('Fecha de última menstruación (FUM)', V(p2, 30)) +
+                F('Hijos vivos', V(p2, 35)) +
+                F('Complicaciones obstétricas de interés psiquiátrico', V(p2, 36), true) +
+                F('Estado actual', V(p2, 37)) +
+                F('Embarazo actual', V(p2, 38)) +
+                F('Semanas de gestación', V(p2, 39)) +
+                F('Lactancia activa', V(p2, 40)) +
+                F('Uso de anticonceptivos hormonales', V(p2, 41)) +
+                F('Nombre / Tipo', V(p2, 42)) +
+                F('Paciente niega AGO', V(p2, 43), true);
 
             let fo =
-                F('G', V(p2, 31))
-                +
-                F('P', V(p2, 32))
-                +
-                F('A', V(p2, 33))
-                +
+                F('G', V(p2, 31)) +
+                F('P', V(p2, 32)) +
+                F('A', V(p2, 33)) +
                 F('C', V(p2, 34));
 
-
             if (fo) {
-
                 ago =
-                    `
-                    <div class="f full">
-
-                        <span class="fl">
-                            Fórmula obstétrica
-                        </span>
-
-                        <div class="formula">
-                            ${fo}
-                        </div>
-
-                    </div>
-                    `
-                    +
+                    `<div class="f full">
+                        <span class="fl">Fórmula obstétrica</span>
+                        <div class="formula">${fo}</div>
+                    </div>` +
                     ago;
             }
 
-
             a += SS(
                 'Antecedentes ginecoobstétricos (AGO)',
-
-                ago
-                    ? `
-                        <div class="grid">
-                            ${ago}
-                        </div>
-                    `
-                    : ''
+                ago ? `<div class="grid">${ago}</div>` : ''
             );
-
 
             h += SEC(
                 'Antecedentes personales',
                 a
             );
-
 
             /* =====================================================
                P3 — ANTECEDENTES PSIQUIÁTRICOS
@@ -1285,371 +701,143 @@
 
             let ps = '';
 
-
-            /* -------------------------
-               PRIMERA VEZ PSIQUIATRÍA
-            ------------------------- */
-
             ps += SS(
                 'Primera vez en Psiquiatría',
-
-                `
-                <div class="grid">
-
-                    ${F(
-                        'Primera vez en Psiquiatría',
-                        V(p3, 0),
-                        true
-                    )}
-
-                    ${F(
-                        'Nota',
-                        V(p3, 1),
-                        true
-                    )}
-
-                </div>
-                `
+                `<div class="grid">
+                    ${F('Primera vez en Psiquiatría', V(p3, 0), true)}
+                    ${F('Nota', V(p3, 1), true)}
+                </div>`
             );
 
-
-            /* -------------------------
-               DIAGNÓSTICOS PREVIOS
-            ------------------------- */
-
+            /* DIAGNÓSTICOS PREVIOS */
             let dx =
-                F(
-                    'Trastorno Depresivo',
-                    V(p3, 2)
-                )
-
-                +
-                F(
-                    'Trastorno Bipolar',
-                    V(p3, 3)
-                )
-
-                +
-                F(
-                    'Trastornos de Ansiedad',
-                    V(p3, 4)
-                )
-
-                +
-                F(
-                    'TOC o trastornos relacionados',
-                    V(p3, 5)
-                )
-
-                +
-                F(
-                    'TEPT o trastornos del desarrollo/apego',
-                    V(p3, 6),
-                    true
-                )
-
-                +
-                F(
-                    'Espectro de la esquizofrenia / otros trastornos psicóticos',
-                    V(p3, 7),
-                    true
-                )
-
-                +
-                F(
-                    'TDAH',
-                    V(p3, 8)
-                )
-
-                +
-                F(
-                    'Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)',
-                    V(p3, 9)
-                )
-
-                +
-                F(
-                    'Trastornos de la Conducta Alimentaria',
-                    V(p3, 10)
-                )
-
-                +
-                F(
-                    'Trastorno de la Personalidad',
-                    V(p3, 11)
-                )
-
-                +
-                F(
-                    'Otro diagnóstico psiquiátrico previo',
-                    V(p3, 12),
-                    true
-                );
-
+                F('Trastorno Depresivo', V(p3, 2)) +
+                F('Trastorno Bipolar', V(p3, 3)) +
+                F('Trastornos de Ansiedad', V(p3, 4)) +
+                F('TOC o trastornos relacionados', V(p3, 5)) +
+                F('TEPT o trastornos del desarrollo/apego', V(p3, 6), true) +
+                F('Espectro de la esquizofrenia / otros trastornos psicóticos', V(p3, 7), true) +
+                F('TDAH', V(p3, 8)) +
+                F('Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)', V(p3, 9)) +
+                F('Trastornos de la Conducta Alimentaria', V(p3, 10)) +
+                F('Trastorno de la Personalidad', V(p3, 11)) +
+                F('Otro diagnóstico psiquiátrico previo', V(p3, 12), true);
 
             ps += SS(
                 'Historial de diagnósticos previos',
-
-                dx
-                    ? `
-                        <div class="grid">
-                            ${dx}
-                        </div>
-                    `
-                    : ''
+                dx ? `<div class="grid">${dx}</div>` : ''
             );
 
-
-            /* -------------------------
-               TRATAMIENTOS ANTERIORES
-            ------------------------- */
-
+            /* TRATAMIENTOS ANTERIORES */
             let tr =
-                F(
-                    'Historial de Psicoterapia',
-                    V(p3, 13),
-                    true
-                )
-
-                +
-                F(
-                    'Enfoque',
-                    V(p3, 14)
-                )
-
-                +
-                F(
-                    'Duración',
-                    V(p3, 15)
-                )
-
-                +
-                F(
-                    'Apego',
-                    V(p3, 16)
-                );
-
+                F('Historial de Psicoterapia', V(p3, 13), true) +
+                F('Enfoque', V(p3, 14)) +
+                F('Duración', V(p3, 15)) +
+                F('Apego', V(p3, 16));
 
             ps += SS(
                 'Historial de tratamientos anteriores',
-
-                tr
-                    ? `
-                        <div class="grid">
-                            ${tr}
-                        </div>
-                    `
-                    : ''
+                tr ? `<div class="grid">${tr}</div>` : ''
             );
 
-
-            /* -------------------------
-               SUICIDIO Y AUTOLESIONES
-            ------------------------- */
-
+            /* SUICIDIO Y AUTOLESIONES */
             let su =
-                F(
-                    'Historial de Ideación Suicida',
-                    V(p3, 17)
-                )
-
-                +
-                F(
-                    'Historial de Intentos de Suicidio',
-                    V(p3, 18)
-                )
-
-                +
-                F(
-                    'Número de intentos previos',
-                    V(p3, 19)
-                )
-
-                +
-                F(
-                    'Edad / Año del intento más grave',
-                    V(p3, 20)
-                )
-
-                +
-                F(
-                    'Método(s) utilizado(s)',
-                    V(p3, 21),
-                    true
-                )
-
-                +
-                F(
-                    '¿Requirió hospitalización médica o terapia intensiva?',
-                    V(p3, 22),
-                    true
-                )
-
-                +
-                F(
-                    'Conductas de Autolesión no suicidas',
-                    V(p3, 23),
-                    true
-                );
-
+                F('Historial de Ideación Suicida', V(p3, 17)) +
+                F('Historial de Intentos de Suicidio', V(p3, 18)) +
+                F('Número de intentos previos', V(p3, 19)) +
+                F('Edad / Año del intento más grave', V(p3, 20)) +
+                F('Método(s) utilizado(s)', V(p3, 21), true) +
+                F('¿Requirió hospitalización médica o terapia intensiva?', V(p3, 22), true) +
+                F('Conductas de Autolesión no suicidas', V(p3, 23), true);
 
             ps += SS(
                 'Intentos de suicidio y conductas de autolesión',
-
-                su
-                    ? `
-                        <div class="grid">
-                            ${su}
-                        </div>
-                    `
-                    : ''
+                su ? `<div class="grid">${su}</div>` : ''
             );
 
-
-            /* -------------------------
-               INTERNAMIENTOS
-            ------------------------- */
-
+            /* INTERNAMIENTOS PSIQUIÁTRICOS */
             let inx =
-                F(
-                    'Hospitalizaciones Psiquiátricas Previas',
-                    V(p3, 24),
-                    true
-                )
-
-                +
-                F(
-                    'Número total de internamientos',
-                    V(p3, 25)
-                )
-
-                +
-                F(
-                    'Año y duración del último internamiento',
-                    V(p3, 26)
-                )
-
-                +
-                F(
-                    'Causa principal',
-                    V(p3, 27),
-                    true
-                )
-
-                +
-                F(
-                    'Tipo de ingreso',
-                    V(p3, 28)
-                );
-
+                F('Hospitalizaciones Psiquiátricas Previas', V(p3, 24), true) +
+                F('Número total de internamientos', V(p3, 25)) +
+                F('Año y duración del último internamiento', V(p3, 26)) +
+                F('Causa principal', V(p3, 27), true) +
+                F('Tipo de ingreso', V(p3, 28));
 
             ps += SS(
                 'Historial de internamientos psiquiátricos',
-
-                inx
-                    ? `
-                        <div class="grid">
-                            ${inx}
-                        </div>
-                    `
-                    : ''
+                inx ? `<div class="grid">${inx}</div>` : ''
             );
 
-
-            /* -------------------------
-               TRATAMIENTOS BIOLÓGICOS
-            ------------------------- */
-
+            /* TRATAMIENTOS BIOLÓGICOS */
             let bio =
-                F(
-                    'Terapia Electroconvulsiva (TEC) anterior',
-                    V(p3, 29),
-                    true
-                )
-
-                +
-                F(
-                    'Estimulación Magnética Transcraneal (EMT) anterior',
-                    V(p3, 30),
-                    true
-                )
-
-                +
-                F(
-                    'Otro (tDCS, Ketamina / Esketamina IV o Intranasal)',
-                    V(p3, 31),
-                    true
-                );
-
+                F('Terapia Electroconvulsiva (TEC) anterior', V(p3, 29), true) +
+                F('Estimulación Magnética Transcraneal (EMT) anterior', V(p3, 30), true) +
+                F('Otro (tDCS, Ketamina / Esketamina IV o Intranasal)', V(p3, 31), true);
 
             ps += SS(
                 'Tratamientos biológicos no farmacológicos',
-
-                bio
-                    ? `
-                        <div class="grid">
-                            ${bio}
-                        </div>
-                    `
-                    : ''
+                bio ? `<div class="grid">${bio}</div>` : ''
             );
-
 
             h += SEC(
                 'Antecedentes psiquiátricos previos (APP-Psi)',
                 ps
             );
 
-
             /* =====================================================
                P5 — ANTECEDENTES HEREDOFAMILIARES
             ===================================================== */
 
-            let ah =
-                (
-                    p5.length > 0 &&
-                    p5.some(item => C(item))
-                )
+            const rows5 = parseRows(g('P5'));
 
-                    ?
+            if (rows5.length > 0) {
+                let t =
+                    '<table class="tbl">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Parentesco / Familiar</th>' +
+                    '<th>Diagnóstico / Condición</th>' +
+                    '<th>Observaciones</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
 
-                F(
-                    'Mapeo Familiar / AHF',
-                    p5.join(' | '),
-                    true
-                )
+                rows5.forEach(r => {
+                    if (r.length === 1) {
+                        t += `<tr>
+                            <td colspan="3">${E(r[0])}</td>
+                        </tr>`;
+                    } else if (r.length === 2) {
+                        t += `<tr>
+                            <td>${E(r[0])}</td>
+                            <td>${E(r[1])}</td>
+                            <td>-</td>
+                        </tr>`;
+                    } else {
+                        t += `<tr>
+                            <td>${E(r[0])}</td>
+                            <td>${E(r[1])}</td>
+                            <td>${E(r[2] || '')}</td>
+                        </tr>`;
+                    }
+                });
 
-                    :
+                t += '</tbody></table>';
 
-                (
-                    F(
-                        'Sin antecedentes familiares de importancia',
-                        V(p3, 32),
-                        true
-                    )
-
-                    +
-
-                    F(
-                        'Reporte',
-                        V(p3, 33),
-                        true
-                    )
+                h += SEC(
+                    'Antecedentes heredofamiliares (AHF)',
+                    t
                 );
+            } else {
+                let ah =
+                    F('Sin antecedentes familiares de importancia', V(p3, 32), true) +
+                    F('Reporte', V(p3, 33), true);
 
-
-            h += SEC(
-                'Antecedentes heredofamiliares (AHF)',
-
-                ah
-                    ? `
-                        <div class="grid">
-                            ${ah}
-                        </div>
-                    `
-                    : ''
-            );
-
+                h += SEC(
+                    'Antecedentes heredofamiliares (AHF)',
+                    ah ? `<div class="grid">${ah}</div>` : ''
+                );
+            }
 
             /* =====================================================
                HÁBITOS PSICOBIOLÓGICOS
@@ -1657,299 +845,168 @@
 
             let hb = '';
 
-
-            /* Sueño */
-
             hb += SS(
                 'Sueño / descanso',
-
-                `
-                <div class="grid">
-
-                    ${F(
-                        'Horas promedio de sueño nocturno',
-                        V(p3, 34)
-                    )}
-
-                    ${F(
-                        'Calidad del sueño',
-                        V(p3, 35)
-                    )}
-
-                </div>
-                `
+                `<div class="grid">
+                    ${F('Horas promedio de sueño nocturno', V(p3, 34))}
+                    ${F('Calidad del sueño', V(p3, 35))}
+                </div>`
             );
-
-
-            /* Alimentación */
 
             hb += SS(
                 'Alimentación',
-
-                `
-                <div class="grid">
-
-                    ${F(
-                        'Frecuencia',
-                        V(p3, 36)
-                    )}
-
-                    ${F(
-                        'Descripción',
-                        V(p3, 37),
-                        true
-                    )}
-
-                </div>
-                `
+                `<div class="grid">
+                    ${F('Frecuencia', V(p3, 36))}
+                    ${F('Descripción', V(p3, 37), true)}
+                </div>`
             );
-
-
-            /* Actividad física */
 
             hb += SS(
                 'Actividad física',
-
-                `
-                <div class="grid">
-
-                    ${F(
-                        'Frecuencia semanal',
-                        V(p3, 38)
-                    )}
-
-                    ${F(
-                        'Tipo de ejercicio',
-                        V(p3, 39)
-                    )}
-
-                </div>
-                `
+                `<div class="grid">
+                    ${F('Frecuencia semanal', V(p3, 38))}
+                    ${F('Tipo de ejercicio', V(p3, 39))}
+                </div>`
             );
-
-
-            /* Pantallas */
 
             hb += SS(
                 'Uso de pantallas',
-
-                `
-                <div class="grid">
-
-                    ${F(
-                        'h/día',
-                        V(p3, 40)
-                    )}
-
-                    ${F(
-                        'Supervisión',
-                        V(p3, 41)
-                    )}
-
-                    ${F(
-                        'Contenido de tipo',
-                        V(p3, 42),
-                        true
-                    )}
-
-                </div>
-                `
+                `<div class="grid">
+                    ${F('h/día', V(p3, 40))}
+                    ${F('Supervisión', V(p3, 41))}
+                    ${F('Contenido de tipo', V(p3, 42), true)}
+                </div>`
             );
-
-
-            /* Estresores */
 
             hb += SS(
                 'Exposición a estresores crónicos ambientales',
-
-                `
-                <div class="grid">
-
-                    ${F(
-                        'Exposición',
-                        V(p3, 43),
-                        true
-                    )}
-
-                </div>
-                `
+                `<div class="grid">
+                    ${F('Exposición', V(p3, 43), true)}
+                </div>`
             );
-
-
-            /* Sustancias */
 
             hb += SS(
                 'Consumo y dependencia de sustancias',
-
-                `
-                <div class="grid">
-
-                    ${F(
-                        'No consume',
-                        V(p3, 44)
-                    )}
-
-                    ${F(
-                        'Nota',
-                        V(p3, 45),
-                        true
-                    )}
-
-                </div>
-                `
+                `<div class="grid">
+                    ${F('No consume', V(p3, 44))}
+                    ${F('Nota', V(p3, 45), true)}
+                </div>`
             );
-
 
             h += SEC(
                 'Hábitos psicobiológicos y uso de sustancias',
                 hb
             );
 
-
             /* =====================================================
                P4 — CONCLUSIONES DIAGNÓSTICAS
             ===================================================== */
 
-            if (
-                p4.length > 0 &&
-                p4.some(item => C(item))
-            ) {
+            const rows4 = parseRows(g('P4'));
 
-                let cdx =
-                    F(
-                        'CIE-11 ID',
-                        V(p4, 0)
-                    )
+            if (rows4.length > 0) {
+                let t =
+                    '<table class="tbl">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>CIE-11 ID</th>' +
+                    '<th>Tipo de Diagnóstico</th>' +
+                    '<th>Gravedad</th>' +
+                    '<th>Curso / Episodio</th>' +
+                    '<th>Disfunción Personalidad</th>' +
+                    '<th>Rasgos Prominentes</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
 
-                    +
-                    F(
-                        'Tipo de Diagnóstico',
-                        V(p4, 1)
-                    )
+                rows4.forEach(r => {
+                    t += `<tr>
+                        <td>${E(r[0] || '')}</td>
+                        <td>${E(r[1] || '')}</td>
+                        <td>${E(r[2] || '')}</td>
+                        <td>${E(r[3] || '')}</td>
+                        <td>${E(r[4] || '')}</td>
+                        <td>${E(r[5] || '')}</td>
+                    </tr>`;
+                });
 
-                    +
-                    F(
-                        'Especificador de Gravedad',
-                        V(p4, 2)
-                    )
-
-                    +
-                    F(
-                        'Especificador de Curso / Episodio',
-                        V(p4, 3)
-                    )
-
-                    +
-                    F(
-                        'Disfunción de Personalidad',
-                        V(p4, 4)
-                    )
-
-                    +
-                    F(
-                        'Rasgos Prominentes',
-                        V(p4, 5)
-                    );
-
+                t += '</tbody></table>';
 
                 h += SEC(
                     'Conclusiones Diagnósticas (CIE-11)',
-
-                    `
-                    <div class="grid">
-                        ${cdx}
-                    </div>
-                    `
+                    t
                 );
             }
-
 
             /* =====================================================
                P6 — HISTORIAL DE TRATAMIENTOS ANTERIORES
             ===================================================== */
 
-            if (
-                p6.length > 0 &&
-                p6.some(item => C(item))
-            ) {
+            const rows6 = parseRows(g('P6'));
 
-                let htr =
-                    F(
-                        'Tratamiento / Psicofármaco',
-                        p6.join(' | '),
-                        true
-                    );
+            if (rows6.length > 0) {
+                let t =
+                    '<table class="tbl">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Grupo / Psicofármaco</th>' +
+                    '<th>Tratamiento / Especificación</th>' +
+                    '<th>Duración</th>' +
+                    '<th>Dosis</th>' +
+                    '<th>Observaciones / Causa</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
 
+                rows6.forEach(r => {
+                    if (r.length === 1) {
+                        t += `<tr>
+                            <td colspan="5">${E(r[0])}</td>
+                        </tr>`;
+                    } else {
+                        t += `<tr>
+                            <td>${E(r[0] || '')}</td>
+                            <td>${E(r[1] || '')}</td>
+                            <td>${E(r[2] || '')}</td>
+                            <td>${E(r[3] || '')}</td>
+                            <td>${E(r[4] || '')}</td>
+                        </tr>`;
+                    }
+                });
+
+                t += '</tbody></table>';
 
                 h += SEC(
                     'Historial de Tratamientos Anteriores',
-
-                    `
-                    <div class="grid">
-                        ${htr}
-                    </div>
-                    `
+                    t
                 );
             }
-
 
             /* =====================================================
                DATOS PERSONALES COMPLEMENTARIOS
             ===================================================== */
 
             let extra =
-                F(
-                    'Escolaridad',
-                    g('Escolaridad')
-                )
-
-                +
-
-                F(
-                    'Religión',
-                    g('Religion')
-                );
-
+                F('Escolaridad', g('Escolaridad')) +
+                F('Religión', g('Religion'));
 
             if (extra) {
-
                 h =
-                    `
-                    <section class="sec">
-
-                        <div class="st">
-                            Datos personales complementarios
-                        </div>
-
-                        <div class="grid">
-                            ${extra}
-                        </div>
-
-                    </section>
-                    `
-                    +
+                    `<section class="sec">
+                        <div class="st">Datos personales complementarios</div>
+                        <div class="grid">${extra}</div>
+                    </section>` +
                     h;
             }
 
-
-            /* =====================================================
-               INSERTAR CONTENIDO
-            ===================================================== */
-
+            /* INSERTAR CONTENIDO */
             document.getElementById('content').innerHTML = h;
 
-
             if (!h.trim()) {
-
-                document.getElementById('empty').style.display =
-                    'block';
+                document.getElementById('empty').style.display = 'block';
             }
 
-
-            /* =====================================================
-               FOOTER
-            ===================================================== */
-
+            /* FOOTER */
             const foot = [
                 'Direccion',
                 'Numero+de+telefono+principal',
@@ -1958,26 +1015,17 @@
                 'Redes+sociales',
                 'Correo+electronico'
             ]
-            .map(g)
-            .map(C)
-            .filter(Boolean);
-
+                .map(g)
+                .map(C)
+                .filter(Boolean);
 
             document.getElementById('footer').innerHTML =
                 foot
-                    .map(x => `
-                        <span>
-                            ${E(x)}
-                        </span>
-                    `)
+                    .map(x => `<span>${E(x)}</span>`)
                     .join('');
 
-
         })();
-
     </script>
-
 </body>
-
 </html>
 ```
