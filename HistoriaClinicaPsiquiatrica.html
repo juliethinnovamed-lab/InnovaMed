@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historia Clínica Psiquiátrica</title>
+
+<style>
+*{box-sizing:border-box;font-family:"Times New Roman",Times,serif}
+
+html,body{margin:0;padding:0}
+
+body{
+    background:#eeeeee;
+    color:#111;
+    padding:20px;
+    font-size:10pt;
+}
+
+.page{
+    width:210mm;
+    min-height:297mm;
+    margin:0 auto 20px;
+    background:#fff;
+    padding:12mm 18mm 18mm;
+    box-shadow:0 0 10px rgba(0,0,0,.14);
+}
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-bottom:5px;
+    margin-bottom:10px;
+}
+
+.logo-space{
+    width:34mm;
+    height:25mm;
+    flex:0 0 34mm;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.logo-space img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+}
+
+.header-info{
+    flex:1;
+    text-align:center;
+    padding-left:12px;
+}
+
+.header-info h2{
+    margin:0;
+    font-size:11.5pt;
+    line-height:1.1;
+    text-transform:uppercase;
+}
+
+.header-info h3{
+    margin:2px 0;
+    font-size:10pt;
+    font-weight:normal;
+    line-height:1.1;
+}
+
+.doctor-line{
+    font-size:9.5pt;
+    font-weight:bold;
+    line-height:1.1;
+}
+
+.header-divider{
+    border-bottom:1.5px solid #111;
+    margin:4px 0;
+}
+
+.address-line,.contact-line{
+    font-size:8.4pt;
+    line-height:1.15;
+}
+
+.contact-item{display:inline-block;margin:0 3px}
+
+.patient-block{
+    margin-bottom:9px;
+    font-size:9.7pt;
+}
+
+.date-row{
+    text-align:right;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.patient-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr;
+    column-gap:16px;
+    row-gap:3px;
+}
+
+.field strong{font-weight:bold}
+
+.divider{
+    border-bottom:1px solid #bdbdbd;
+    margin:8px 0 11px;
+}
+
+.document-title{
+    text-align:center;
+    font-size:13pt;
+    font-weight:bold;
+    text-decoration:underline;
+    margin:7px 0 13px;
+    text-transform:uppercase;
+}
+
+.section{
+    margin-bottom:12px;
+    break-inside:avoid-page;
+}
+
+.section-title{
+    font-size:10.8pt;
+    font-weight:bold;
+    text-transform:uppercase;
+    margin:0 0 6px;
+    padding-bottom:3px;
+    border-bottom:1px solid #222;
+}
+
+.subsection{
+    margin:8px 0 8px;
+    break-inside:avoid-page;
+}
+
+.subsection-title{
+    font-size:10pt;
+    font-weight:bold;
+    margin:0 0 4px;
+}
+
+.field-block{
+    margin:3px 0 5px;
+    line-height:1.28;
+}
+
+.field-label{
+    font-weight:bold;
+}
+
+.multiline{
+    white-space:pre-wrap;
+}
+
+.inline-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:5px 13px;
+}
+
+.inline-grid.three{grid-template-columns:repeat(3,1fr)}
+.inline-grid.two{grid-template-columns:repeat(2,1fr)}
+
+.vitals{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:5px;
+    font-size:9.4pt;
+}
+
+.vitals th,.vitals td{
+    border:1px solid #999;
+    padding:4px 5px;
+    text-align:center;
+    vertical-align:top;
+}
+
+.vitals th{
+    font-weight:bold;
+    background:#f4f4f4;
+}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:5px;
+    font-size:8.7pt;
+    break-inside:auto;
+}
+
+.data-table th,.data-table td{
+    border:1px solid #999;
+    padding:4px 4px;
+    vertical-align:top;
+    text-align:left;
+}
+
+.data-table th{
+    background:#f4f4f4;
+    font-weight:bold;
+}
+
+.data-table tr{
+    break-inside:avoid-page;
+}
+
+.empty-message{
+    display:none;
+}
+
+.note-box{
+    border-left:2px solid #555;
+    padding-left:8px;
+    line-height:1.3;
+}
+
+.action-buttons{
+    width:210mm;
+    margin:0 auto 20px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+}
+
+.btn{
+    border:0;
+    background:#1d5f99;
+    color:white;
+    border-radius:4px;
+    padding:9px 18px;
+    cursor:pointer;
+    font-family:Arial,sans-serif;
+    font-size:10pt;
+    font-weight:bold;
+}
+
+.btn:hover{background:#14436d}
+
+@media print{
+    body{
+        background:#fff!important;
+        padding:0!important;
+        margin:0!important;
+    }
+
+    .page{
+        width:100%!important;
+        min-height:auto!important;
+        margin:0!important;
+        padding:0!important;
+        box-shadow:none!important;
+    }
+
+    .action-buttons{display:none!important}
+
+    @page{
+        size:A4 portrait;
+        margin:10mm 15mm 12mm 15mm;
+    }
+
+    .section,.subsection{
+        break-inside:avoid-page;
+    }
+
+    .data-table tr{
+        break-inside:avoid-page;
+    }
+
+    .section-title{
+        break-after:avoid-page;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page" id="historia-content">
+
+    <!-- ===================== MEMBRETE ===================== -->
+    <header class="header">
+        <div class="logo-space">
+            <!-- Reemplazar posteriormente por el logo de la Dra. Juliette -->
+            <img id="logo-centro" src="" alt="Logo">
+        </div>
+
+        <div class="header-info">
+            <h2 id="field-Titulo"></h2>
+            <h3 id="field-Subtitulo"></h3>
+
+            <div class="doctor-line">
+                <span id="field-Medico"></span>
+                <span id="doctor-separator"> - </span>
+                <span id="field-Especialidad"></span>
+            </div>
+
+            <div class="header-divider"></div>
+
+            <div class="address-line" id="sec-Direccion" style="display:none">
+                <span id="field-Direccion"></span>
+            </div>
+
+            <div class="contact-line">
+                <span class="contact-item" id="sec-Telefonos" style="display:none">
+                    <strong>Telfs:</strong> <span id="field-Telefonos"></span>
+                </span>
+
+                <span class="contact-item" id="sec-Whatsapp" style="display:none">
+                    | <strong>WhatsApp:</strong> <span id="field-Whatsapp"></span>
+                </span>
+
+                <span class="contact-item" id="sec-Redes" style="display:none">
+                    | <span id="field-Redes"></span>
+                </span>
+
+                <span class="contact-item" id="sec-Correo" style="display:none">
+                    | <span id="field-Correo"></span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== DATOS DEL PACIENTE ===================== -->
+    <section class="patient-block" id="patient-block">
+        <div class="date-row" id="sec-Fecha" style="display:none">
+            Fecha de ingreso: <span id="val-Fecha"></span>
+        </div>
+
+        <div class="patient-grid">
+            <div class="field" id="sec-Nombre"><strong>Paciente:</strong> <span id="val-Nombre"></span></div>
+            <div class="field" id="sec-Sexo"><strong>Sexo:</strong> <span id="val-Sexo"></span></div>
+            <div class="field" id="sec-Cedula"><strong>C.I.:</strong> <span id="val-Cedula"></span></div>
+
+            <div class="field" id="sec-FN"><strong>F / N:</strong> <span id="val-FN"></span></div>
+            <div class="field" id="sec-Edad"><strong>Edad:</strong> <span id="val-Edad"></span></div>
+            <div class="field" id="sec-Telefono"><strong>Teléfono:</strong> <span id="val-Telefono"></span></div>
+
+            <div class="field" id="sec-Lugar"><strong>Lugar de nacimiento:</strong> <span id="val-Lugar"></span></div>
+            <div class="field" id="sec-EstadoCivil"><strong>Estado civil:</strong> <span id="val-EstadoCivil"></span></div>
+            <div class="field" id="sec-Ocupacion"><strong>Profesión / Ocupación:</strong> <span id="val-Ocupacion"></span></div>
+
+            <div class="field" id="sec-Escolaridad"><strong>Escolaridad:</strong> <span id="val-Escolaridad"></span></div>
+            <div class="field" id="sec-Religion"><strong>Religión:</strong> <span id="val-Religion"></span></div>
+            <div class="field" id="sec-Emergencia"><strong>Contacto de emergencia:</strong> <span id="val-Emergencia"></span></div>
+
+            <div class="field" id="sec-DireccionPaciente" style="grid-column:1 / -1">
+                <strong>Dirección:</strong> <span id="val-DireccionPaciente"></span>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <div class="document-title">Historia Clínica Psiquiátrica</div>
+
+    <!-- ===================== MOTIVO / ENFERMEDAD ===================== -->
+    <section class="section" id="sec-Motivo">
+        <h2 class="section-title">Motivo de Consulta</h2>
+        <div class="field-block multiline" id="val-Motivo"></div>
+    </section>
+
+    <section class="section" id="sec-Enfermedad">
+        <h2 class="section-title">Enfermedad Actual</h2>
+        <div class="field-block multiline" id="val-Enfermedad"></div>
+    </section>
+
+    <!-- ===================== VITALES ===================== -->
+    <section class="section" id="sec-Vitales">
+        <h2 class="section-title">Constantes Vitales y Somatometría</h2>
+        <table class="vitals">
+            <thead>
+                <tr>
+                    <th id="th-TA">TA</th>
+                    <th id="th-FC">FC</th>
+                    <th id="th-FR">FR</th>
+                    <th id="th-Circ">Circunferencia Abdominal</th>
+                    <th id="th-Peso">Peso</th>
+                    <th id="th-Talla">Talla</th>
+                    <th id="th-IMC">IMC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="val-TA"></td>
+                    <td id="val-FC"></td>
+                    <td id="val-FR"></td>
+                    <td id="val-Circ"></td>
+                    <td id="val-Peso"></td>
+                    <td id="val-Talla"></td>
+                    <td id="val-IMC"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ===================== EXAMEN MENTAL ===================== -->
+    <section class="section" id="sec-EMA">
+        <h2 class="section-title">Examen Mental Actual (EMA)</h2>
+
+        <div class="subsection" id="ema-normal">
+            <div class="field-block" id="field-ExamenNormal"></div>
+        </div>
+
+        <div class="subsection" id="ema-1">
+            <h3 class="subsection-title">1. Aspecto, Porte, Conación y Actitud</h3>
+            <div class="field-block" id="ema-AspectoGeneral"><span class="field-label">Aspecto general:</span> <span></span></div>
+            <div class="field-block" id="ema-Vestimenta"><span class="field-label">Presentación y vestimenta:</span> <span></span></div>
+            <div class="field-block" id="ema-Actitud"><span class="field-label">Actitud ante la entrevista:</span> <span></span></div>
+            <div class="field-block" id="ema-Psicomotricidad"><span class="field-label">Conación / Psicomotricidad:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="ema-2">
+            <h3 class="subsection-title">2. Conciencia y Funciones Cognitivas</h3>
+            <div class="inline-grid two">
+                <div class="field-block" id="ema-Conciencia"><span class="field-label">Nivel de conciencia:</span> <span></span></div>
+                <div class="field-block" id="ema-Orientacion"><span class="field-label">Orientación:</span> <span></span></div>
+                <div class="field-block" id="ema-Atencion"><span class="field-label">Atención:</span> <span></span></div>
+                <div class="field-block" id="ema-Concentracion"><span class="field-label">Concentración:</span> <span></span></div>
+                <div class="field-block" id="ema-Memoria"><span class="field-label">Memoria:</span> <span></span></div>
+                <div class="field-block" id="ema-Calculo"><span class="field-label">Cálculo y abstracción:</span> <span></span></div>
+            </div>
+        </div>
+
+        <div class="subsection" id="ema-3">
+            <h3 class="subsection-title">3. Lenguaje</h3>
+            <div class="field-block" id="ema-Expresion"><span class="field-label">Expresión / Emisión:</span> <span></span></div>
+            <div class="field-block" id="ema-Comprension"><span class="field-label">Comprensión:</span> <span></span></div>
+            <div class="field-block" id="ema-Velocidad"><span class="field-label">Velocidad y ritmo:</span> <span></span></div>
+            <div class="field-block" id="ema-Estructura"><span class="field-label">Alteraciones de la estructura y semántica:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="ema-4">
+            <h3 class="subsection-title">4. Afecto y Estado de Ánimo</h3>
+            <div class="field-block" id="ema-ExpresionAfecto"><span class="field-label">Expresión o intensidad:</span> <span></span></div>
+            <div class="field-block" id="ema-Modulacion"><span class="field-label">Modulación:</span> <span></span></div>
+            <div class="field-block" id="ema-Resonante"><span class="field-label">Resonancia:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="ema-5">
+            <h3 class="subsection-title">5. Pensamiento (Curso, Forma y Contenido)</h3>
+            <div class="field-block" id="ema-Curso"><span class="field-label">Curso / Velocidad:</span> <span></span></div>
+            <div class="field-block" id="ema-Forma"><span class="field-label">Forma / Lógica:</span> <span></span></div>
+            <div class="field-block" id="ema-Contenido"><span class="field-label">Contenido / Ideación:</span> <span></span></div>
+            <div class="field-block" id="ema-Sobrevaloradas"><span class="field-label">Ideas sobrevaloradas:</span> <span></span></div>
+            <div class="field-block" id="ema-Delirantes"><span class="field-label">Ideas delirantes:</span> <span></span></div>
+            <div class="field-block" id="ema-Muerte"><span class="field-label">Ideas de muerte:</span> <span></span></div>
+            <div class="field-block" id="ema-Suicida"><span class="field-label">Ideación suicida:</span> <span></span></div>
+            <div class="field-block" id="ema-SuicidaActiva"><span class="field-label">Ideación suicida activa:</span> <span></span></div>
+            <div class="field-block" id="ema-Obsesivas"><span class="field-label">Ideas obsesivas / fóbicas:</span> <span></span></div>
+            <div class="field-block" id="ema-Minusvalia"><span class="field-label">Ideas de minusvalía / culpa / desesperanza:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="ema-6">
+            <h3 class="subsection-title">6. Percepción (Sensopercepción)</h3>
+            <div class="field-block" id="ema-Percepcion"><span class="field-label">Alteraciones:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="ema-7">
+            <h3 class="subsection-title">7. Juicio de Realidad e Introspección (Insight)</h3>
+            <div class="field-block" id="ema-Juicio"><span class="field-label">Juicio de realidad:</span> <span></span></div>
+            <div class="field-block" id="ema-Insight"><span class="field-label">Introspección (conciencia de enfermedad):</span> <span></span></div>
+        </div>
+    </section>
+
+    <!-- ===================== ANTECEDENTES PERSONALES ===================== -->
+    <section class="section" id="sec-Antecedentes">
+        <h2 class="section-title">Antecedentes Personales</h2>
+
+        <div class="subsection" id="sec-Perinatales">
+            <h3 class="subsection-title">Perinatales</h3>
+            <div class="inline-grid two">
+                <div class="field-block" id="ap-Producto"><span class="field-label">Producto de embarazo:</span> <span></span></div>
+                <div class="field-block" id="ap-Semanas"><span class="field-label">Semanas de embarazo:</span> <span></span></div>
+                <div class="field-block" id="ap-Respirio"><span class="field-label">Respiró y lloró al nacer:</span> <span></span></div>
+                <div class="field-block" id="ap-Alimentacion"><span class="field-label">Alimentación:</span> <span></span></div>
+                <div class="field-block" id="ap-Desarrollo"><span class="field-label">Desarrollo psicomotor:</span> <span></span></div>
+                <div class="field-block" id="ap-Control"><span class="field-label">Control postural:</span> <span></span></div>
+                <div class="field-block" id="ap-Cabeza"><span class="field-label">Sostener la cabeza:</span> <span></span></div>
+                <div class="field-block" id="ap-Sentarse"><span class="field-label">Sentarse sin apoyo y ponerse de pie:</span> <span></span></div>
+                <div class="field-block" id="ap-Gatear"><span class="field-label">Gatear:</span> <span></span></div>
+                <div class="field-block" id="ap-Caminar"><span class="field-label">Caminar:</span> <span></span></div>
+                <div class="field-block" id="ap-Correr"><span class="field-label">Correr y saltar:</span> <span></span></div>
+                <div class="field-block" id="ap-Equilibrio"><span class="field-label">Equilibrio:</span> <span></span></div>
+                <div class="field-block" id="ap-Linea"><span class="field-label">Caminar en línea recta:</span> <span></span></div>
+            </div>
+        </div>
+
+        <div class="subsection" id="sec-APP">
+            <h3 class="subsection-title">1. Antecedentes Médicos Patológicos (APP)</h3>
+            <div class="field-block" id="ap-Neurologicos"><span class="field-label">Neurológicos:</span> <span></span></div>
+            <div class="field-block" id="ap-TCE"><span class="field-label">Traumatismo craneoencefálico (TCE):</span> <span></span></div>
+            <div class="field-block" id="ap-Perdida"><span class="field-label">Pérdida de conciencia:</span> <span></span></div>
+            <div class="field-block" id="ap-Duracion"><span class="field-label">Duración:</span> <span></span></div>
+            <div class="field-block" id="ap-Epilepsia"><span class="field-label">Epilepsia / Crisis convulsivas:</span> <span></span></div>
+            <div class="field-block" id="ap-Endocrinos"><span class="field-label">Endocrinos / Metabólicos:</span> <span></span></div>
+            <div class="field-block" id="ap-Cardiovasculares"><span class="field-label">Cardiovasculares:</span> <span></span></div>
+            <div class="field-block" id="ap-Renales"><span class="field-label">Renales y Hepáticos:</span> <span></span></div>
+            <div class="field-block" id="ap-Quirurgicos"><span class="field-label">Quirúrgicos y Hospitalizaciones Previas:</span> <span></span></div>
+            <div class="field-block" id="ap-Alergias"><span class="field-label">Alergias a medicamentos generales:</span> <span></span></div>
+            <div class="field-block" id="ap-RAM"><span class="field-label">Reacciones graves a psicofármacos previos:</span> <span></span></div>
+            <div class="field-block" id="ap-Negar"><span class="field-label">Negar APP:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="sec-Cirugia">
+            <h3 class="subsection-title">Cirugías y Hospitalizaciones Previas</h3>
+            <div class="inline-grid two">
+                <div class="field-block" id="ap-Ano"><span class="field-label">Año:</span> <span></span></div>
+                <div class="field-block" id="ap-TipoCirugia"><span class="field-label">Tipo de cirugía / causa:</span> <span></span></div>
+                <div class="field-block" id="ap-Bariatrica"><span class="field-label">Cirugía bariátrica:</span> <span></span></div>
+                <div class="field-block" id="ap-Delirium"><span class="field-label">Delirium postoperatorio previo:</span> <span></span></div>
+            </div>
+        </div>
+
+        <div class="subsection" id="sec-AGO">
+            <h3 class="subsection-title">Antecedentes Ginecoobstétricos (AGO)</h3>
+            <div class="inline-grid two">
+                <div class="field-block" id="ago-Menarca"><span class="field-label">Menarca:</span> <span></span></div>
+                <div class="field-block" id="ago-Ciclos"><span class="field-label">Ciclos menstruales:</span> <span></span></div>
+                <div class="field-block" id="ago-Duracion"><span class="field-label">Duración y frecuencia:</span> <span></span></div>
+                <div class="field-block" id="ago-FUM"><span class="field-label">FUM:</span> <span></span></div>
+                <div class="field-block" id="ago-G"><span class="field-label">G:</span> <span></span></div>
+                <div class="field-block" id="ago-P"><span class="field-label">P:</span> <span></span></div>
+                <div class="field-block" id="ago-A"><span class="field-label">A:</span> <span></span></div>
+                <div class="field-block" id="ago-C"><span class="field-label">C:</span> <span></span></div>
+                <div class="field-block" id="ago-H"><span class="field-label">Hijos vivos:</span> <span></span></div>
+                <div class="field-block" id="ago-Complicaciones"><span class="field-label">Complicaciones obstétricas de interés psiquiátrico:</span> <span></span></div>
+                <div class="field-block" id="ago-Estado"><span class="field-label">Estado actual:</span> <span></span></div>
+                <div class="field-block" id="ago-Embarazo"><span class="field-label">Embarazo actual:</span> <span></span></div>
+                <div class="field-block" id="ago-Semanas"><span class="field-label">Semanas de gestación:</span> <span></span></div>
+                <div class="field-block" id="ago-Lactancia"><span class="field-label">Lactancia activa:</span> <span></span></div>
+                <div class="field-block" id="ago-Anticonceptivos"><span class="field-label">Uso de anticonceptivos hormonales:</span> <span></span></div>
+                <div class="field-block" id="ago-NombreTipo"><span class="field-label">Nombre / Tipo:</span> <span></span></div>
+                <div class="field-block" id="ago-Negativos"><span class="field-label">AGO negativos / No aplica:</span> <span></span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== ANTECEDENTES PSIQUIATRICOS ===================== -->
+    <section class="section" id="sec-Psiquiatria">
+        <h2 class="section-title">Antecedentes Psiquiátricos Previos (APP-Psi)</h2>
+
+        <div class="field-block" id="psi-PrimeraVez"><span class="field-label">Primera vez en Psiquiatría:</span> <span></span></div>
+        <div class="field-block" id="psi-NotaPrimeraVez"><span class="field-label">Nota primera vez:</span> <span></span></div>
+
+        <div class="subsection" id="psi-Diagnosticos">
+            <h3 class="subsection-title">a. Historial de Diagnósticos Previos</h3>
+            <div class="field-block" id="psi-Depresivo"><span class="field-label">Trastorno Depresivo:</span> <span></span></div>
+            <div class="field-block" id="psi-Bipolar"><span class="field-label">Trastorno Bipolar:</span> <span></span></div>
+            <div class="field-block" id="psi-Ansiedad"><span class="field-label">Trastornos de Ansiedad:</span> <span></span></div>
+            <div class="field-block" id="psi-TOC"><span class="field-label">TOC o trastornos relacionados:</span> <span></span></div>
+            <div class="field-block" id="psi-TEPT"><span class="field-label">TEPT o trastornos del desarrollo/apego:</span> <span></span></div>
+            <div class="field-block" id="psi-Esquizofrenia"><span class="field-label">Espectro de la esquizofrenia / otros trastornos psicóticos:</span> <span></span></div>
+            <div class="field-block" id="psi-TDAH"><span class="field-label">TDAH:</span> <span></span></div>
+            <div class="field-block" id="psi-TEA"><span class="field-label">Trastorno del Neurodesarrollo (TEA):</span> <span></span></div>
+            <div class="field-block" id="psi-TCA"><span class="field-label">Trastornos de la Conducta Alimentaria:</span> <span></span></div>
+            <div class="field-block" id="psi-Personalidad"><span class="field-label">Trastorno de la Personalidad:</span> <span></span></div>
+            <div class="field-block" id="psi-Otro"><span class="field-label">Otro diagnóstico psiquiátrico previo:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="psi-Psicoterapia">
+            <h3 class="subsection-title">b. Historial de Tratamientos Anteriores</h3>
+            <div class="field-block" id="psi-PsicoterapiaGeneral"><span class="field-label">Historial de Psicoterapia:</span> <span></span></div>
+            <div class="inline-grid three">
+                <div class="field-block" id="psi-Enfoque"><span class="field-label">Enfoque:</span> <span></span></div>
+                <div class="field-block" id="psi-Duracion"><span class="field-label">Duración:</span> <span></span></div>
+                <div class="field-block" id="psi-Apego"><span class="field-label">Apego:</span> <span></span></div>
+            </div>
+        </div>
+
+        <div class="subsection" id="psi-Suicidio">
+            <h3 class="subsection-title">c. Intentos de Suicidio y Conductas de Autolesión</h3>
+            <div class="field-block" id="psi-Ideacion"><span class="field-label">Historial de ideación suicida:</span> <span></span></div>
+            <div class="field-block" id="psi-Intentos"><span class="field-label">Historial de intentos de suicidio:</span> <span></span></div>
+            <div class="field-block" id="psi-NumeroIntentos"><span class="field-label">Número de intentos previos:</span> <span></span></div>
+            <div class="field-block" id="psi-IntentoGrave"><span class="field-label">Edad / Año del intento más grave:</span> <span></span></div>
+            <div class="field-block" id="psi-Metodo"><span class="field-label">Método(s) utilizado(s):</span> <span></span></div>
+            <div class="field-block" id="psi-Hospitalizacion"><span class="field-label">¿Requirió hospitalización médica o terapia intensiva?:</span> <span></span></div>
+            <div class="field-block" id="psi-Autolesion"><span class="field-label">Conductas de autolesión no suicidas:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="psi-Internamientos">
+            <h3 class="subsection-title">d. Historial de Internamientos Psiquiátricos</h3>
+            <div class="field-block" id="psi-Hospitalizaciones"><span class="field-label">Hospitalizaciones psiquiátricas previas:</span> <span></span></div>
+            <div class="field-block" id="psi-NumeroInternamientos"><span class="field-label">Número total de internamientos:</span> <span></span></div>
+            <div class="field-block" id="psi-UltimoInternamiento"><span class="field-label">Año y duración del último internamiento:</span> <span></span></div>
+            <div class="field-block" id="psi-CausaInternamiento"><span class="field-label">Causa principal:</span> <span></span></div>
+            <div class="field-block" id="psi-TipoIngreso"><span class="field-label">Tipo de ingreso:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="psi-Biologicos">
+            <h3 class="subsection-title">e. Tratamientos Biológicos No Farmacológicos</h3>
+            <div class="field-block" id="psi-TEC"><span class="field-label">Terapia Electroconvulsiva (TEC) anterior:</span> <span></span></div>
+            <div class="field-block" id="psi-TECDetalle"><span class="field-label">Especificar año, número de sesiones y respuesta:</span> <span></span></div>
+            <div class="field-block" id="psi-EMT"><span class="field-label">Estimulación Magnética Transcraneal (EMT) anterior:</span> <span></span></div>
+            <div class="field-block" id="psi-EMTDetalle"><span class="field-label">Especificar año, número de sesiones y respuesta:</span> <span></span></div>
+            <div class="field-block" id="psi-OtroBiologico"><span class="field-label">Otro (tDCS, Ketamina / Esketamina):</span> <span></span></div>
+            <div class="field-block" id="psi-OtroBiologicoDetalle"><span class="field-label">Especificar año, número de sesiones y respuesta:</span> <span></span></div>
+        </div>
+    </section>
+
+    <!-- ===================== HEREDOFAMILIARES ===================== -->
+    <section class="section" id="sec-Heredofamiliares">
+        <h2 class="section-title">Antecedentes Heredofamiliares (AHF)</h2>
+
+        <div class="field-block" id="ahf-SinAntecedentes"><span class="field-label">Sin antecedentes familiares de importancia:</span> <span></span></div>
+        <div class="field-block multiline" id="ahf-Reporte"><span class="field-label">Reporte:</span> <span></span></div>
+
+        <div class="subsection" id="sub-MapeoFamiliar">
+            <h3 class="subsection-title">1. Mapeo Dinámico por Familiar</h3>
+            <div id="mapeo-container"></div>
+        </div>
+    </section>
+
+    <!-- ===================== HABITOS ===================== -->
+    <section class="section" id="sec-Habitos">
+        <h2 class="section-title">Hábitos Psicobiológicos y Uso de Sustancias</h2>
+
+        <div class="subsection" id="habitos-generales">
+            <h3 class="subsection-title">1. Hábitos Psicobiológicos Generales</h3>
+
+            <div class="field-block" id="hab-Sueno"><span class="field-label">Sueño / Descanso:</span> <span></span></div>
+            <div class="inline-grid two">
+                <div class="field-block" id="hab-HorasSueno"><span class="field-label">Horas promedio de sueño nocturno:</span> <span></span></div>
+                <div class="field-block" id="hab-CalidadSueno"><span class="field-label">Calidad del sueño:</span> <span></span></div>
+            </div>
+
+            <div class="field-block" id="hab-Alimentacion"><span class="field-label">Alimentación:</span> <span></span></div>
+            <div class="inline-grid two">
+                <div class="field-block" id="hab-FrecuenciaAlimentacion"><span class="field-label">Frecuencia:</span> <span></span></div>
+                <div class="field-block" id="hab-DescripcionAlimentacion"><span class="field-label">Descripción:</span> <span></span></div>
+            </div>
+
+            <div class="field-block" id="hab-Actividad"><span class="field-label">Actividad física:</span> <span></span></div>
+            <div class="inline-grid two">
+                <div class="field-block" id="hab-FrecuenciaEjercicio"><span class="field-label">Frecuencia semanal:</span> <span></span></div>
+                <div class="field-block" id="hab-TipoEjercicio"><span class="field-label">Tipo de ejercicio:</span> <span></span></div>
+            </div>
+
+            <div class="field-block" id="hab-Pantallas"><span class="field-label">Uso de pantallas:</span> <span></span></div>
+            <div class="inline-grid two">
+                <div class="field-block" id="hab-HorasPantalla"><span class="field-label">h/día:</span> <span></span></div>
+                <div class="field-block" id="hab-Supervision"><span class="field-label">Supervisión:</span> <span></span></div>
+            </div>
+
+            <div class="field-block" id="hab-ContenidoPantalla"><span class="field-label">Contenido de tipo:</span> <span></span></div>
+            <div class="field-block" id="hab-Estresores"><span class="field-label">Exposición a estresores crónicos ambientales:</span> <span></span></div>
+        </div>
+
+        <div class="subsection" id="sustancias">
+            <h3 class="subsection-title">2. Consumo y Dependencia de Sustancias</h3>
+            <div class="field-block" id="sust-NoConsume"><span class="field-label">No consume:</span> <span></span></div>
+            <div class="field-block" id="sust-Nota"><span class="field-label">Nota:</span> <span></span></div>
+            <div id="sustancias-container"></div>
+        </div>
+    </section>
+
+    <!-- ===================== CONCLUSIONES ===================== -->
+    <section class="section" id="sec-Conclusiones">
+        <h2 class="section-title">Conclusiones Diagnósticas (CIE-11)</h2>
+
+        <div id="diagnosticos-container"></div>
+
+        <div class="field-block multiline" id="concl-Notas">
+            <span class="field-label">Notas diagnósticas y juicio clínico:</span>
+            <div></div>
+        </div>
+
+        <div class="field-block multiline" id="concl-Impresion">
+            <span class="field-label">Impresión diagnóstica y discusión:</span>
+            <div></div>
+        </div>
+    </section>
+
+</div>
+
+<div class="action-buttons">
+    <button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+    <button class="btn" onclick="descargarWord()">Descargar Word</button>
+</div>
+
+<script>
+/* ============================================================
+   HISTORIA CLÍNICA PSIQUIÁTRICA - DRA. JULIETTE
+   ============================================================
+
+   La historia principal recibe los campos mediante parámetros URL.
+
+   Las tablas hijas pueden recibirse como JSON URL-encoded:
+
+   TratamientosJSON=[{"Grupo Farmacológico":"..."}]
+   FamiliaresJSON=[{"Parentesco":"..."}]
+   DiagnosticosJSON=[{"cie11_ID":"..."}]
+
+   Esta parte queda preparada para conectar posteriormente
+   con la expresión exacta de AppSheet.
+*/
+
+function obtenerParametros(){
+    const params = {};
+    const qs = new URLSearchParams(window.location.search);
+
+    qs.forEach((value,key)=>{
+        params[key] = value;
+    });
+
+    return params;
+}
+
+function limpio(v){
+    if(v === null || v === undefined) return "";
+    const s = String(v).trim();
+    if(!s || s === "null" || s === "undefined") return "";
+    return s;
+}
+
+function mostrarCampo(id, valor, formatter){
+    const el = document.getElementById(id);
+    if(!el) return false;
+
+    const section = el.closest(".field-block,.field,.date-row");
+
+    if(!limpio(valor)){
+        if(section) section.style.display = "none";
+        return false;
+    }
+
+    const target = el.querySelector("span:not(.field-label),div:not(.field-label)") || el;
+    if(formatter){
+        target.textContent = formatter(valor);
+    }else{
+        target.textContent = valor;
+    }
+
+    if(section) section.style.display = "";
+    return true;
+}
+
+function formatearFecha(fecha){
+    const f=limpio(fecha);
+    if(!f) return "";
+    const p=f.split(/[-/]/);
+
+    if(p.length===3 && p[0].length===4)
+        return `${p[2].padStart(2,"0")}/${p[1].padStart(2,"0")}/${p[0]}`;
+
+    if(p.length===3 && p[2].length===4)
+        return `${p[1].padStart(2,"0")}/${p[0].padStart(2,"0")}/${p[2]}`;
+
+    return f;
+}
+
+function valor(p,...keys){
+    for(const k of keys){
+        if(limpio(p[k])) return limpio(p[k]);
+    }
+    return "";
+}
+
+function procesarCampo(p, config){
+    const v=valor(p,...config.keys);
+    const el=document.getElementById(config.id);
+
+    if(!el) return !!v;
+
+    const valueTarget=el.querySelector("span:last-child") || el.querySelector("div:last-child") || el;
+
+    if(!v){
+        el.style.display="none";
+        return false;
+    }
+
+    valueTarget.textContent=config.fecha ? formatearFecha(v) : v;
+    el.style.display="";
+    return true;
+}
+
+function ocultarSeccionSiVacia(sectionId, childSelector=".field-block,.subsection,.section"){
+    const section=document.getElementById(sectionId);
+    if(!section) return;
+
+    const children=[...section.querySelectorAll(childSelector)]
+        .filter(el=>el.id!==sectionId);
+
+    const visible=children.some(el=>{
+        const style=getComputedStyle(el);
+        return style.display!=="none" && el.textContent.trim()!=="";
+    });
+
+    if(!visible) section.style.display="none";
+}
+
+function cargarMembrete(p){
+    const campos=[
+        ["field-Titulo",valor(p,"Titulo")],
+        ["field-Subtitulo",valor(p,"Subtitulo")],
+        ["field-Medico",valor(p,"Medico tratante","Médico tratante")],
+        ["field-Especialidad",valor(p,"Especialidad Medica","Especialidad Médica")]
+    ];
+
+    campos.forEach(([id,v])=>{
+        const el=document.getElementById(id);
+        if(el) el.textContent=v;
+    });
+
+    const medico=limpio(p["Medico tratante"]||p["Médico tratante"]);
+    const especialidad=limpio(p["Especialidad Medica"]||p["Especialidad Médica"]);
+    const sep=document.getElementById("doctor-separator");
+
+    if(sep) sep.style.display=(medico&&especialidad)?"inline":"none";
+
+    const direccion=valor(p,"Direccion","Dirección");
+    const secDireccion=document.getElementById("sec-Direccion");
+    document.getElementById("field-Direccion").textContent=direccion;
+    secDireccion.style.display=direccion?"block":"none";
+
+    const tel1=valor(p,"Numero de telefono principal","Número de telefono principal");
+    const tel2=valor(p,"Numero secundario","Número secundario");
+    const telefonos=tel1&&tel2?`${tel1} / ${tel2}`:(tel1||tel2);
+
+    document.getElementById("field-Telefonos").textContent=telefonos;
+    document.getElementById("sec-Telefonos").style.display=telefonos?"inline-block":"none";
+
+    const extras=[
+        ["Whatsapp","field-Whatsapp","sec-Whatsapp"],
+        ["Redes sociales","field-Redes","sec-Redes"],
+        ["Correo electronico","field-Correo","sec-Correo"]
+    ];
+
+    extras.forEach(([key,field,sec])=>{
+        const v=valor(p,key);
+        document.getElementById(field).textContent=v;
+        document.getElementById(sec).style.display=v?"inline-block":"none";
+    });
+
+    const logo=valor(p,"LogoURL","Logo");
+    if(logo){
+        document.getElementById("logo-centro").src=logo;
+    }
+}
+
+const campos=[
+    ["sec-Fecha",["Fecha Ingreso","Fecha"],true],
+    ["sec-Nombre",["Nombre y Apellido"]],
+    ["sec-Sexo",["Sexo"]],
+    ["sec-Cedula",["Cedula","Cédula"]],
+    ["sec-FN",["F / N"]],
+    ["sec-Edad",["Edad"]],
+    ["sec-Telefono",["Telefono","Teléfono"]],
+    ["sec-Lugar",["Lugar de Nacimiento"]],
+    ["sec-EstadoCivil",["Estado civil"]],
+    ["sec-Ocupacion",["Profesion / Ocupacion","Profesión / Ocupación"]],
+    ["sec-Escolaridad",["Escolaridad"]],
+    ["sec-Religion",["Religion","Religión"]],
+    ["sec-Emergencia",["Contacto de emergencia"]],
+    ["sec-DireccionPaciente",["Dirección"]]
+];
+
+const contenidoSimple=[
+    ["sec-Motivo","Motivo de Consulta"],
+    ["sec-Enfermedad","Enfermedad Actual"]
+];
+
+const ema=[
+    ["ema-AspectoGeneral",["Aspecto general"]],
+    ["ema-Vestimenta",["Presentación y vestimenta"]],
+    ["ema-Actitud",["Actitud ante la entrevista"]],
+    ["ema-Psicomotricidad",["Conación / Psicomotricidad"]],
+    ["ema-Conciencia",["Nivel de Conciencia","Nivel de conciencia"]],
+    ["ema-Orientacion",["Orientación"]],
+    ["ema-Atencion",["Atención"]],
+    ["ema-Concentracion",["Concentración"]],
+    ["ema-Memoria",["Memoria"]],
+    ["ema-Calculo",["Cálculo y Abstracción","Cálculo y abstracción"]],
+    ["ema-Expresion",["Expresión / Emisión"]],
+    ["ema-Comprension",["Comprensión"]],
+    ["ema-Velocidad",["Velocidad y Ritmo","Velocidad y ritmo"]],
+    ["ema-Estructura",["Alteraciones de la Estructura y Semántica","Alteraciones de la estructura y semántica"]],
+    ["ema-ExpresionAfecto",["Expresión o Intensidad","Expresión o intensidad"]],
+    ["ema-Modulacion",["Modulación"]],
+    ["ema-Resonante",["Resonante","Resonancia"]],
+    ["ema-Curso",["Curso / Velocidad"]],
+    ["ema-Forma",["Forma / Lógica"]],
+    ["ema-Contenido",["Contenido / Ideación"]],
+    ["ema-Sobrevaloradas",["Ideas Sobrevaloradas"]],
+    ["ema-Delirantes",["Ideas delirantes"]],
+    ["ema-Muerte",["Ideas de Muerte"]],
+    ["ema-Suicida",["Ideación suicida"]],
+    ["ema-SuicidaActiva",["Ideación suicida activa"]],
+    ["ema-Obsesivas",["Ideas obsesivas / Fóbicas"]],
+    ["ema-Minusvalia",["Ideas de minusvalía / Culpa / Desesperanza"]],
+    ["ema-Percepcion",["Alteraciones"]],
+    ["ema-Juicio",["Juicio de Realidad"]],
+    ["ema-Insight",["Introspección (Conciencia de enfermedad)"]]
+];
+
+const antecedentes=[
+    ["ap-Producto",["Producto de embarazo"]],
+    ["ap-Semanas",["Semanas de embarazo"]],
+    ["ap-Respirio",["Respiró y lloró al nacer"]],
+    ["ap-Alimentacion",["Alimentación"]],
+    ["ap-Desarrollo",["Desarrollo psicomotor"]],
+    ["ap-Control",["Control postural"]],
+    ["ap-Cabeza",["sostener la cabeza"]],
+    ["ap-Sentarse",["sentarse sin apoyo y ponerse de pie"]],
+    ["ap-Gatear",["gatear"]],
+    ["ap-Caminar",["caminar"]],
+    ["ap-Correr",["correr y saltar con uno o ambos pies"]],
+    ["ap-Equilibrio",["mantenerse estable de pie o sobre un solo pie"]],
+    ["ap-Linea",["caminar en línea recta"]],
+    ["ap-Neurologicos",["Neurológicos"]],
+    ["ap-TCE",["Traumatismo Craneoencefálico (TCE)","Traumatismo craneoencefálico (TCE)"]],
+    ["ap-Perdida",["Pérdida de conciencia"]],
+    ["ap-Duracion",["Duración"]],
+    ["ap-Epilepsia",["Epilepsia / Crisis convulsivas"]],
+    ["ap-Endocrinos",["Endocrinos / Metabólicos"]],
+    ["ap-Cardiovasculares",["Cardiovasculares"]],
+    ["ap-Renales",["Renales y Hepáticos"]],
+    ["ap-Quirurgicos",["Quirúrgicos y Hospitalizaciones Previas"]],
+    ["ap-Alergias",["Alergias a medicamentos generales"]],
+    ["ap-RAM",["Reacciones graves a psicofármacos previos (Ej: Síndrome Neuroléptico Maligno, Síndrome Serotoninérgico, distonía grave)"]],
+    ["ap-Negar",["Negar APP"]],
+    ["ap-Ano",["Año"]],
+    ["ap-TipoCirugia",["Tipo de Cirugía/causa","Tipo de cirugía/causa"]],
+    ["ap-Bariatrica",["Cirugía Bariátrica"]],
+    ["ap-Delirium",["Delirium postoperatorio previo"]]
+];
+
+const ago=[
+    ["ago-Menarca",["Menarca (Edad de primera menstruación)","Menarca"]],
+    ["ago-Ciclos",["Ciclos Menstruales","Ciclos menstruales"]],
+    ["ago-Duracion",["Duración y frecuencia (Ej: 28x5)","Duración y frecuencia"]],
+    ["ago-FUM",["Fecha de Última Menstruacion (FUM)","Fecha de Última Menstruación (FUM)","FUM"]],
+    ["ago-G",["G"]],
+    ["ago-P",["P"]],
+    ["ago-A",["A"]],
+    ["ago-C",["C"]],
+    ["ago-H",["Hijos Vivos","Hijos vivos"]],
+    ["ago-Complicaciones",["Complicaciones Obstétricas de interés Psiquiátrico"]],
+    ["ago-Estado",["Estado Actual","Estado actual"]],
+    ["ago-Embarazo",["Embarazo actual"]],
+    ["ago-Semanas",["Semanas de gestación"]],
+    ["ago-Lactancia",["Lactancia activa"]],
+    ["ago-Anticonceptivos",["Uso de anticonceptivos hormonales"]],
+    ["ago-NombreTipo",["Nombre/Tipo","Nombre / Tipo"]],
+    ["ago-Negativos",["AGO Negativos / No Aplica","Paciente niega AGO"]]
+];
+
+const psi=[
+    ["psi-PrimeraVez",["Primera vez en Psiquiatría"]],
+    ["psi-NotaPrimeraVez",["Nota primera vez"]],
+    ["psi-Depresivo",["Trastorno Depresivo","Edad de diagnóstico / Año:"]],
+    ["psi-Bipolar",["Trastorno Bipolar","Edad de diagnóstico / Año:"]],
+    ["psi-Ansiedad",["Trastornos de Ansiedad","Edad de diagnóstico / Año:"]],
+    ["psi-TOC",["Trastorno Obsesivo-Compulsivo (TOC) o trastornos relacionados","Edad de diagnóstico / Año:"]],
+    ["psi-TEPT",["Trastorno por Estrés Postraumático (TEPT) o del desarrollo/apego","Edad de diagnóstico / Año:"]],
+    ["psi-Esquizofrenia",["Trastorno del Espectro de la Esquizofrenia / Otros trastornos psicóticos","Edad de diagnóstico / Año:"]],
+    ["psi-TDAH",["Trastorno por Déficit de Atención e Hiperactividad (TDAH)","Edad de diagnóstico / Año:"]],
+    ["psi-TEA",["Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)","Edad de diagnóstico / Año:"]],
+    ["psi-TCA",["Trastornos de la Conducta Alimentaria (Anorexia, Bulimia, PICA, etc.)","Edad de diagnóstico / Año:"]],
+    ["psi-Personalidad",["Trastorno de la Personalidad","Edad de diagnóstico / Año:"]],
+    ["psi-Otro",["Otro diagnóstico psiquiátrico previo:"]],
+    ["psi-PsicoterapiaGeneral",["Historial de Psicoterapia"]],
+    ["psi-Enfoque",["Enfoque"]],
+    ["psi-Duracion",["Duración"]],
+    ["psi-Apego",["Apego"]],
+    ["psi-Ideacion",["Historial de Ideación Suicida"]],
+    ["psi-Intentos",["Historial de Intentos de Suicidio"]],
+    ["psi-NumeroIntentos",["Número de intentos previos"]],
+    ["psi-IntentoGrave",["Edad/Año del intento más grave"]],
+    ["psi-Metodo",["Método(s) utilizado(s)"]],
+    ["psi-Hospitalizacion",["¿Requirió hospitalización médica o terapia intensiva?"]],
+    ["psi-Autolesion",["Conductas de Autolesión no suicidas (Cutting, quemaduras, etc.)"]],
+    ["psi-Hospitalizaciones",["Hospitalizaciones Psiquiátricas Previas"]],
+    ["psi-NumeroInternamientos",["Número total de internamientos"]],
+    ["psi-UltimoInternamiento",["Año y duración del último internamiento"]],
+    ["psi-CausaInternamiento",["Causa principal"]],
+    ["psi-TipoIngreso",["Tipo de ingreso"]],
+    ["psi-TEC",["Terapia Electroconvulsiva (TEC) anterior"]],
+    ["psi-TECDetalle",["Especificar año, número de sesiones y respuesta"]],
+    ["psi-EMT",["Estimulación Magnética Transcraneal (EMT) anterior"]],
+    ["psi-EMTDetalle",["Especificar año, número de sesiones y respuesta"]],
+    ["psi-OtroBiologico",["Otro (tDCS, Ketamina / Esketamina IV o Intranasal)"]],
+    ["psi-OtroBiologicoDetalle",["Especificar año, número de sesiones y respuesta"]]
+];
+
+const habitos=[
+    ["hab-Sueno",["• Sueño / Descanso:","Sueño / Descanso"]],
+    ["hab-HorasSueno",["Horas promedio de sueño nocturno"]],
+    ["hab-CalidadSueno",["Calidad del sueño"]],
+    ["hab-Alimentacion",["• Alimentación:","Alimentación"]],
+    ["hab-FrecuenciaAlimentacion",["Frecuencia"]],
+    ["hab-DescripcionAlimentacion",["Descripción"]],
+    ["hab-Actividad",["• Actividad Física:","Actividad Física"]],
+    ["hab-FrecuenciaEjercicio",["Frecuencia semanal"]],
+    ["hab-TipoEjercicio",["Tipo de ejercicio"]],
+    ["hab-Pantallas",["• Uso de pantallas:","Uso de pantallas"]],
+    ["hab-HorasPantalla",["h/día"]],
+    ["hab-Supervision",["Supervisión"]],
+    ["hab-ContenidoPantalla",["Contenido de tipo"]],
+    ["hab-Estresores",["Exposición a Estresores Crónicos Ambientales"]]
+];
+
+function cargarCampos(p){
+    campos.forEach(([id,keys,fecha])=>procesarCampo(p,{id,keys,fecha}));
+    contenidoSimple.forEach(([sec,key])=>{
+        const el=document.getElementById(sec);
+        const target=el.querySelector(".field-block");
+        const v=valor(p,key);
+        if(!v){el.style.display="none";return;}
+        target.textContent=v;
+        el.style.display="";
+    });
+
+    ema.forEach(([id,keys])=>procesarCampo(p,{id,keys}));
+    antecedentes.forEach(([id,keys])=>procesarCampo(p,{id,keys}));
+    ago.forEach(([id,keys])=>procesarCampo(p,{id,keys}));
+    psi.forEach(([id,keys])=>procesarCampo(p,{id,keys}));
+    habitos.forEach(([id,keys])=>procesarCampo(p,{id,keys}));
+
+    const vitales=[
+        ["TA",["TA"],"th-TA"],
+        ["FC",[" FC","FC"],"th-FC"],
+        ["FR",["FR"],"th-FR"],
+        ["Circ",["Circunferencia Abdominal"],"th-Circ"],
+        ["Peso",["Peso"],"th-Peso"],
+        ["Talla",["Talla"],"th-Talla"],
+        ["IMC",["IMC"],"th-IMC"]
+    ];
+
+    let hayVital=false;
+
+    vitales.forEach(([campo,keys,th])=>{
+        const v=valor(p,...keys);
+        document.getElementById("val-"+campo).textContent=v;
+        document.getElementById(th).style.display=v?"":"none";
+        document.getElementById("val-"+campo).style.display=v?"":"none";
+        if(v) hayVital=true;
+    });
+
+    document.getElementById("sec-Vitales").style.display=hayVital?"":"none";
+
+    const normal=valor(p,"Cargar Examen Mental Normal");
+    if(normal){
+        document.getElementById("field-ExamenNormal").textContent=normal;
+        document.getElementById("ema-normal").style.display="";
+    }else{
+        document.getElementById("ema-normal").style.display="none";
+    }
+
+    ["ema-1","ema-2","ema-3","ema-4","ema-5","ema-6","ema-7"].forEach(id=>{
+        const sec=document.getElementById(id);
+        if(!sec)return;
+        const visible=[...sec.querySelectorAll(".field-block")]
+            .some(x=>getComputedStyle(x).display!=="none" && x.textContent.trim().length>0);
+        sec.style.display=visible?"":"none";
+    });
+
+    ["sec-Perinatales","sec-APP","sec-Cirugia","sec-AGO"].forEach(id=>{
+        const sec=document.getElementById(id);
+        if(!sec)return;
+        const visible=[...sec.querySelectorAll(".field-block")]
+            .some(x=>getComputedStyle(x).display!=="none" && x.textContent.trim().length>0);
+        sec.style.display=visible?"":"none";
+    });
+
+    ["psi-Diagnosticos","psi-Psicoterapia","psi-Suicidio","psi-Internamientos","psi-Biologicos"].forEach(id=>{
+        const sec=document.getElementById(id);
+        if(!sec)return;
+        const visible=[...sec.querySelectorAll(".field-block")]
+            .some(x=>getComputedStyle(x).display!=="none" && x.textContent.trim().length>0);
+        sec.style.display=visible?"":"none";
+    });
+
+    const normalSections=[
+        ["sec-EMA",".subsection"],
+        ["sec-Antecedentes",".subsection"],
+        ["sec-Psiquiatria",".subsection"]
+    ];
+
+    normalSections.forEach(([id,selector])=>{
+        const sec=document.getElementById(id);
+        if(!sec)return;
+        const visible=[...sec.querySelectorAll(selector)]
+            .some(x=>getComputedStyle(x).display!=="none");
+        sec.style.display=visible?"":"none";
+    });
+}
+
+function parseJSONParam(p,key){
+    const raw=valor(p,key);
+    if(!raw)return [];
+
+    try{
+        return JSON.parse(raw);
+    }catch(e){
+        try{
+            return JSON.parse(decodeURIComponent(raw));
+        }catch(e2){
+            console.warn("No se pudo interpretar",key,e2);
+            return [];
+        }
+    }
+}
+
+function crearTabla(containerId,rows,columns){
+    const container=document.getElementById(containerId);
+    if(!container)return;
+
+    container.innerHTML="";
+
+    if(!rows.length){
+        container.style.display="none";
+        return;
+    }
+
+    const table=document.createElement("table");
+    table.className="data-table";
+
+    const thead=document.createElement("thead");
+    const trh=document.createElement("tr");
+
+    columns.forEach(col=>{
+        const th=document.createElement("th");
+        th.textContent=col.label;
+        trh.appendChild(th);
+    });
+
+    thead.appendChild(trh);
+    table.appendChild(thead);
+
+    const tbody=document.createElement("tbody");
+
+    rows.forEach(row=>{
+        const tr=document.createElement("tr");
+
+        columns.forEach(col=>{
+            const td=document.createElement("td");
+            td.textContent=limpio(row[col.key]);
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+    container.style.display="";
+}
+
+function cargarTablasHijas(p){
+    const tratamientos=parseJSONParam(p,"TratamientosJSON");
+    const familiares=parseJSONParam(p,"FamiliaresJSON");
+    const diagnosticos=parseJSONParam(p,"DiagnosticosJSON");
+
+    crearTabla("mapeo-container",familiares,[
+        {key:"Nombre y Apellido",label:"Familiar"},
+        {key:"Parentesco",label:"Parentesco"},
+        {key:"Edad",label:"Edad"},
+        {key:"Estado",label:"Estado"},
+        {key:"Patologías Psiquiátricas y Adicciones",label:"Patologías psiquiátricas / adicciones"},
+        {key:"Intento de suicidio",label:"Intento de suicidio"},
+        {key:"Suicidio consumado",label:"Suicidio consumado"},
+        {key:"Patologías Médicas Crónicas",label:"Patologías médicas crónicas"},
+        {key:"Especificar patologías",label:"Especificar patologías"}
+    ]);
+
+    crearTabla("diagnosticos-container",diagnosticos,[
+        {key:"cie11_ID",label:"CIE-11"},
+        {key:"Tipo de Diagnóstico",label:"Tipo de diagnóstico"},
+        {key:"Especificador de Gravedad",label:"Gravedad"},
+        {key:"Especificador de Curso / Episodio",label:"Curso / Episodio"},
+        {key:"Severidad de la Disfunción de Personalidad",label:"Disfunción de personalidad"},
+        {key:"Rasgos de Dominio Prominentes",label:"Rasgos de dominio"}
+    ]);
+
+    crearTabla("tratamientos-container",tratamientos,[
+        {key:"Grupo Farmacológico",label:"Grupo farmacológico"},
+        {key:"Nombre del Fármaco",label:"Nombre del fármaco"},
+        {key:"Tiempo de Uso",label:"Tiempo de uso"},
+        {key:"Dosis Máxima",label:"Dosis máxima"},
+        {key:"Motivo deSuspensión",label:"Motivo de suspensión"}
+    ]);
+
+    const mapSec=document.getElementById("sub-MapeoFamiliar");
+    if(!familiares.length)mapSec.style.display="none";
+
+    const diagSec=document.getElementById("sec-Conclusiones");
+    if(!diagnosticos.length){
+        const notas=valor(p,"Notas Diagnósticas y Juicio Clínico");
+        const impresion=valor(p,"Impresión diagnóstica y discusión");
+        if(!notas&&!impresion)diagSec.style.display="none";
+    }
+
+    // La tabla de tratamientos se inserta antes de las conclusiones.
+    if(tratamientos.length){
+        const sec=document.createElement("section");
+        sec.className="section";
+        sec.id="sec-TratamientosTabla";
+        sec.innerHTML='<h2 class="section-title">Tratamientos Anteriores</h2><div id="tratamientos-container"></div>';
+
+        const psiSec=document.getElementById("sec-Psiquiatria");
+        psiSec.parentNode.insertBefore(sec,document.getElementById("sec-Heredofamiliares"));
+        crearTabla("tratamientos-container",tratamientos,[
+            {key:"Grupo Farmacológico",label:"Grupo farmacológico"},
+            {key:"Nombre del Fármaco",label:"Nombre del fármaco"},
+            {key:"Tiempo de Uso",label:"Tiempo de uso"},
+            {key:"Dosis Máxima",label:"Dosis máxima"},
+            {key:"Motivo deSuspensión",label:"Motivo de suspensión"}
+        ]);
+    }
+}
+
+function cargarConclusiones(p){
+    const notas=valor(p,"Notas Diagnósticas y Juicio Clínico");
+    const impresion=valor(p,"Impresión diagnóstica y discusión");
+
+    const n=document.getElementById("concl-Notas");
+    const i=document.getElementById("concl-Impresion");
+
+    n.querySelector("div").textContent=notas;
+    i.querySelector("div").textContent=impresion;
+
+    n.style.display=notas?"":"none";
+    i.style.display=impresion?"":"none";
+}
+
+function cargarDatos(){
+    const p=obtenerParametros();
+
+    cargarMembrete(p);
+    cargarCampos(p);
+    cargarTablasHijas(p);
+    cargarConclusiones(p);
+
+    // Si no existe contenido real, se mantiene como boceto visual.
+    document.title=valor(p,"Tipo de historia","Tipo de informe") || "Historia Clínica Psiquiátrica";
+}
+
+function descargarWord(){
+    const node=document.getElementById("historia-content");
+    if(!node)return;
+
+    const clone=node.cloneNode(true);
+
+    clone.querySelectorAll('[style*="display: none"]').forEach(el=>el.remove());
+
+    const css=`
+        body{font-family:'Times New Roman',serif;font-size:10pt;color:#000;margin:0;line-height:1.18}
+        .header{display:flex;align-items:center;margin-bottom:8pt}
+        .logo-space{width:120pt;height:70pt}
+        .logo-space img{max-width:100%;max-height:100%}
+        .header-info{flex:1;text-align:center}
+        .header-info h2{font-size:11pt;margin:0}
+        .header-info h3{font-size:10pt;margin:2pt 0}
+        .doctor-line{font-size:9.5pt;font-weight:bold}
+        .header-divider{border-bottom:1pt solid #000;margin:4pt 0}
+        .address-line,.contact-line{font-size:8pt}
+        .patient-grid{display:table;width:100%}
+        .patient-grid .field{display:table-cell;padding:2pt}
+        .document-title{text-align:center;font-size:13pt;font-weight:bold;text-decoration:underline;margin:8pt 0 12pt}
+        .section{margin-bottom:10pt;break-inside:avoid}
+        .section-title{font-size:10.5pt;font-weight:bold;text-transform:uppercase;border-bottom:1pt solid #000;padding-bottom:2pt;margin-bottom:5pt}
+        .subsection{margin-bottom:7pt;break-inside:avoid}
+        .subsection-title{font-size:10pt;font-weight:bold;margin-bottom:3pt}
+        .field-block{margin:3pt 0;line-height:1.2}
+        .field-label{font-weight:bold}
+        .inline-grid{width:100%}
+        .vitals,.data-table{width:100%;border-collapse:collapse;margin-top:4pt;font-size:8.5pt}
+        .vitals th,.vitals td,.data-table th,.data-table td{border:1pt solid #999;padding:3pt;vertical-align:top}
+        .vitals th,.data-table th{background:#f4f4f4;font-weight:bold}
+    `;
+
+    const html=`
+        <html xmlns:o="urn:schemas-microsoft-com:office:office"
+              xmlns:w="urn:schemas-microsoft-com:office:word"
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="utf-8">
+            <style>${css}</style>
+        </head>
+        <body>${clone.outerHTML}</body>
+        </html>`;
+
+    const paciente=valor(obtenerParametros(),"Nombre y Apellido") || "Paciente";
+    const blob=new Blob(["\ufeff",html],{type:"application/msword"});
+    const url=URL.createObjectURL(blob);
+
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=`Historia_Clinica_${paciente.replace(/\s+/g,"_")}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+}
+
+window.addEventListener("DOMContentLoaded",cargarDatos);
+</script>
+
+</body>
+</html>
