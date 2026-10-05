@@ -1,802 +1,577 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Informe de Ecosonograma Urológico</title>
+  <style>
+    @page {
+      size: letter portrait;
+      margin: 0;
+    }
 
-    <title>Historia Clínica Psiquiátrica</title>
+    * {
+      box-sizing: border-box;
+    }
 
-    <style>
-        :root {
-            --p: #1f5f86;
-            --pd: #174967;
-            --a: #6fa7c6;
-            --b: #cfdde5;
-            --m: #6c7a83;
-            --bg: #eef5f8;
-        }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #2c3e50;
+      background-color: #e2e8f0;
+      margin: 0;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 10pt;
+      line-height: 1.35;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    /* BOTÓN DE IMPRESIÓN / DESCARGA PDF */
+    .no-print-container {
+      width: 215.9mm;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
 
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            background: #e9eef1;
-            color: #26343d;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 11.5px;
-            line-height: 1.4;
-        }
+    .btn-print {
+      background-color: #1a365d;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      font-size: 9.5pt;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      transition: background-color 0.2s ease;
+    }
 
-        body {
-            padding: 18px;
-        }
+    .btn-print:hover {
+      background-color: #2b6cb0;
+    }
 
-        .doc {
-            width: 210mm;
-            min-height: 297mm;
-            margin: auto;
-            background: #fff;
-            padding: 14mm 14mm 25mm;
-            box-shadow: 0 2px 14px #0002;
-            position: relative;
-        }
+    /* CONTENEDOR TAMAÑO CARTA FIJO */
+    .page-sheet {
+      width: 215.9mm;
+      height: 279.4mm;
+      background-color: #ffffff;
+      padding: 15mm 18mm;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
 
-        /* =====================================================
-           ENCABEZADO
-        ===================================================== */
+    /* ENCABEZADO CON LOGO DINÁMICO */
+    .header-container {
+      border-bottom: 2pt solid #1a365d;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .header {
-            display: flex;
-            gap: 13px;
-            align-items: center;
-            border-bottom: 2px solid var(--p);
-            padding-bottom: 9px;
-            margin-bottom: 11px;
-        }
+    .header-text {
+      flex: 1;
+    }
 
-        .logo {
-            width: 70px;
-            height: 70px;
-            flex: 0 0 70px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: #f8fbfc;
-        }
+    .clinic-logo {
+      max-height: 95px;
+      max-width: 220px;
+      object-fit: contain;
+      margin-left: 15px;
+    }
 
-        .logo img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
+    .clinic-title {
+      font-size: 15pt;
+      font-weight: 800;
+      color: #1a365d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 2px 0;
+    }
 
-        .hm {
-            flex: 1;
-        }
+    .clinic-subtitle {
+      font-size: 8.5pt;
+      color: #4a5568;
+      margin: 0;
+      line-height: 1.35;
+    }
 
-        .title {
-            font-size: 19px;
-            font-weight: 700;
-            color: var(--pd);
-            margin: 0 0 2px;
-        }
+    /* FICHA PACIENTE */
+    .patient-card {
+      background-color: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
 
-        .sub {
-            font-size: 10.5px;
-            color: var(--m);
-            margin-bottom: 5px;
-        }
+    .patient-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1fr;
+      gap: 8px 14px;
+    }
 
-        .docline {
-            font-size: 10.5px;
-        }
+    .data-item {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .docline strong {
-            color: var(--pd);
-        }
+    .data-label {
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #718096;
+    }
 
-        /* =====================================================
-           DATOS DEL PACIENTE
-        ===================================================== */
+    .data-value {
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: #1a202c;
+      min-height: 14px;
+    }
 
-        .patient {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1.2fr 1fr 1.5fr;
-            border: 1px solid var(--b);
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 11px;
-        }
+    /* TÍTULO DEL INFORME DEBAJO DE PACIENTE */
+    .doc-title-container {
+      text-align: center;
+      margin: 10px 0 16px 0;
+    }
 
-        .pi {
-            padding: 6px 8px;
-            border-right: 1px solid var(--b);
-            min-width: 0;
-        }
+    .doc-title {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #1a365d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #cbd5e0;
+      display: inline-block;
+      padding-bottom: 2px;
+    }
 
-        .pi:last-child {
-            border: 0;
-        }
+    /* EQUIPO UTILIZADO */
+    .equipment-box {
+      font-size: 9pt;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      background-color: #edf2f7;
+      border-left: 3px solid #3182ce;
+      color: #2d3748;
+    }
 
-        .lab {
-            display: block;
-            font-size: 8.5px;
-            color: var(--m);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+    /* BLOQUES DE ÓRGANOS */
+    .organ-block {
+      margin-bottom: 16px;
+      text-align: justify;
+      font-size: 9.5pt;
+    }
 
-        .val {
-            font-weight: 600;
-            word-break: break-word;
-        }
+    .organ-name {
+      font-weight: 700;
+      color: #1a365d;
+    }
 
-        /* =====================================================
-           SECCIONES
-        ===================================================== */
+    .mark {
+      font-weight: 800;
+      font-family: monospace;
+      color: #1a365d;
+      padding: 0 1px;
+    }
 
-        .sec {
-            margin: 11px 0;
-        }
+    .val {
+      font-weight: 700;
+      color: #2d3748;
+      border-bottom: 1px dotted #a0aec0;
+      padding: 0 3px;
+    }
 
-        .st {
-            background: var(--p);
-            color: white;
-            font-weight: 700;
-            padding: 6px 8px;
-            border-radius: 5px;
-            margin-bottom: 6px;
-            font-size: 11.5px;
-            break-after: avoid;
-        }
+    .desc-box {
+      margin-top: 6px;
+      padding-left: 10px;
+      border-left: 2px solid #cbd5e0;
+      font-style: italic;
+      color: #4a5568;
+    }
 
-        .sst {
-            color: var(--pd);
-            font-weight: 700;
-            font-size: 10.5px;
-            border-bottom: 1px solid var(--b);
-            padding: 5px 0 3px;
-            margin: 8px 0 5px;
-            break-after: avoid;
-        }
+    /* IMPRESIÓN DIAGNÓSTICA */
+    .diagnostic-container {
+      margin-top: 14px;
+      background-color: #f7fafc;
+      border: 1px solid #cbd5e0;
+      border-radius: 5px;
+      padding: 10px 12px;
+      flex-grow: 1;
+    }
 
-        /* =====================================================
-           CAMPOS
-        ===================================================== */
+    .diagnostic-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #1a365d;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 5px 9px;
-        }
+    .diagnostic-content {
+      font-size: 9.5pt;
+      color: #2d3748;
+      white-space: pre-line;
+    }
 
-        .f {
-            border: 1px solid var(--b);
-            border-radius: 5px;
-            padding: 4px 7px;
-            break-inside: avoid;
-            min-width: 0;
-            text-align: left;
-        }
+    /* FIRMA Y PIE DE PÁGINA */
+    .footer-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
 
-        .f.full {
-            grid-column: 1 / -1;
-        }
+    .doctor-signature {
+      text-align: center;
+      width: 220px;
+    }
 
-        .fl {
-            display: block;
-            color: var(--m);
-            font-size: 8.5px;
-            font-weight: 700;
-            margin-bottom: 2px;
-            text-align: left;
-        }
+    .signature-line {
+      border-top: 1px solid #718096;
+      margin-bottom: 4px;
+    }
 
-        .fv {
-            white-space: pre-wrap;
-            word-break: break-word;
-            text-align: left;
-            line-height: 1.3;
-        }
+    .doctor-name {
+      font-weight: 700;
+      font-size: 9.5pt;
+      color: #1a365d;
+    }
 
-        /* =====================================================
-           EXAMEN MENTAL
-        ===================================================== */
+    .doctor-spec {
+      font-size: 8pt;
+      color: #718096;
+    }
 
-        .mental {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px 9px;
-        }
-
-        .mi {
-            border-left: 3px solid var(--a);
-            padding: 4px 7px;
-            background: #f7fafb;
-            break-inside: avoid;
-        }
-
-        .mil {
-            font-size: 8.5px;
-            font-weight: 700;
-            color: var(--pd);
-        }
-
-        .miv {
-            white-space: pre-wrap;
-            word-break: break-word;
-            margin-top: 2px;
-            text-align: left;
-        }
-
-        /* =====================================================
-           FÓRMULA OBSTÉTRICA
-        ===================================================== */
-
-        .formula {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-
-        .mini {
-            border: 1px solid var(--b);
-            border-radius: 4px;
-            padding: 4px 9px;
-            text-align: center;
-            min-width: 42px;
-        }
-
-        .mini .fl {
-            margin: 0;
-        }
-
-        .mini .fv {
-            font-weight: 700;
-        }
-
-        /* =====================================================
-           TABLAS
-        ===================================================== */
-
-        .tbl {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 4px 0 8px;
-            font-size: 10.5px;
-            background: #fff;
-        }
-
-        .tbl th {
-            background: var(--p);
-            color: #fff;
-            font-weight: 700;
-            padding: 5px 8px;
-            border: 1px solid var(--b);
-            text-align: left;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .tbl td {
-            padding: 5px 8px;
-            border: 1px solid var(--b);
-            color: #26343d;
-            word-break: break-word;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .tbl tr:nth-child(even) {
-            background: #f8fbfc;
-        }
-
-        /* =====================================================
-           FOOTER
-        ===================================================== */
-
-        .footer {
-            position: fixed;
-            left: 14mm;
-            right: 14mm;
-            bottom: 6mm;
-            border-top: 1px solid var(--b);
-            padding-top: 4px;
-            text-align: center;
-            color: var(--m);
-            font-size: 8px;
-            background: #fff;
-        }
-
-        .footer span:not(:last-child)::after {
-            content: ' • ';
-            margin: 0 5px;
-        }
-
-        /* =====================================================
-           BOTONES
-        ===================================================== */
-
-        .buttons {
-            position: fixed;
-            right: 12px;
-            top: 12px;
-            z-index: 20;
-        }
-
-        button {
-            border: 0;
-            border-radius: 6px;
-            background: var(--p);
-            color: white;
-            padding: 8px 10px;
-            cursor: pointer;
-            font-size: 10px;
-        }
-
-        .empty {
-            text-align: center;
-            color: var(--m);
-            padding: 30px;
-        }
-
-        /* =====================================================
-           IMPRESIÓN
-        ===================================================== */
-
-        @page {
-            size: A4;
-            margin: 12mm 14mm 17mm;
-        }
-
-        @media print {
-
-            html,
-            body {
-                background: #fff;
-                padding: 0;
-            }
-
-            .doc {
-                width: auto;
-                min-height: 0;
-                margin: 0;
-                padding: 0 0 17mm;
-                box-shadow: none;
-            }
-
-            .buttons {
-                display: none;
-            }
-
-            .footer {
-                position: fixed;
-                bottom: 4mm;
-                left: 14mm;
-                right: 14mm;
-            }
-
-            .st {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .f,
-            .mi,
-            .pi,
-            .tbl {
-                break-inside: avoid;
-            }
-        }
-    </style>
+    @media print {
+      .no-print-container {
+        display: none !important;
+      }
+      body {
+        background-color: #ffffff;
+        padding: 0;
+      }
+      .page-sheet {
+        box-shadow: none;
+        width: 100%;
+        height: 100vh;
+        padding: 10mm 15mm;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-    <div class="buttons">
-        <button onclick="window.print()">Imprimir / PDF</button>
+  <!-- BOTÓN PARA DESCARGAR EN PDF / IMPRIMIR -->
+  <div class="no-print-container">
+    <button class="btn-print" onclick="window.print();">
+      🖨️ Imprimir / Guardar como PDF
+    </button>
+  </div>
+
+  <div class="page-sheet">
+    <div>
+      <!-- ENCABEZADO CENTRO MÉDICO DINÁMICO Y LOGO -->
+      <div class="header-container">
+        <div class="header-text">
+          <div class="clinic-title" id="p_titulo">CENTRO MÉDICO</div>
+          <div class="clinic-subtitle" id="p_subtitulo">-</div>
+        </div>
+        <img id="p_logo" class="clinic-logo" src="https://lh3.googleusercontent.com/d/1h_-qvm4EX96JvPaT0Wjx-zAhxkkbvxkQ" alt="Logo Centro Médico" />
+      </div>
+
+      <!-- DATOS PACIENTE -->
+      <div class="patient-card">
+        <div class="patient-grid">
+          <div class="data-item">
+            <span class="data-label">Nombre y Apellido</span>
+            <span class="data-value" id="p_nombre">-</span>
+          </div>
+          <div class="data-item">
+            <span class="data-label">Cédula de Identidad</span>
+            <span class="data-value" id="p_cedula">-</span>
+          </div>
+          <div class="data-item">
+            <span class="data-label">Edad</span>
+            <span class="data-value" id="p_edad_sexo">-</span>
+          </div>
+          <div class="data-item">
+            <span class="data-label">Fecha de Consulta</span>
+            <span class="data-value" id="p_fecha">-</span>
+          </div>
+          <div class="data-item">
+            <span class="data-label">Teléfono</span>
+            <span class="data-value" id="p_telefono">-</span>
+          </div>
+          <div class="data-item">
+            <span class="data-label">F. Nacimiento</span>
+            <span class="data-value" id="p_f_nacimiento">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TÍTULO DEL INFORME -->
+      <div class="doc-title-container">
+        <div class="doc-title" id="p_tipo_informe">Ecosonograma Urológico</div>
+      </div>
+
+      <!-- EQUIPO -->
+      <div class="equipment-box">
+        Se realiza U.S. con equipo <strong id="p_equipo">EDAN DUS 3 con transductor convex de 3,5 MHz</strong> mediante cortes sagitales, coronales y axiales observándose:
+      </div>
+
+      <!-- RIÑÓN DERECHO -->
+      <div class="organ-block">
+        <span class="organ-name">Riñón Derecho:</span> 
+        tamaño y configuración regular (<span class="mark" id="rd_reg">&nbsp;&nbsp;</span>), 
+        alterado (<span class="mark" id="rd_alt">&nbsp;&nbsp;</span>), 
+        medidas <span class="val" id="rd_med">____</span> mm. 
+        Ecogenicidad hipo (<span class="mark" id="rd_hipo">&nbsp;&nbsp;</span>) 
+        iso (<span class="mark" id="rd_iso">&nbsp;&nbsp;</span>) 
+        hiper (<span class="mark" id="rd_hiper">&nbsp;&nbsp;</span>). 
+        Parénquima normal (<span class="mark" id="rd_par_norm">&nbsp;&nbsp;</span>) 
+        alterada (<span class="mark" id="rd_par_alt">&nbsp;&nbsp;</span>), 
+        corteza (<span class="mark" id="rd_par_cort">&nbsp;&nbsp;</span>), 
+        no se evidencian alteraciones (<span class="mark" id="rd_par_sin">&nbsp;&nbsp;</span>), 
+        se evidencia LOE (<span class="mark" id="rd_loe">&nbsp;&nbsp;</span>) 
+        litiasis (<span class="mark" id="rd_lit">&nbsp;&nbsp;</span>) 
+        dilatación pielocalicial grado (<span class="mark" id="rd_dil">&nbsp;&nbsp;</span>).
+        <div id="rd_desc_box" class="desc-box" style="display:none;">
+          <strong>Descripción de alteración:</strong> <span id="rd_desc"></span>
+        </div>
+      </div>
+
+      <!-- RIÑÓN IZQUIERDO -->
+      <div class="organ-block">
+        <span class="organ-name">Riñón Izquierdo:</span> 
+        tamaño y configuración regular (<span class="mark" id="ri_reg">&nbsp;&nbsp;</span>), 
+        alterado (<span class="mark" id="ri_alt">&nbsp;&nbsp;</span>), 
+        medidas <span class="val" id="ri_med">____</span> mm. 
+        Ecogenicidad hipo (<span class="mark" id="ri_hipo">&nbsp;&nbsp;</span>) 
+        iso (<span class="mark" id="ri_iso">&nbsp;&nbsp;</span>) 
+        hiper (<span class="mark" id="ri_hiper">&nbsp;&nbsp;</span>). 
+        Parénquima normal (<span class="mark" id="ri_par_norm">&nbsp;&nbsp;</span>) 
+        alterada (<span class="mark" id="ri_par_alt">&nbsp;&nbsp;</span>), 
+        corteza (<span class="mark" id="ri_par_cort">&nbsp;&nbsp;</span>), 
+        no se evidencian alteraciones (<span class="mark" id="ri_par_sin">&nbsp;&nbsp;</span>), 
+        se evidencia LOE (<span class="mark" id="ri_loe">&nbsp;&nbsp;</span>) 
+        litiasis (<span class="mark" id="ri_lit">&nbsp;&nbsp;</span>) 
+        dilatación pielocalicial grado (<span class="mark" id="ri_dil">&nbsp;&nbsp;</span>).
+        <div id="ri_desc_box" class="desc-box" style="display:none;">
+          <strong>Descripción de alteración:</strong> <span id="ri_desc"></span>
+        </div>
+      </div>
+
+      <!-- VEJIGA Y VOLÚMENES -->
+      <div class="organ-block">
+        <span class="organ-name">Vejiga:</span> 
+        plenificada (<span class="mark" id="v_pleni">&nbsp;&nbsp;</span>) 
+        poco plenificada (<span class="mark" id="v_pocop">&nbsp;&nbsp;</span>), 
+        pared <span class="val" id="v_pared">__</span> mm, 
+        sin alteraciones (<span class="mark" id="v_sinalt">&nbsp;&nbsp;</span>), 
+        imagen de LOE en su interior (<span class="mark" id="v_loe">&nbsp;&nbsp;</span>) 
+        litiasis (<span class="mark" id="v_lit">&nbsp;&nbsp;</span>).<br>
+        Vol. Premiccional: <span class="val" id="v_volpre">____</span> cc &nbsp;&nbsp;|&nbsp;&nbsp; 
+        Vol. Postmiccional: <span class="val" id="v_volpost">____</span> cc.
+      </div>
+
+      <!-- IMPRESIÓN DIAGNÓSTICA -->
+      <div class="diagnostic-container">
+        <div class="diagnostic-title">Impresión Diagnóstica</div>
+        <div class="diagnostic-content" id="p_idx">-</div>
+      </div>
     </div>
 
-    <main class="doc">
-
-        <header class="header">
-
-            <div class="logo" id="logo">
-                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" alt="Logo de la Clínica">
-            </div>
-
-            <div class="hm">
-
-                <h1 class="title" id="titulo"></h1>
-
-                <div class="sub" id="subtitulo"></div>
-
-                <div class="docline">
-                    <strong>Médico tratante:</strong>
-                    <span id="medico"></span>
-
-                    &nbsp;|&nbsp;
-
-                    <strong>Especialidad:</strong>
-                    <span id="especialidad"></span>
-                </div>
-
-            </div>
-
-        </header>
-
-        <div class="patient" id="patient"></div>
-
-        <div id="content"></div>
-
-        <div
-            id="empty"
-            class="empty"
-            style="display:none"
-        >
-            No se encontraron datos clínicos para mostrar.
-        </div>
-
-    </main>
-
-    <footer class="footer" id="footer"></footer>
-
-    <script>
-        (() => {
-
-            /* =====================================================
-               PARÁMETROS DE URL
-            ===================================================== */
-
-            const q = new URLSearchParams(location.search);
-
-            const g = k => q.get(k) || '';
-
-            const C = v => String(v ?? '').trim();
-
-            const A = k => {
-                const x = g(k);
-
-                return x === ''
-                    ? []
-                    : x.split('|');
-            };
-
-            const V = (a, i) => C(a[i]);
-
-
-            /* =====================================================
-               ESCAPE HTML Y CONVERSIÓN DE 'X' A 'Si'
-            ===================================================== */
-
-            const E = v => {
-
-                let s = String(v ?? '');
-
-                if (s.trim().toUpperCase() === 'X') {
-                    s = 'Si';
-                }
-
-                return s
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#039;');
-            };
-
-
-            /* =====================================================
-               GENERADORES DE CONTENIDO
-            ===================================================== */
-
-            const F = (l, v, full = false) =>
-                C(v)
-                    ? `
-                        <div class="f ${full ? 'full' : ''}">
-                            <span class="fl">${E(l)}</span>
-                            <div class="fv">${E(v)}</div>
-                        </div>
-                    `
-                    : '';
-
-
-            const M = (l, v) =>
-                C(v)
-                    ? `
-                        <div class="mi">
-                            <div class="mil">${E(l)}</div>
-                            <div class="miv">${E(v)}</div>
-                        </div>
-                    `
-                    : '';
-
-
-            const SS = (t, h) =>
-                h.trim()
-                    ? `
-                        <div class="sst">
-                            ${E(t)}
-                        </div>
-                        ${h}
-                    `
-                    : '';
-
-
-            const SEC = (t, h) =>
-                h.trim()
-                    ? `
-                        <section class="sec">
-
-                            <div class="st">
-                                ${E(t)}
-                            </div>
-
-                            ${h}
-
-                        </section>
-                    `
-                    : '';
-
-
-            /* =====================================================
-               PARSEO DE TABLAS
-            ===================================================== */
-
-            const parseRows = v => {
-
-                if (!C(v)) {
-                    return [];
-                }
-
-                const r = v.split(/\|\||\n|~~/);
-
-                return r
-                    .map(x => x.split('|').map(C))
-                    .filter(x => x.some(Boolean));
-            };
-
-
-            /* =====================================================
-               ENCABEZADO
-            ===================================================== */
-
-            document.getElementById('titulo').textContent =
-                g('Titulo');
-
-            document.getElementById('subtitulo').textContent =
-                g('Subtitulo');
-
-            document.getElementById('medico').textContent =
-                g('Medico+tratante');
-
-            document.getElementById('especialidad').textContent =
-                g('Especialidad+Medica');
-
-
-            /* =====================================================
-               DATOS DEL PACIENTE
-            ===================================================== */
-
-            const pi = [
-                ['Paciente', g('Paciente')],
-                ['Sexo', g('Sexo')],
-                ['Cédula', g('Cedula')],
-                ['Edad', g('Edad')],
-                ['Teléfono', g('Telefono')]
-            ].filter(x => C(x[1]));
-
-
-            document.getElementById('patient').innerHTML =
-                pi
-                    .map(x =>
-                        `
-                            <div class="pi">
-                                <span class="lab">${E(x[0])}</span>
-                                <span class="val">${E(x[1])}</span>
-                            </div>
-                        `
-                    )
-                    .join('');
-
-
-            /* =====================================================
-               ARRAYS PRINCIPALES
-            ===================================================== */
-
-            const p1 = A('P1');
-            const p2 = A('P2');
-            const p3 = A('P3');
-
-            let h = '';
-
-
-            /* =====================================================
-               P1 — MOTIVO DE CONSULTA Y ENFERMEDAD ACTUAL
-            ===================================================== */
-
-            let x =
-                F(
-                    'Motivo de consulta',
-                    V(p1, 0),
-                    true
-                ) +
-
-                F(
-                    'Enfermedad actual',
-                    V(p1, 1),
-                    true
-                );
-
-
-            let v =
-                F('TA', V(p1, 2)) +
-                F('FC', V(p1, 3)) +
-                F('FR', V(p1, 4)) +
-                F('Circunferencia abdominal', V(p1, 5)) +
-                F('Peso', V(p1, 6)) +
-                F('Talla', V(p1, 7)) +
-                F('IMC', V(p1, 8));
-
-
-            if (v) {
-
-                x += SS(
-                    'Constantes vitales y somatometría',
-
-                    `
-                        <div class="grid">
-                            ${v}
-                        </div>
-                    `
-                );
-            }
-
-
-            h += SEC(
-                'Motivo de consulta y enfermedad actual',
-                x
-            );
-
-
-            /* =====================================================
-               P1 — EXAMEN MENTAL ACTUAL
-            ===================================================== */
-
-            let m = '';
-
-
-            m += SS(
-                '1. Aspecto, porte, conación y actitud',
-
-                `
-                    <div class="mental">
-
-                        ${M(
-                            'Aspecto general',
-                            V(p1, 9)
-                        )}
-
-                        ${M(
-                            'Presentación y vestimenta',
-                            V(p1, 10)
-                        )}
-
-                        ${M(
-                            'Actitud ante la entrevista',
-                            V(p1, 11)
-                        )}
-
-                        ${M(
-                            'Conación / Psicomotricidad',
-                            V(p1, 12)
-                        )}
-
-                    </div>
-                `
-            );
-
-
-            m += SS(
-                '2. Conciencia y funciones cognitivas',
-
-                `
-                    <div class="mental">
-
-                        ${M(
-                            'Nivel de conciencia',
-                            V(p1, 13)
-                        )}
-
-                        ${M(
-                            'Orientación',
-                            V(p1, 14)
-                        )}
-
-                        ${M(
-                            'Atención',
-                            V(p1, 15)
-                        )}
-
-                        ${M(
-                            'Concentración',
-                            V(p1, 16)
-                        )}
-
-                        ${M(
-                            'Memoria',
-                            V(p1, 17)
-                        )}
-
-                        ${M(
-                            'Cálculo y abstracción',
-                            V(p1, 18)
-                        )}
-
-                    </div>
-                `
-            );
-
-
-            m += SS(
-                '3. Lenguaje',
-
-                `
-                    <div class="mental">
-
-                        ${M(
-                            'Expresión / Emisión',
-                            V(p1, 19)
-                        )}
-
-                        ${M(
-                            'Comprensión',
-                            V(p1, 20)
-                        )}
-
-                        ${M(
-                            'Velocidad y Ritmo',
-                            V(p1, 21)
-                        )}
-
-                        ${M(
-                            'Alteraciones de la Estructura y Semántica',
-                            V(p1, 22)
-                        )}
-
-                    </div>
-                `
-            );
-
-
-            m += SS(
-                '4. Afecto y estado de ánimo',
-
-                `
-                    <div class="mental">
-
-                        ${M(
-                            'Expresión o Intensidad',
-                            V(p1, 23)
-                        )}
-
-                        ${M(
-                            'Modulación',
-                            V(p1, 24)
-                        )}
-
-                        ${M(
-                            'Resonante',
-                            V(p1, 25)
-                        )}
-
-                    </div>
-             
+    <!-- PIE DE PÁGINA Y FIRMA DEL MÉDICO -->
+    <div class="footer-container">
+      <div style="font-size: 8pt; color: #a0aec0; line-height: 1.3;" id="p_contacto"></div>
+      <div class="doctor-signature">
+        <div class="signature-line"></div>
+        <div class="doctor-name" id="p_firma_medico">Dra. Medico Tratante</div>
+        <div class="doctor-spec" id="p_firma_esp">Especialista / Ecografista</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    function getP(keys) {
+      if (!Array.isArray(keys)) keys = [keys];
+      for (let key of keys) {
+        const target = key.trim().toLowerCase().replace(/[\s_]+/g, '');
+        for (let [paramKey, val] of params.entries()) {
+          let cleanKey = decodeURIComponent(paramKey).replace(/\+/g, ' ').trim().toLowerCase().replace(/[\s_]+/g, '');
+          if (cleanKey === target) {
+            return decodeURIComponent(val).replace(/\+/g, ' ').trim();
+          }
+        }
+      }
+      return '';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      let clean = dateStr.trim();
+      
+      if (clean.includes('/')) {
+        let parts = clean.split('/');
+        if (parts.length === 3) {
+          if (parts[0].length === 4) {
+            return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+          }
+          return `${parts[1].padStart(2, '0')}/${parts[0].padStart(2, '0')}/${parts[2]}`;
+        }
+      }
+      
+      if (clean.includes('-')) {
+        let parts = clean.split('-');
+        if (parts.length === 3) {
+          if (parts[0].length === 4) {
+            return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+          }
+        }
+      }
+      return clean;
+    }
+
+    function checkX(val, expected) {
+      if (!val) return '&nbsp;&nbsp;';
+      const cleanVal = val.toString().trim().toLowerCase();
+      const cleanExp = expected.toString().trim().toLowerCase();
+      return (cleanVal === cleanExp || cleanVal.includes(cleanExp) || cleanVal === 'sí' || cleanVal === 'si' || cleanVal === 'true') ? 'X' : '&nbsp;&nbsp;';
+    }
+
+    let logoUrl = getP(['Logo', 'LogoUrl', 'Imagen', 'Logopng']);
+    if (logoUrl) {
+      document.getElementById('p_logo').src = logoUrl;
+    }
+
+    let tituloVal = getP(['Titulo', 'Título']);
+    if (tituloVal) document.getElementById('p_titulo').innerText = tituloVal;
+
+    let subHeader = getP(['Subtitulo', 'Subtítulo']);
+    let dirHeader = getP(['Direccion', 'Dirección']);
+    let telf1 = getP(['Numero de telefono principal', 'Telefono principal', 'Telefono', 'Teléfono']);
+    let telf2 = getP(['Numero secundario', 'Numero de telefono secundario', 'Telefono secundario', 'Whatsapp', 'Celular']);
+    let correo = getP(['Correo', 'Email']);
+    let redes = getP(['Redes', 'Instagram', 'Facebook']);
+
+    let subLines = [];
+    if (subHeader) subLines.push(subHeader);
+    if (dirHeader) subLines.push(dirHeader);
+
+    let contactParts = [];
+    if (telf1) contactParts.push('Telf: ' + telf1);
+    if (telf2) contactParts.push('Wsp: ' + telf2);
+    if (correo) contactParts.push('Email: ' + correo);
+    if (redes) contactParts.push('Redes: ' + redes);
+
+    if (contactParts.length > 0) {
+      subLines.push(contactParts.join(' | '));
+    }
+
+    if (subLines.length > 0) {
+      document.getElementById('p_subtitulo').innerHTML = subLines.join('<br>');
+    }
+
+    let tipoInforme = getP(['Tipo de informe', 'TipoInforme']);
+    if (tipoInforme) document.getElementById('p_tipo_informe').innerText = tipoInforme;
+
+    document.getElementById('p_nombre').innerText = getP(['Nombre y Apellido', 'Nombre']) || '-';
+    document.getElementById('p_cedula').innerText = getP(['Cedula', 'Cédula']) || '-';
+    
+    let edadVal = getP('Edad');
+    let fnVal = getP(['F / N', 'F/N', 'F_N', 'Fecha de Nacimiento', 'Nacimiento']);
+    
+    document.getElementById('p_edad_sexo').innerText = edadVal ? edadVal + ' años' : '-';
+    document.getElementById('p_fecha').innerText = formatDate(getP('Fecha'));
+    document.getElementById('p_telefono').innerText = getP(['Telefono', 'Teléfono']) || '-';
+    document.getElementById('p_f_nacimiento').innerText = formatDate(fnVal);
+
+    let equipoRaw = getP(['Equipo Utilizado', 'Equipo']);
+    if (equipoRaw) {
+      document.getElementById('p_equipo').innerText = equipoRaw.replace(/^se realiza u\.s\. con equipo/i, '').trim();
+    }
+
+    // RIÑÓN DERECHO
+    document.getElementById('rd_reg').innerHTML = checkX(getP(['Rinon Derecho', 'Rinón Derecho']), 'regular');
+    document.getElementById('rd_alt').innerHTML = checkX(getP(['Rinon Derecho', 'Rinón Derecho']), 'alterado');
+    document.getElementById('rd_med').innerText = getP(['Medidas RD', 'Medidas']) || '____';
+    document.getElementById('rd_hipo').innerHTML = checkX(getP(['Ecogenicidad RD', 'Ecogenicidad']), 'hipo');
+    document.getElementById('rd_iso').innerHTML = checkX(getP(['Ecogenicidad RD', 'Ecogenicidad']), 'iso');
+    document.getElementById('rd_hiper').innerHTML = checkX(getP(['Ecogenicidad RD', 'Ecogenicidad']), 'hiper');
+
+    let parRD = getP(['Parenquima RD', 'Parenquima']);
+    document.getElementById('rd_par_norm').innerHTML = checkX(parRD, 'normal');
+    document.getElementById('rd_par_alt').innerHTML = checkX(parRD, 'alterada');
+    document.getElementById('rd_par_cort').innerHTML = checkX(parRD, 'corteza');
+    document.getElementById('rd_par_sin').innerHTML = checkX(parRD, 'no se evidencian');
+
+    document.getElementById('rd_loe').innerHTML = checkX(getP(['LOE RD', 'LOE']), 'sí');
+    document.getElementById('rd_lit').innerHTML = checkX(getP(['Litiasis RD', 'litiasis']), 'sí');
+    document.getElementById('rd_dil').innerHTML = checkX(getP(['Dilatacion RD', 'dilatacion']), 'sí');
+
+    let descRD = getP(['Descripcion RD', 'Descripcion de alteración', 'Descripción de alteración']);
+    if (descRD) {
+      document.getElementById('rd_desc_box').style.display = 'block';
+      document.getElementById('rd_desc').innerText = descRD;
+    }
+
+    // RIÑÓN IZQUIERDO
+    document.getElementById('ri_reg').innerHTML = checkX(getP(['Rinon Izquierdo', 'Rinón Izquierdo']), 'regular');
+    document.getElementById('ri_alt').innerHTML = checkX(getP(['Rinon Izquierdo', 'Rinón Izquierdo']), 'alterado');
+    document.getElementById('ri_med').innerText = getP(['Medidas RI', 'Medidas']) || '____';
+    document.getElementById('ri_hipo').innerHTML = checkX(getP(['Ecogenicidad RI', 'Ecogenicidad']), 'hipo');
+    document.getElementById('ri_iso').innerHTML = checkX(getP(['Ecogenicidad RI', 'Ecogenicidad']), 'iso');
+    document.getElementById('ri_hiper').innerHTML = checkX(getP(['Ecogenicidad RI', 'Ecogenicidad']), 'hiper');
+
+    let parRI = getP(['Parenquima RI', 'Parenquima']);
+    document.getElementById('ri_par_norm').innerHTML = checkX(parRI, 'normal');
+    document.getElementById('ri_par_alt').innerHTML = checkX(parRI, 'alterada');
+    document.getElementById('ri_par_cort').innerHTML = checkX(parRI, 'corteza');
+    document.getElementById('ri_par_sin').innerHTML = checkX(parRI, 'no se evidencian');
+
+    document.getElementById('ri_loe').innerHTML = checkX(getP(['LOE RI', 'LOE']), 'sí');
+    document.getElementById('ri_lit').innerHTML = checkX(getP(['Litiasis RI', 'litiasis']), 'sí');
+    document.getElementById('ri_dil').innerHTML = checkX(getP(['Dilatacion RI', 'dilatacion']), 'sí');
+
+    let descRI = getP(['Descripcion RI', 'Descripción de alteración', 'Descripcion de alteración']);
+    if (descRI) {
+      document.getElementById('ri_desc_box').style.display = 'block';
+      document.getElementById('ri_desc').innerText = descRI;
+    }
+
+    // VEJIGA Y VOLÚMENES
+    document.getElementById('v_pleni').innerHTML = checkX(getP('Vejiga'), 'plenificada');
+    document.getElementById('v_pocop').innerHTML = checkX(getP('Vejiga'), 'poco plenificada');
+    document.getElementById('v_pared').innerText = getP(['Pared', 'pared']) || '__';
+    document.getElementById('v_sinalt').innerHTML = checkX(getP(['Sin Alteraciones', 'sin alteraciones']), 'sí');
+    document.getElementById('v_loe').innerHTML = checkX(getP(['LOE Vejiga', 'imagen de LOE en su interior']), 'sí');
+    document.getElementById('v_lit').innerHTML = checkX(getP(['Litiasis Vejiga', 'Litiasis']), 'sí');
+    document.getElementById('v_volpre').innerText = getP('Volumen Premiccional') || '____';
+    document.getElementById('v_volpost').innerText = getP('Volumen Postmiccional') || '____';
+
+    // IMPRESIÓN DIAGNÓSTICA
+    document.getElementById('p_idx').innerText = getP(['IDX Impresion Diagnostica', 'Impresion Diagnostica']) || '-';
+
+    if (getP('Medico tratante')) document.getElementById('p_firma_medico').innerText = getP('Medico tratante');
+    if (getP('Especialidad Medica')) document.getElementById('p_firma_esp').innerText = getP('Especialidad Medica');
+
+    let footerParts = [];
+    if (dirHeader) footerParts.push(dirHeader);
+    if (telf1) footerParts.push('Telf: ' + telf1);
+    if (telf2) footerParts.push('Wsp: ' + telf2);
+    document.getElementById('p_contacto').innerHTML = footerParts.join('<br>');
+  </script>
+</body>
+</html>
