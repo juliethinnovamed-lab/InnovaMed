@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -580,4 +579,128 @@
             /* Excepción Primera Vez en Psiquiatría */
             const primeraVez = V(p3, 0).toUpperCase() === 'X';
             if (primeraVez) {
-                const notaPrimeraVez = V(p3, 1) || 'El paciente niega contacto previo con servicios de salud mental o tratamientos psiquiátri
+                const notaPrimeraVez = V(p3, 1) || 'El paciente niega contacto previo con servicios de salud mental o tratamientos psiquiátricos.';
+                ps += `<div class="f full" style="margin-bottom:8px;"><div class="fv">${E(notaPrimeraVez)}</div></div>`;
+            } else if (C(V(p3, 0))) {
+                ps += SS('Primera vez en Psiquiatría', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 0), true)}${F('Nota', V(p3, 1), true)}</div>`);
+            }
+
+            let dx =
+                F('Trastorno Depresivo', V(p3, 2)) +
+                F('Trastorno Bipolar', V(p3, 3)) +
+                F('Trastornos de Ansiedad', V(p3, 4)) +
+                F('TOC o trastornos relacionados', V(p3, 5)) +
+                F('TEPT o trastornos del desarrollo/apego', V(p3, 6), true) +
+                F('Espectro de la esquizofrenia / otros trastornos psicóticos', V(p3, 7), true) +
+                F('TDAH', V(p3, 8)) +
+                F('Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)', V(p3, 9)) +
+                F('Trastornos de la Conducta Alimentaria', V(p3, 10)) +
+                F('Trastorno de la Personalidad', V(p3, 11)) +
+                F('Otro diagnóstico psiquiátrico previo', V(p3, 12), true);
+
+            if (dx) ps += SS('Historial de diagnósticos previos', `<div class="grid">${dx}</div>`);
+
+            let tr =
+                F('Historial de Psicoterapia', V(p3, 13), true) +
+                F('Enfoque', V(p3, 14)) +
+                F('Duración', V(p3, 15)) +
+                F('Apego', V(p3, 16));
+
+            if (tr) ps += SS('Historial de tratamientos anteriores', `<div class="grid">${tr}</div>`);
+
+            let su =
+                F('Historial de Ideación Suicida', V(p3, 17)) +
+                F('Historial de Intentos de Suicidio', V(p3, 18)) +
+                F('Número de intentos previos', V(p3, 19)) +
+                F('Edad / Año del intento más grave', V(p3, 20)) +
+                F('Método(s) utilizado(s)', V(p3, 21), true) +
+                F('¿Requirió hospitalización médica o terapia intensiva?', V(p3, 22), true) +
+                F('Conductas de Autolesión no suicidas', V(p3, 23), true);
+
+            if (su) ps += SS('Intentos de suicidio y conductas de autolesión', `<div class="grid">${su}</div>`);
+
+            let inx =
+                F('Hospitalizaciones Psiquiátricas Previas', V(p3, 24), true) +
+                F('Número total de internamientos', V(p3, 25)) +
+                F('Año y duración del último internamiento', V(p3, 26)) +
+                F('Causa principal', V(p3, 27), true) +
+                F('Tipo de ingreso', V(p3, 28));
+
+            if (inx) ps += SS('Historial de internamientos psiquiátricos', `<div class="grid">${inx}</div>`);
+
+            let bio =
+                F('Terapia Electroconvulsiva (TEC) anterior', V(p3, 29), true) +
+                F('Estimulación Magnética Transcraneal (EMT) anterior', V(p3, 30), true) +
+                F('Otro (tDCS, Ketamina / Esketamina IV o Intranasal)', V(p3, 31), true);
+
+            if (bio) ps += SS('Tratamientos biológicos no farmacológicos', `<div class="grid">${bio}</div>`);
+
+            if (ps) h += SEC('Antecedentes psiquiátricos previos (APP-Psi)', ps);
+
+            /* Heredofamiliares */
+            const rows5 = parseRows(g('P5'));
+            if (rows5.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Diagnóstico / Condición</th><th>Observaciones</th></tr></thead><tbody>';
+                rows5.forEach(r => {
+                    if (r.length === 1) t += `<tr><td colspan="3">${E(r[0])}</td></tr>`;
+                    else if (r.length === 2) t += `<tr><td>${E(r[0])}</td><td>${E(r[1])}</td><td>-</td></tr>`;
+                    else t += `<tr><td>${E(r[0])}</td><td>${E(r[1])}</td><td>${E(r[2] || '')}</td></tr>`;
+                });
+                t += '</tbody></table>';
+                h += SEC('Antecedentes heredofamiliares (AHF)', t);
+            } else {
+                let ah = F('Sin antecedentes familiares de importancia', V(p3, 32), true) + F('Reporte', V(p3, 33), true);
+                if (ah) h += SEC('Antecedentes heredofamiliares (AHF)', `<div class="grid">${ah}</div>`);
+            }
+
+            /* Hábitos Psicobiológicos */
+            let hb = '';
+            hb += SS('Sueño / descanso', `<div class="grid">${F('Horas promedio de sueño nocturno', V(p3, 34))}${F('Calidad del sueño', V(p3, 35))}</div>`);
+            hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p3, 36))}${F('Descripción', V(p3, 37), true)}</div>`);
+            hb += SS('Actividad física', `<div class="grid">${F('Frecuencia semanal', V(p3, 38))}${F('Tipo de ejercicio', V(p3, 39))}</div>`);
+            hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p3, 40))}${F('Supervisión', V(p3, 41))}${F('Contenido de tipo', V(p3, 42), true)}</div>`);
+            hb += SS('Exposición a estresores crónicos ambientales', `<div class="grid">${F('Exposición', V(p3, 43), true)}</div>`);
+            hb += SS('Consumo y dependencia de sustancias', `<div class="grid">${F('No consume', V(p3, 44))}${F('Nota', V(p3, 45), true)}</div>`);
+
+            if (hb) h += SEC('Hábitos psicobiológicos y uso de sustancias', hb);
+
+            /* Conclusiones Diagnósticas */
+            const rows4 = parseRows(g('P4'));
+            if (rows4.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>CIE-11 ID</th><th>Tipo de Diagnóstico</th><th>Gravedad</th><th>Curso / Episodio</th><th>Disfunción Personalidad</th><th>Rasgos Prominentes</th></tr></thead><tbody>';
+                rows4.forEach(r => {
+                    t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td></tr>`;
+                });
+                t += '</tbody></table>';
+                h += SEC('Conclusiones Diagnósticas (CIE-11)', t);
+            }
+
+            /* Historial Tratamientos Anteriores */
+            const rows6 = parseRows(g('P6'));
+            if (rows6.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>Grupo / Psicofármaco</th><th>Tratamiento / Especificación</th><th>Duración</th><th>Dosis</th><th>Observaciones / Causa</th></tr></thead><tbody>';
+                rows6.forEach(r => {
+                    if (r.length === 1) t += `<tr><td colspan="5">${E(r[0])}</td></tr>`;
+                    else t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
+                });
+                t += '</tbody></table>';
+                h += SEC('Historial de Tratamientos Anteriores', t);
+            }
+
+            /* Complementarios */
+            let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
+            if (extra) h = `<section class="sec"><div class="st">Datos personales complementarios</div><div class="grid">${extra}</div></section>` + h;
+
+            document.getElementById('content').innerHTML = h;
+            if (!h.trim()) document.getElementById('empty').style.display = 'block';
+
+            /* Pie de página */
+            const foot = ['Direccion', 'Numero+de+telefono+principal', 'Numero+secundario', 'Whatsapp', 'Redes+sociales', 'Correo+electronico'].map(g).map(C).filter(Boolean);
+            document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
+
+        })();
+    </script>
+
+</body>
+
+</html>
