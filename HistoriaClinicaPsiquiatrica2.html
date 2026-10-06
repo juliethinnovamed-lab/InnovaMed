@@ -1,9 +1,4 @@
-Entendido, el motivo por el cual los demás no funcionaron es porque en los arreglos P2 y P3 las posiciones (índices) estaban desfasadas con respecto a los campos reales de AppSheet.
-Para solucionar esto de forma definitiva y robusta, actualizamos la lógica para que:
- * Transforme las X / x en "Si" en cualquier campo regular automáticamente.
- * Detecte si se marcó la X en Negar APP, AGO Negativos / No Aplica o Primera vez en Psiquiatría, ocultando las casillas individuales y mostrando únicamente el texto descriptivo correspondiente.
- * Optimice la búsqueda en los arreglos (P2 y P3) buscando por coincidencia directa de valores o verificando si las casillas clave contienen la X.
-Aquí tienes el código HTML con las correcciones aplicadas:
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -551,14 +546,19 @@ Aquí tienes el código HTML con las correcciones aplicadas:
 
             if (app) a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${app}</div>`);
 
-            /* BÚSQUEDA DINÁMICA DE AGO EN P2 */
+            /* BÚSQUEDA Y EVALUACIÓN DE AGO EN P2 */
             let ago = '';
-            const idxNegarAGO = p2.findIndex(val => val.toUpperCase() === 'X' && (p2[p2.indexOf(val) + 1] || '').toLowerCase().includes('ginecoobstétricos'));
-            const isNegarAGO = idxNegarAGO !== -1 || V(p2, 43).toUpperCase() === 'X';
+            const valNiegaAGO = V(p2, 43);
+            const isNiegaAGO = valNiegaAGO.toUpperCase() === 'X' || valNiegaAGO.toLowerCase() === 'si';
 
-            if (isNegarAGO) {
-                const textAGO = (idxNegarAGO !== -1 && p2[idxNegarAGO + 1]) ? p2[idxNegarAGO + 1] : (V(p2, 44) || 'Sin antecedentes ginecoobstétricos patológicos');
-                ago = `<div class="f full"><span class="fl">Paciente niega AGO</span><div class="fv">${E(textAGO)}</div></div>`;
+            if (isNiegaAGO) {
+                const notaAGO = V(p2, 44) || 'Paciente niega antecedentes ginecoobstétricos patológicos / No aplica';
+                ago = `
+                    <div class="f full">
+                        <span class="fl">Antecedentes Ginecoobstétricos (AGO)</span>
+                        <div class="fv">${E(notaAGO)}</div>
+                    </div>
+                `;
             } else {
                 let fo = F('G', V(p2, 31)) + F('P', V(p2, 32)) + F('A', V(p2, 33)) + F('C', V(p2, 34));
                 if (fo) ago += `<div class="f full"><span class="fl">Fórmula obstétrica</span><div class="formula">${fo}</div></div>`;
@@ -712,4 +712,4 @@ Aquí tienes el código HTML con las correcciones aplicadas:
 
 </body>
 
-</html>
+</html>SS('Antecedentes médico
