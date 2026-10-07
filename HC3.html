@@ -385,12 +385,10 @@
             const SS = (t, h) => h && h.trim() ? `<div class="sst">${E(t)}</div>${h}` : '';
             const SEC = (t, h) => h && h.trim() ? `<section class="sec"><div class="st">${E(t)}</div>${h}</section>` : '';
 
-            /* Corrección robusta para separar filas hijas de AppSheet (lee saltos de línea reales y separadores) */
+            /* Procesador limpio de filas y columnas para tablas hijas */
             const parseRows = v => {
                 if (!C(v)) return [];
-                return v.split(/\r?\n|~~|\|\|/).map(rowStr => {
-                    return rowStr.split('|').map(C);
-                }).filter(cols => cols.some(Boolean));
+                return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
             };
 
             document.getElementById('titulo').textContent = g('Titulo') || 'HISTORIA CLÍNICA PSIQUIÁTRICA';
@@ -493,16 +491,15 @@
             if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            /* Mapeo Familiar por Filas Independientes */
+            /* Mapeo Familiar (P5) adaptado al formato exacto de AppSheet */
             const rows5 = parseRows(g('P5'));
             if (rows5.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Edad / Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
+                let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Patologías Psiquiátricas, Médicas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
                 rows5.forEach(r => {
                     t += `<tr>
                         <td>${E(r[0] || '')}</td>
                         <td>${E(r[1] || '')}</td>
                         <td>${E(r[2] || '')}</td>
-                        <td>${E(r[3] || '')}</td>
                     </tr>`;
                 });
                 t += '</tbody></table>';
