@@ -8,12 +8,9 @@
 
     <style>
         :root {
-            --p: #174967;
-            --pd: #11354b;
-            --a: #6fa7c6;
-            --b: #bcd0dc;
-            --m: #505c65;
-            --bg: #ffffff;
+            --p: #2b3e50; /* Tonalidad gris-azulada neutra y sobria muy suave */
+            --b: #d0d7de; /* Líneas divisorias muy sutiles y delgadas */
+            --m: #57606a; /* Gris texto secundario */
         }
 
         * {
@@ -23,15 +20,15 @@
         html, body {
             margin: 0;
             padding: 0;
-            background: #e9eef1;
-            color: #26343d;
+            background: #f4f6f8;
+            color: #24292f;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
-            line-height: 1.35;
+            line-height: 1.4;
         }
 
         body {
-            padding: 12px;
+            padding: 15px;
         }
 
         .doc {
@@ -39,30 +36,29 @@
             min-height: 297mm;
             margin: auto;
             background: #fff;
-            padding: 12mm 15mm 20mm;
-            box-shadow: 0 2px 12px #0002;
+            padding: 15mm 15mm 20mm;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
             position: relative;
         }
 
-        /* Estilo de membrete basado en la referencia institucional */
+        /* Membrete limpio, sin fondos azules pesados */
         .header {
             display: flex;
             align-items: center;
             border-bottom: 2px solid var(--p);
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
         .logo {
-            width: 65px;
-            height: 65px;
-            flex: 0 0 65px;
+            width: 60px;
+            height: 60px;
+            flex: 0 0 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: #fff;
         }
 
         .logo img {
@@ -77,44 +73,38 @@
         }
 
         .title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--pd);
+            color: var(--p);
             text-transform: uppercase;
             margin: 0 0 2px;
             letter-spacing: 0.5px;
         }
 
         .sub {
-            font-size: 10.5px;
+            font-size: 10px;
             font-weight: bold;
-            color: var(--pd);
+            color: var(--m);
             margin-bottom: 2px;
         }
 
         .docline {
-            font-size: 9.5px;
+            font-size: 9px;
             color: var(--m);
         }
 
+        /* Datos del paciente con estructura limpia sin bordes externos */
         .patient {
             display: grid;
             grid-template-columns: 2fr 1fr 1.2fr 1fr 1.5fr;
-            border: 1px solid var(--b);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            background: #fdfdfd;
+            border-bottom: 1px solid var(--p);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
         }
 
         .pi {
-            padding: 5px 7px;
-            border-right: 1px solid var(--b);
+            padding: 2px 6px;
             min-width: 0;
-        }
-
-        .pi:last-child {
-            border: 0;
         }
 
         .lab {
@@ -132,46 +122,44 @@
         }
 
         .sec {
-            margin: 10px 0;
+            margin: 12px 0;
         }
 
+        /* Títulos de sección limpios, tipo texto elegante subrayado o con acento sobrio */
         .st {
-            background: var(--p);
-            color: white;
+            color: var(--p);
             font-weight: 700;
-            padding: 5px 8px;
-            border-radius: 3px;
-            margin-bottom: 5px;
+            padding: 4px 0;
+            margin-bottom: 6px;
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid var(--p);
             break-after: avoid;
         }
 
         .sst {
-            color: var(--pd);
+            color: var(--p);
             font-weight: 700;
             font-size: 10px;
-            border-bottom: 1px solid var(--b);
             padding: 4px 0 2px;
-            margin: 6px 0 4px;
+            margin: 6px 0 3px;
             break-after: avoid;
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 4px 8px;
+            gap: 4px 10px;
         }
 
+        /* Celdas de cuadrícula sin recuadros pesados, separadas sutilmente */
         .f {
-            border: 1px solid var(--b);
-            border-radius: 4px;
-            padding: 3px 6px;
+            padding: 3px 2px;
             break-inside: avoid;
             min-width: 0;
             text-align: left;
-            background: #fff;
+            border-bottom: 1px dotted var(--b);
         }
 
         .f.full {
@@ -192,28 +180,26 @@
             white-space: pre-wrap;
             word-break: break-word;
             text-align: left;
-            line-height: 1.3;
-            font-size: 10.5px;
+            line-height: 1.35;
+            font-size: 10px;
         }
 
         .mental {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 5px 8px;
+            gap: 4px 10px;
         }
 
         .mi {
-            border-left: 3px solid var(--a);
-            padding: 3px 6px;
-            background: #f7fafb;
+            padding: 3px 2px;
             break-inside: avoid;
-            border-radius: 0 4px 4px 0;
+            border-bottom: 1px dotted var(--b);
         }
 
         .mil {
             font-size: 8px;
             font-weight: 700;
-            color: var(--pd);
+            color: var(--m);
             text-transform: uppercase;
         }
 
@@ -231,37 +217,34 @@
             flex-wrap: wrap;
         }
 
+        /* Tablas limpias sin rellenos molestos */
         .tbl {
             width: 100%;
             border-collapse: collapse;
-            margin: 4px 0 6px;
+            margin: 4px 0 8px;
             font-size: 10px;
             background: #fff;
         }
 
         .tbl th {
-            background: var(--p);
-            color: #fff;
+            color: var(--p);
             font-weight: 700;
-            padding: 5px 6px;
-            border: 1px solid var(--b);
+            padding: 4px 6px;
+            border-bottom: 2px solid var(--p);
             text-align: left;
             font-size: 9px;
             text-transform: uppercase;
+            background: transparent;
         }
 
         .tbl td {
             padding: 5px 6px;
-            border: 1px solid var(--b);
-            color: #26343d;
+            border-bottom: 1px solid var(--b);
+            color: #24292f;
             word-break: break-word;
             text-align: left;
             vertical-align: top;
             font-size: 10px;
-        }
-
-        .tbl tr:nth-child(even) {
-            background: #f8fbfc;
         }
 
         .footer {
@@ -335,11 +318,6 @@
                 left: 15mm;
                 right: 15mm;
             }
-
-            .st {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
         }
     </style>
 </head>
@@ -352,7 +330,7 @@
 
     <main class="doc">
 
-        <!-- Membresía Estilizada -->
+        <!-- Membrete minimalista -->
         <header class="header">
             <div class="logo" id="logo">
                 <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" alt="Logo">
@@ -473,14 +451,12 @@
             if (per) a += SS('Perinatales y desarrollo (menores de 18 años)', `<div class="grid">${per}</div>`);
 
             // CONDICIONAL: Negar APP
-            let app = '';
             const idxNegarAPP = p2.findIndex(val => val.toUpperCase() === 'X' && (p2[p2.indexOf(val) + 1] || '').toLowerCase().includes('antecedentes'));
             const isNegarAPP = idxNegarAPP !== -1 || V(p2, 26).toUpperCase() === 'X';
 
             if (isNegarAPP) {
                 const textAPP = (idxNegarAPP !== -1 && p2[idxNegarAPP + 1]) ? p2[idxNegarAPP + 1] : 'Paciente niega APP';
-                app = `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`;
-                a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${app}</div>`);
+                a += SS('Antecedentes médicos patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
             } else {
                 let appVals = F('Traumatismo Craneoencefálico (TCE)', V(p2, 13)) + F('Pérdida de conciencia', V(p2, 14)) + F('Duración', V(p2, 15)) + F('Epilepsia / Crisis convulsivas', V(p2, 16)) + F('Endocrinos / Metabólicos', V(p2, 17)) + F('Cardiovasculares', V(p2, 18)) + F('Renales y Hepáticos', V(p2, 19)) + F('Tipo de Cirugía / causa', V(p2, 20)) + F('Año', V(p2, 21)) + F('Cirugía Bariátrica', V(p2, 22)) + F('Delirium postoperatorio previo', V(p2, 23)) + F('Alergias a medicamentos generales', V(p2, 24), true) + F('Reacciones graves a psicofármacos previos', V(p2, 25), true);
                 if (appVals) a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${appVals}</div>`);
@@ -583,7 +559,7 @@
             document.getElementById('content').innerHTML = h;
             if (!h.trim()) document.getElementById('empty').style.display = 'block';
 
-            /* Pie de página con datos institucionales dinámicos */
+            /* Pie de página dinámico */
             const foot = ['Direccion', 'Numero+de+telefono+principal', 'Numero+secundario', 'Whatsapp', 'Redes+sociales', 'Correo+electronico'].map(g).map(C).filter(Boolean);
             document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
         })();
