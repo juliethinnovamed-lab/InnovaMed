@@ -8,9 +8,9 @@
 
     <style>
         :root {
-            --p: #2b3e50; /* Tonalidad gris-azulada neutra y sobria muy suave */
-            --b: #d0d7de; /* Líneas divisorias muy sutiles y delgadas */
-            --m: #57606a; /* Gris texto secundario */
+            --p: #2b3e50;
+            --b: #d0d7de;
+            --m: #57606a;
         }
 
         * {
@@ -41,7 +41,6 @@
             position: relative;
         }
 
-        /* Membrete limpio, sin fondos azules pesados */
         .header {
             display: flex;
             align-items: center;
@@ -93,7 +92,6 @@
             color: var(--m);
         }
 
-        /* Datos del paciente con estructura limpia sin bordes externos */
         .patient {
             display: grid;
             grid-template-columns: 2fr 1fr 1.2fr 1fr 1.5fr;
@@ -125,7 +123,6 @@
             margin: 12px 0;
         }
 
-        /* Títulos de sección limpios, tipo texto elegante subrayado o con acento sobrio */
         .st {
             color: var(--p);
             font-weight: 700;
@@ -153,7 +150,6 @@
             gap: 4px 10px;
         }
 
-        /* Celdas de cuadrícula sin recuadros pesados, separadas sutilmente */
         .f {
             padding: 3px 2px;
             break-inside: avoid;
@@ -217,7 +213,6 @@
             flex-wrap: wrap;
         }
 
-        /* Tablas limpias sin rellenos molestos */
         .tbl {
             width: 100%;
             border-collapse: collapse;
@@ -238,7 +233,7 @@
         }
 
         .tbl td {
-            padding: 5px 6px;
+            padding: 6px;
             border-bottom: 1px solid var(--b);
             color: #24292f;
             word-break: break-word;
@@ -330,7 +325,6 @@
 
     <main class="doc">
 
-        <!-- Membrete minimalista -->
         <header class="header">
             <div class="logo" id="logo">
                 <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" alt="Logo">
@@ -391,12 +385,14 @@
             const SS = (t, h) => h && h.trim() ? `<div class="sst">${E(t)}</div>${h}` : '';
             const SEC = (t, h) => h && h.trim() ? `<section class="sec"><div class="st">${E(t)}</div>${h}</section>` : '';
 
+            /* Corrección robusta para separar filas hijas de AppSheet (lee saltos de línea reales y separadores) */
             const parseRows = v => {
                 if (!C(v)) return [];
-                return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
+                return v.split(/\r?\n|~~|\|\|/).map(rowStr => {
+                    return rowStr.split('|').map(C);
+                }).filter(cols => cols.some(Boolean));
             };
 
-            /* Encabezado y Membrete */
             document.getElementById('titulo').textContent = g('Titulo') || 'HISTORIA CLÍNICA PSIQUIÁTRICA';
             document.getElementById('subtitulo').textContent = g('Subtitulo');
             
@@ -406,7 +402,6 @@
             ].filter(Boolean).join(' &nbsp;|&nbsp; ');
             document.getElementById('info-institucion').innerHTML = instInfo;
 
-            /* Datos del Paciente */
             const pi = [
                 ['Paciente', g('Paciente')],
                 ['Sexo', g('Sexo')],
@@ -428,13 +423,11 @@
 
             let h = '';
 
-            /* P1: Motivo y Enfermedad Actual */
             let x = F('Motivo de consulta', V(p1, 0), true) + F('Enfermedad actual', V(p1, 1), true);
             let v = F('TA', V(p1, 2)) + F('FC', V(p1, 3)) + F('FR', V(p1, 4)) + F('Circunferencia abdominal', V(p1, 5)) + F('Peso', V(p1, 6)) + F('Talla', V(p1, 7)) + F('IMC', V(p1, 8));
             if (v) x += SS('Constantes vitales y somatometría', `<div class="grid">${v}</div>`);
             if (x) h += SEC('Motivo de consulta y enfermedad actual', x);
 
-            /* Examen Mental */
             let m = '';
             m += SS('1. Aspecto, porte, conación y actitud', `<div class="mental">${M('Aspecto general', V(p1, 9))}${M('Presentación y vestimenta', V(p1, 10))}${M('Actitud ante la entrevista', V(p1, 11))}${M('Conación / Psicomotricidad', V(p1, 12))}</div>`);
             m += SS('2. Conciencia y funciones cognitivas', `<div class="mental">${M('Nivel de conciencia', V(p1, 13))}${M('Orientación', V(p1, 14))}${M('Atención', V(p1, 15))}${M('Concentración', V(p1, 16))}${M('Memoria', V(p1, 17))}${M('Cálculo y abstracción', V(p1, 18))}</div>`);
@@ -445,12 +438,10 @@
             m += SS('7. Juicio de realidad e introspección (Insight)', `<div class="mental">${M('Juicio de realidad', V(p1, 37))}${M('Introspección (Conciencia de enfermedad)', V(p1, 38))}</div>`);
             if (m) h += SEC('Examen Mental Actual (EMA)', m);
 
-            /* Antecedentes Personales (P2) con regla condicional estricta */
             let a = '';
             let per = F('Producto de embarazo', V(p2, 0)) + F('Semanas de embarazo', V(p2, 1)) + F('Respiró y lloró al nacer', V(p2, 2)) + F('Alimentación', V(p2, 3)) + F('Desarrollo psicomotor', V(p2, 4)) + F('Control postural', V(p2, 5)) + F('Sostener la cabeza', V(p2, 6)) + F('Sentarse sin apoyo y ponerse de pie', V(p2, 7)) + F('Gatear', V(p2, 8)) + F('Caminar', V(p2, 9)) + F('Correr y saltar con uno o ambos pies', V(p2, 10)) + F('Equilibrio', V(p2, 11)) + F('Caminar en línea recta', V(p2, 12));
             if (per) a += SS('Perinatales y desarrollo (menores de 18 años)', `<div class="grid">${per}</div>`);
 
-            // CONDICIONAL: Negar APP
             const idxNegarAPP = p2.findIndex(val => val.toUpperCase() === 'X' && (p2[p2.indexOf(val) + 1] || '').toLowerCase().includes('antecedentes'));
             const isNegarAPP = idxNegarAPP !== -1 || V(p2, 26).toUpperCase() === 'X';
 
@@ -462,7 +453,6 @@
                 if (appVals) a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${appVals}</div>`);
             }
 
-            // CONDICIONAL: Ago Negativos / No aplica
             const valNiegaAGO = V(p2, 43);
             const isNiegaAGO = valNiegaAGO.toUpperCase() === 'X' || valNiegaAGO.toLowerCase() === 'si';
 
@@ -478,10 +468,7 @@
             }
             if (a) h += SEC('Antecedentes personales', a);
 
-            /* Antecedentes Psiquiátricos (P3) */
             let ps = '';
-            
-            // CONDICIONAL: Primera vez en psiquiatría
             const isPrimeraVez = V(p3, 0).toUpperCase() === 'X' || p3.some(val => val.toUpperCase() === 'X' && (p3[p3.indexOf(val) + 1] || '').toLowerCase().includes('primera vez'));
             if (isPrimeraVez) {
                 const textPrimeraVez = V(p3, 1) || 'El paciente niega contacto previo con servicios de salud mental o tratamientos psiquiátricos.';
@@ -506,12 +493,17 @@
             if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            /* Tablas Hijas Expansivas (Mapeo Familiar, Diagnósticos CIE-11 y Tratamientos Anteriores) */
+            /* Mapeo Familiar por Filas Independientes */
             const rows5 = parseRows(g('P5'));
             if (rows5.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Edad / Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
                 rows5.forEach(r => {
-                    t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td></tr>`;
+                    t += `<tr>
+                        <td>${E(r[0] || '')}</td>
+                        <td>${E(r[1] || '')}</td>
+                        <td>${E(r[2] || '')}</td>
+                        <td>${E(r[3] || '')}</td>
+                    </tr>`;
                 });
                 t += '</tbody></table>';
                 h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', t);
@@ -520,7 +512,6 @@
                 if (ah) h += SEC('Antecedentes heredofamiliares (AHF)', `<div class="grid">${ah}</div>`);
             }
 
-            /* Hábitos Psicobiológicos */
             let hb = '';
             hb += SS('Sueño / descanso', `<div class="grid">${F('Horas de sueño', V(p3, 34))}${F('Calidad del sueño', V(p3, 35))}</div>`);
             hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p3, 36))}${F('Descripción', V(p3, 37), true)}</div>`);
@@ -530,7 +521,6 @@
             hb += SS('Sustancias', `<div class="grid">${F('No consume', V(p3, 44))}${F('Nota', V(p3, 45), true)}</div>`);
             if (hb) h += SEC('Hábitos psicobiológicos', hb);
 
-            /* Conclusiones Diagnósticas (CIE-11) */
             const rows4 = parseRows(g('P4'));
             if (rows4.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>Tipo de Diagnóstico</th><th>CIE-11 ID</th><th>Especificador de Gravedad</th><th>Curso / Episodio</th><th>Disfunción</th><th>Rasgos Prominentes</th></tr></thead><tbody>';
@@ -541,7 +531,6 @@
                 h += SEC('Conclusiones Diagnósticas (CIE-11)', t);
             }
 
-            /* Historial Tratamientos Anteriores */
             const rows6 = parseRows(g('P6'));
             if (rows6.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Observaciones</th></tr></thead><tbody>';
@@ -552,14 +541,12 @@
                 h += SEC('Historial de Tratamientos Anteriores', t);
             }
 
-            /* Complementarios */
             let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
             if (extra) h = `<section class="sec"><div class="st">Datos personales complementarios</div><div class="grid">${extra}</div></section>` + h;
 
             document.getElementById('content').innerHTML = h;
             if (!h.trim()) document.getElementById('empty').style.display = 'block';
 
-            /* Pie de página dinámico */
             const foot = ['Direccion', 'Numero+de+telefono+principal', 'Numero+secundario', 'Whatsapp', 'Redes+sociales', 'Correo+electronico'].map(g).map(C).filter(Boolean);
             document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
         })();
