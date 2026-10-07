@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Clínica Psiquiátrica</title>
+
+    <style>
+        :root {
+            --p: #174967;
+            --pd: #11354b;
+            --a: #6fa7c6;
+            --b: #bcd0dc;
+            --m: #505c65;
+            --bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #e9eef1;
+            color: #26343d;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        body {
+            padding: 12px;
+        }
+
+        .doc {
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            background: #fff;
+            padding: 12mm 15mm 20mm;
+            box-shadow: 0 2px 12px #0002;
+            position: relative;
+        }
+
+        /* Estilo de membrete basado en la referencia institucional */
+        .header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--p);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            flex: 0 0 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .hm {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--pd);
+            text-transform: uppercase;
+            margin: 0 0 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .sub {
+            font-size: 10.5px;
+            font-weight: bold;
+            color: var(--pd);
+            margin-bottom: 2px;
+        }
+
+        .docline {
+            font-size: 9.5px;
+            color: var(--m);
+        }
+
+        .patient {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.2fr 1fr 1.5fr;
+            border: 1px solid var(--b);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            background: #fdfdfd;
+        }
+
+        .pi {
+            padding: 5px 7px;
+            border-right: 1px solid var(--b);
+            min-width: 0;
+        }
+
+        .pi:last-child {
+            border: 0;
+        }
+
+        .lab {
+            display: block;
+            font-size: 8px;
+            color: var(--m);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .val {
+            font-weight: 600;
+            word-break: break-word;
+            font-size: 10.5px;
+        }
+
+        .sec {
+            margin: 10px 0;
+        }
+
+        .st {
+            background: var(--p);
+            color: white;
+            font-weight: 700;
+            padding: 5px 8px;
+            border-radius: 3px;
+            margin-bottom: 5px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            break-after: avoid;
+        }
+
+        .sst {
+            color: var(--pd);
+            font-weight: 700;
+            font-size: 10px;
+            border-bottom: 1px solid var(--b);
+            padding: 4px 0 2px;
+            margin: 6px 0 4px;
+            break-after: avoid;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 4px 8px;
+        }
+
+        .f {
+            border: 1px solid var(--b);
+            border-radius: 4px;
+            padding: 3px 6px;
+            break-inside: avoid;
+            min-width: 0;
+            text-align: left;
+            background: #fff;
+        }
+
+        .f.full {
+            grid-column: 1 / -1;
+        }
+
+        .fl {
+            display: block;
+            color: var(--m);
+            font-size: 8px;
+            font-weight: 700;
+            margin-bottom: 1px;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        .fv {
+            white-space: pre-wrap;
+            word-break: break-word;
+            text-align: left;
+            line-height: 1.3;
+            font-size: 10.5px;
+        }
+
+        .mental {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px 8px;
+        }
+
+        .mi {
+            border-left: 3px solid var(--a);
+            padding: 3px 6px;
+            background: #f7fafb;
+            break-inside: avoid;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .mil {
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--pd);
+            text-transform: uppercase;
+        }
+
+        .miv {
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin-top: 1px;
+            text-align: left;
+            font-size: 10px;
+        }
+
+        .formula {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .tbl {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 4px 0 6px;
+            font-size: 10px;
+            background: #fff;
+        }
+
+        .tbl th {
+            background: var(--p);
+            color: #fff;
+            font-weight: 700;
+            padding: 5px 6px;
+            border: 1px solid var(--b);
+            text-align: left;
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+
+        .tbl td {
+            padding: 5px 6px;
+            border: 1px solid var(--b);
+            color: #26343d;
+            word-break: break-word;
+            text-align: left;
+            vertical-align: top;
+            font-size: 10px;
+        }
+
+        .tbl tr:nth-child(even) {
+            background: #f8fbfc;
+        }
+
+        .footer {
+            position: fixed;
+            left: 15mm;
+            right: 15mm;
+            bottom: 6mm;
+            border-top: 1px solid var(--b);
+            padding-top: 4px;
+            text-align: center;
+            color: var(--m);
+            font-size: 8px;
+            background: #fff;
+        }
+
+        .footer span:not(:last-child)::after {
+            content: ' | ';
+            margin: 0 4px;
+        }
+
+        .buttons {
+            position: fixed;
+            right: 12px;
+            top: 12px;
+            z-index: 20;
+        }
+
+        button {
+            border: 0;
+            border-radius: 4px;
+            background: var(--p);
+            color: white;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--m);
+            padding: 20px;
+        }
+
+        @page {
+            size: A4;
+            margin: 10mm 15mm 15mm;
+        }
+
+        @media print {
+            html, body {
+                background: #fff;
+                padding: 0;
+            }
+
+            .doc {
+                width: auto;
+                min-height: 0;
+                margin: 0;
+                padding: 0 0 15mm;
+                box-shadow: none;
+            }
+
+            .buttons {
+                display: none;
+            }
+
+            .footer {
+                position: fixed;
+                bottom: 2mm;
+                left: 15mm;
+                right: 15mm;
+            }
+
+            .st {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="buttons">
+        <button onclick="window.print()">Imprimir / PDF</button>
+    </div>
+
+    <main class="doc">
+
+        <!-- Membresía Estilizada -->
+        <header class="header">
+            <div class="logo" id="logo">
+                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" alt="Logo">
+            </div>
+            <div class="hm">
+                <h1 class="title" id="titulo"></h1>
+                <div class="sub" id="subtitulo"></div>
+                <div class="docline" id="info-institucion"></div>
+            </div>
+        </header>
+
+        <div class="patient" id="patient"></div>
+        <div id="content"></div>
+        <div id="empty" class="empty" style="display:none">No se encontraron datos clínicos para mostrar.</div>
+
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+
+    <script>
+        (() => {
+            const q = new URLSearchParams(location.search);
+
+            const g = k => {
+                if (q.has(k)) return q.get(k) || '';
+                const altKey = k.replace(/\+/g, ' ');
+                if (q.has(altKey)) return q.get(altKey) || '';
+                for (let [key, val] of q.entries()) {
+                    if (key.replace(/\s+/g, '+') === k.replace(/\s+/g, '+')) return val;
+                }
+                return '';
+            };
+
+            const C = v => String(v ?? '').trim();
+            const A = k => { const x = g(k); return x === '' ? [] : x.split('|'); };
+            const V = (a, i) => C(a && a[i] !== undefined ? a[i] : '');
+
+            const FX = v => {
+                const val = C(v);
+                return val.toUpperCase() === 'X' ? 'Sí' : val;
+            };
+
+            const E = v => String(v ?? '')
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+
+            const F = (l, v, full = false) => {
+                const val = FX(v);
+                if (!val) return '';
+                return `<div class="f ${full ? 'full' : ''}">${l ? `<span class="fl">${E(l)}</span>` : ''}<div class="fv">${E(val)}</div></div>`;
+            };
+
+            const M = (l, v) => {
+                const val = FX(v);
+                return val ? `<div class="mi"><div class="mil">${E(l)}</div><div class="miv">${E(val)}</div></div>` : '';
+            };
+
+            const SS = (t, h) => h && h.trim() ? `<div class="sst">${E(t)}</div>${h}` : '';
+            const SEC = (t, h) => h && h.trim() ? `<section class="sec"><div class="st">${E(t)}</div>${h}</section>` : '';
+
+            const parseRows = v => {
+                if (!C(v)) return [];
+                return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
+            };
+
+            /* Encabezado y Membrete */
+            document.getElementById('titulo').textContent = g('Titulo') || 'HISTORIA CLÍNICA PSIQUIÁTRICA';
+            document.getElementById('subtitulo').textContent = g('Subtitulo');
+            
+            const instInfo = [
+                g('Medico+tratante') || g('Medico tratante') ? `<strong>Médico tratante:</strong> ${g('Medico+tratante') || g('Medico tratante')}` : '',
+                g('Especialidad+Medica') || g('Especialidad Medica') ? `<strong>Especialidad:</strong> ${g('Especialidad+Medica') || g('Especialidad Medica')}` : ''
+            ].filter(Boolean).join(' &nbsp;|&nbsp; ');
+            document.getElementById('info-institucion').innerHTML = instInfo;
+
+            /* Datos del Paciente */
+            const pi = [
+                ['Paciente', g('Paciente')],
+                ['Sexo', g('Sexo')],
+                ['Cédula', g('Cedula')],
+                ['Edad', g('Edad')],
+                ['Teléfono', g('Telefono')]
+            ].filter(x => C(x[1]));
+
+            const patientContainer = document.getElementById('patient');
+            if (pi.length > 0) {
+                patientContainer.innerHTML = pi.map(x => `<div class="pi"><span class="lab">${E(x[0])}</span><span class="val">${E(x[1])}</span></div>`).join('');
+            } else {
+                patientContainer.style.display = 'none';
+            }
+
+            const p1 = A('P1');
+            const p2 = A('P2');
+            const p3 = A('P3');
+
+            let h = '';
+
+            /* P1: Motivo y Enfermedad Actual */
+            let x = F('Motivo de consulta', V(p1, 0), true) + F('Enfermedad actual', V(p1, 1), true);
+            let v = F('TA', V(p1, 2)) + F('FC', V(p1, 3)) + F('FR', V(p1, 4)) + F('Circunferencia abdominal', V(p1, 5)) + F('Peso', V(p1, 6)) + F('Talla', V(p1, 7)) + F('IMC', V(p1, 8));
+            if (v) x += SS('Constantes vitales y somatometría', `<div class="grid">${v}</div>`);
+            if (x) h += SEC('Motivo de consulta y enfermedad actual', x);
+
+            /* Examen Mental */
+            let m = '';
+            m += SS('1. Aspecto, porte, conación y actitud', `<div class="mental">${M('Aspecto general', V(p1, 9))}${M('Presentación y vestimenta', V(p1, 10))}${M('Actitud ante la entrevista', V(p1, 11))}${M('Conación / Psicomotricidad', V(p1, 12))}</div>`);
+            m += SS('2. Conciencia y funciones cognitivas', `<div class="mental">${M('Nivel de conciencia', V(p1, 13))}${M('Orientación', V(p1, 14))}${M('Atención', V(p1, 15))}${M('Concentración', V(p1, 16))}${M('Memoria', V(p1, 17))}${M('Cálculo y abstracción', V(p1, 18))}</div>`);
+            m += SS('3. Lenguaje', `<div class="mental">${M('Expresión / Emisión', V(p1, 19))}${M('Comprensión', V(p1, 20))}${M('Velocidad y Ritmo', V(p1, 21))}${M('Alteraciones de la Estructura y Semántica', V(p1, 22))}</div>`);
+            m += SS('4. Afecto y estado de ánimo', `<div class="mental">${M('Expresión o Intensidad', V(p1, 23))}${M('Modulación', V(p1, 24))}${M('Resonante', V(p1, 25))}</div>`);
+            m += SS('5. Pensamiento — curso, forma y contenido', `<div class="mental">${M('Curso / Velocidad', V(p1, 26))}${M('Forma / Lógica', V(p1, 27))}${M('Contenido / Ideación', V(p1, 28))}${M('Ideas sobrevaloradas', V(p1, 29))}${M('Ideas delirantes', V(p1, 30))}${M('Ideas de muerte', V(p1, 31))}${M('Ideación suicida', V(p1, 32))}${M('Ideación suicida activa', V(p1, 33))}${M('Ideas obsesivas / Fóbicas', V(p1, 34))}${M('Ideas de minusvalía / Culpa / Desesperanza', V(p1, 35))}</div>`);
+            m += SS('6. Percepción (Sensopercepción)', `<div class="mental">${M('Alteraciones', V(p1, 36))}</div>`);
+            m += SS('7. Juicio de realidad e introspección (Insight)', `<div class="mental">${M('Juicio de realidad', V(p1, 37))}${M('Introspección (Conciencia de enfermedad)', V(p1, 38))}</div>`);
+            if (m) h += SEC('Examen Mental Actual (EMA)', m);
+
+            /* Antecedentes Personales (P2) con regla condicional estricta */
+            let a = '';
+            let per = F('Producto de embarazo', V(p2, 0)) + F('Semanas de embarazo', V(p2, 1)) + F('Respiró y lloró al nacer', V(p2, 2)) + F('Alimentación', V(p2, 3)) + F('Desarrollo psicomotor', V(p2, 4)) + F('Control postural', V(p2, 5)) + F('Sostener la cabeza', V(p2, 6)) + F('Sentarse sin apoyo y ponerse de pie', V(p2, 7)) + F('Gatear', V(p2, 8)) + F('Caminar', V(p2, 9)) + F('Correr y saltar con uno o ambos pies', V(p2, 10)) + F('Equilibrio', V(p2, 11)) + F('Caminar en línea recta', V(p2, 12));
+            if (per) a += SS('Perinatales y desarrollo (menores de 18 años)', `<div class="grid">${per}</div>`);
+
+            // CONDICIONAL: Negar APP
+            let app = '';
+            const idxNegarAPP = p2.findIndex(val => val.toUpperCase() === 'X' && (p2[p2.indexOf(val) + 1] || '').toLowerCase().includes('antecedentes'));
+            const isNegarAPP = idxNegarAPP !== -1 || V(p2, 26).toUpperCase() === 'X';
+
+            if (isNegarAPP) {
+                const textAPP = (idxNegarAPP !== -1 && p2[idxNegarAPP + 1]) ? p2[idxNegarAPP + 1] : 'Paciente niega APP';
+                app = `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`;
+                a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${app}</div>`);
+            } else {
+                let appVals = F('Traumatismo Craneoencefálico (TCE)', V(p2, 13)) + F('Pérdida de conciencia', V(p2, 14)) + F('Duración', V(p2, 15)) + F('Epilepsia / Crisis convulsivas', V(p2, 16)) + F('Endocrinos / Metabólicos', V(p2, 17)) + F('Cardiovasculares', V(p2, 18)) + F('Renales y Hepáticos', V(p2, 19)) + F('Tipo de Cirugía / causa', V(p2, 20)) + F('Año', V(p2, 21)) + F('Cirugía Bariátrica', V(p2, 22)) + F('Delirium postoperatorio previo', V(p2, 23)) + F('Alergias a medicamentos generales', V(p2, 24), true) + F('Reacciones graves a psicofármacos previos', V(p2, 25), true);
+                if (appVals) a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${appVals}</div>`);
+            }
+
+            // CONDICIONAL: Ago Negativos / No aplica
+            const valNiegaAGO = V(p2, 43);
+            const isNiegaAGO = valNiegaAGO.toUpperCase() === 'X' || valNiegaAGO.toLowerCase() === 'si';
+
+            if (isNiegaAGO) {
+                const notaAGO = V(p2, 44) || 'Paciente niega antecedentes ginecoobstétricos patológicos / No aplica';
+                a += SS('Antecedentes ginecoobstétricos (AGO)', `<div class="f full"><div class="fv">${E(notaAGO)}</div></div>`);
+            } else {
+                let ago = '';
+                let fo = F('G', V(p2, 31)) + F('P', V(p2, 32)) + F('A', V(p2, 33)) + F('C', V(p2, 34));
+                if (fo) ago += `<div class="f full"><span class="fl">Fórmula obstétrica</span><div class="formula">${fo}</div></div>`;
+                ago += F('Menarca', V(p2, 27)) + F('Ciclos menstruales', V(p2, 28)) + F('Duración y frecuencia', V(p2, 29)) + F('FUM', V(p2, 30)) + F('Hijos vivos', V(p2, 35)) + F('Complicaciones obstétricas', V(p2, 36), true) + F('Estado actual', V(p2, 37)) + F('Embarazo actual', V(p2, 38)) + F('Semanas de gestación', V(p2, 39)) + F('Lactancia activa', V(p2, 40)) + F('Anticonceptivos hormonales', V(p2, 41)) + F('Nombre / Tipo', V(p2, 42));
+                if (ago) a += SS('Antecedentes ginecoobstétricos (AGO)', `<div class="grid">${ago}</div>`);
+            }
+            if (a) h += SEC('Antecedentes personales', a);
+
+            /* Antecedentes Psiquiátricos (P3) */
+            let ps = '';
+            
+            // CONDICIONAL: Primera vez en psiquiatría
+            const isPrimeraVez = V(p3, 0).toUpperCase() === 'X' || p3.some(val => val.toUpperCase() === 'X' && (p3[p3.indexOf(val) + 1] || '').toLowerCase().includes('primera vez'));
+            if (isPrimeraVez) {
+                const textPrimeraVez = V(p3, 1) || 'El paciente niega contacto previo con servicios de salud mental o tratamientos psiquiátricos.';
+                ps += `<div class="f full" style="margin-bottom:6px;"><div class="fv">${E(textPrimeraVez)}</div></div>`;
+            } else if (C(V(p3, 0))) {
+                ps += SS('Primera vez en Psiquiatría', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 0), true)}${F('Nota', V(p3, 1), true)}</div>`);
+            }
+
+            let dx = F('Trastorno Depresivo', V(p3, 2)) + F('Trastorno Bipolar', V(p3, 3)) + F('Trastornos de Ansiedad', V(p3, 4)) + F('TOC', V(p3, 5)) + F('TEPT', V(p3, 6), true) + F('Espectro psicótico', V(p3, 7), true) + F('TDAH', V(p3, 8)) + F('Neurodesarrollo', V(p3, 9)) + F('TCA', V(p3, 10)) + F('Personalidad', V(p3, 11)) + F('Otro', V(p3, 12), true);
+            if (dx) ps += SS('Historial de diagnósticos previos', `<div class="grid">${dx}</div>`);
+
+            let tr = F('Psicoterapia', V(p3, 13), true) + F('Enfoque', V(p3, 14)) + F('Duración', V(p3, 15)) + F('Apego', V(p3, 16));
+            if (tr) ps += SS('Historial de tratamientos anteriores', `<div class="grid">${tr}</div>`);
+
+            let su = F('Ideación Suicida', V(p3, 17)) + F('Intentos de Suicidio', V(p3, 18)) + F('Número de intentos', V(p3, 19)) + F('Edad / Año', V(p3, 20)) + F('Método(s)', V(p3, 21), true) + F('Hospitalización', V(p3, 22), true) + F('Autolesión', V(p3, 23), true);
+            if (su) ps += SS('Intentos de suicidio y autolesión', `<div class="grid">${su}</div>`);
+
+            let inx = F('Internamientos previos', V(p3, 24), true) + F('Número total', V(p3, 25)) + F('Último internamiento', V(p3, 26)) + F('Causa principal', V(p3, 27), true) + F('Tipo de ingreso', V(p3, 28));
+            if (inx) ps += SS('Historial de internamientos', `<div class="grid">${inx}</div>`);
+
+            let bio = F('TEC', V(p3, 29), true) + F('EMT', V(p3, 30), true) + F('Otro (tDCS / Ketamina)', V(p3, 31), true);
+            if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
+            if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
+
+            /* Tablas Hijas Expansivas (Mapeo Familiar, Diagnósticos CIE-11 y Tratamientos Anteriores) */
+            const rows5 = parseRows(g('P5'));
+            if (rows5.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Edad / Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
+                rows5.forEach(r => {
+                    t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td></tr>`;
+                });
+                t += '</tbody></table>';
+                h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', t);
+            } else {
+                let ah = F('Sin antecedentes familiares', V(p3, 32), true) + F('Reporte', V(p3, 33), true);
+                if (ah) h += SEC('Antecedentes heredofamiliares (AHF)', `<div class="grid">${ah}</div>`);
+            }
+
+            /* Hábitos Psicobiológicos */
+            let hb = '';
+            hb += SS('Sueño / descanso', `<div class="grid">${F('Horas de sueño', V(p3, 34))}${F('Calidad del sueño', V(p3, 35))}</div>`);
+            hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p3, 36))}${F('Descripción', V(p3, 37), true)}</div>`);
+            hb += SS('Actividad física', `<div class="grid">${F('Frecuencia', V(p3, 38))}${F('Ejercicio', V(p3, 39))}</div>`);
+            hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p3, 40))}${F('Supervisión', V(p3, 41))}${F('Contenido', V(p3, 42), true)}</div>`);
+            hb += SS('Estresores', `<div class="grid">${F('Exposición', V(p3, 43), true)}</div>`);
+            hb += SS('Sustancias', `<div class="grid">${F('No consume', V(p3, 44))}${F('Nota', V(p3, 45), true)}</div>`);
+            if (hb) h += SEC('Hábitos psicobiológicos', hb);
+
+            /* Conclusiones Diagnósticas (CIE-11) */
+            const rows4 = parseRows(g('P4'));
+            if (rows4.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>Tipo de Diagnóstico</th><th>CIE-11 ID</th><th>Especificador de Gravedad</th><th>Curso / Episodio</th><th>Disfunción</th><th>Rasgos Prominentes</th></tr></thead><tbody>';
+                rows4.forEach(r => {
+                    t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td></tr>`;
+                });
+                t += '</tbody></table>';
+                h += SEC('Conclusiones Diagnósticas (CIE-11)', t);
+            }
+
+            /* Historial Tratamientos Anteriores */
+            const rows6 = parseRows(g('P6'));
+            if (rows6.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Observaciones</th></tr></thead><tbody>';
+                rows6.forEach(r => {
+                    t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
+                });
+                t += '</tbody></table>';
+                h += SEC('Historial de Tratamientos Anteriores', t);
+            }
+
+            /* Complementarios */
+            let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
+            if (extra) h = `<section class="sec"><div class="st">Datos personales complementarios</div><div class="grid">${extra}</div></section>` + h;
+
+            document.getElementById('content').innerHTML = h;
+            if (!h.trim()) document.getElementById('empty').style.display = 'block';
+
+            /* Pie de página con datos institucionales dinámicos */
+            const foot = ['Direccion', 'Numero+de+telefono+principal', 'Numero+secundario', 'Whatsapp', 'Redes+sociales', 'Correo+electronico'].map(g).map(C).filter(Boolean);
+            document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
+        })();
+    </script>
+</body>
+</html>
