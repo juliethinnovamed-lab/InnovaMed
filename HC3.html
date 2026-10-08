@@ -242,6 +242,30 @@
             font-size: 10px;
         }
 
+        .tbl-familiar {
+            table-layout: fixed;
+        }
+
+        .tbl-familiar th:nth-child(1),
+        .tbl-familiar td:nth-child(1) {
+            width: 24%;
+        }
+
+        .tbl-familiar th:nth-child(2),
+        .tbl-familiar td:nth-child(2) {
+            width: 51%;
+        }
+
+        .tbl-familiar th:nth-child(3),
+        .tbl-familiar td:nth-child(3) {
+            width: 25%;
+        }
+
+        .tbl-familiar tr {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
         .footer {
             position: fixed;
             left: 15mm;
@@ -390,6 +414,14 @@
                 return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
             };
 
+            const parseFamilyRows = v => {
+                if (!C(v)) return [];
+                return v.split('~~')
+                    .map(row => row.split('|').map(C))
+                    .filter(row => row.some(Boolean))
+                    .map(row => [row[0] || '', row[1] || '', row[2] || '']);
+            };
+
             document.getElementById('titulo').textContent = g('Titulo') || 'HISTORIA CLÍNICA PSIQUIÁTRICA';
             document.getElementById('subtitulo').textContent = g('Subtitulo');
             
@@ -490,16 +522,13 @@
             if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            /* Mapeo Familiar restaurado en formato de tabla limpia y estructurada */
-            const rows5 = parseRows(g('P5'));
+            /* Mapeo Familiar: cada registro hijo se recibe como una fila independiente.
+               Formato P5: parentesco|patologías|observaciones~~parentesco|patologías|observaciones */
+            const rows5 = parseFamilyRows(g('P5'));
             if (rows5.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Patologías Psiquiátricas, Médicas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
+                let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco / Familiar</th><th>Patologías Psiquiátricas, Médicas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
                 rows5.forEach(r => {
-                    t += `<tr>
-                        <td>${E(r[0] || '')}</td>
-                        <td>${E(r[1] || '')}</td>
-                        <td>${E(r[2] || '')}</td>
-                    </tr>`;
+                    t += `<tr><td>${E(r[0])}</td><td>${E(r[1])}</td><td>${E(r[2])}</td></tr>`;
                 });
                 t += '</tbody></table>';
                 h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', t);
