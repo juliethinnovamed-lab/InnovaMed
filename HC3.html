@@ -385,7 +385,7 @@
             const SS = (t, h) => h && h.trim() ? `<div class="sst">${E(t)}</div>${h}` : '';
             const SEC = (t, h) => h && h.trim() ? `<section class="sec"><div class="st">${E(t)}</div>${h}</section>` : '';
 
-            /* Procesador limpio de filas y columnas para tablas hijas */
+            /* Motor exacto para procesar las filas hijas enviadas desde AppSheet */
             const parseRows = v => {
                 if (!C(v)) return [];
                 return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
@@ -491,15 +491,20 @@
             if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            /* Mapeo Familiar (P5) adaptado al formato exacto de AppSheet */
+            /* Mapeo Familiar alineado exactamente al orden de las columnas de AppSheet */
             const rows5 = parseRows(g('P5'));
             if (rows5.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Patologías Psiquiátricas, Médicas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
+                let t = '<table class="tbl"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
                 rows5.forEach(r => {
                     t += `<tr>
                         <td>${E(r[0] || '')}</td>
                         <td>${E(r[1] || '')}</td>
                         <td>${E(r[2] || '')}</td>
+                        <td>${E(r[3] || '')}</td>
+                        <td>${E(r[4] || '')}</td>
+                        <td>${E(r[5] || '')}</td>
+                        <td>${E(r[6] || '')}</td>
+                        <td>${E(r[7] || '')}</td>
                     </tr>`;
                 });
                 t += '</tbody></table>';
