@@ -385,7 +385,6 @@
             const SS = (t, h) => h && h.trim() ? `<div class="sst">${E(t)}</div>${h}` : '';
             const SEC = (t, h) => h && h.trim() ? `<section class="sec"><div class="st">${E(t)}</div>${h}</section>` : '';
 
-            /* Motor exacto para procesar las filas hijas enviadas desde AppSheet */
             const parseRows = v => {
                 if (!C(v)) return [];
                 return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
@@ -491,24 +490,20 @@
             if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            /* Mapeo Familiar alineado exactamente al orden de las columnas de AppSheet */
-            const rows5 = parseRows(g('P5'));
-            if (rows5.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
-                rows5.forEach(r => {
-                    t += `<tr>
-                        <td>${E(r[0] || '')}</td>
-                        <td>${E(r[1] || '')}</td>
-                        <td>${E(r[2] || '')}</td>
-                        <td>${E(r[3] || '')}</td>
-                        <td>${E(r[4] || '')}</td>
-                        <td>${E(r[5] || '')}</td>
-                        <td>${E(r[6] || '')}</td>
-                        <td>${E(r[7] || '')}</td>
-                    </tr>`;
+            /* Mapeo Familiar limpio por bloques (reemplaza las tablas rígidas anteriores) */
+            const p5Val = g('P5');
+            if (C(p5Val)) {
+                const rawFamiliars = p5Val.replace(/^\{|\}$/g, '').split(/,\s*(?=[A-Za-z\u00C0-\u00FF])/);
+                let famHtml = '';
+                rawFamiliars.forEach(fam => {
+                    const cleanFam = fam.trim();
+                    if (cleanFam) {
+                        famHtml += `<div class="f full" style="margin-bottom: 4px;"><div class="fv">${E(cleanFam)}</div></div>`;
+                    }
                 });
-                t += '</tbody></table>';
-                h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', t);
+                if (famHtml) {
+                    h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', `<div class="grid" style="grid-template-columns: 1fr;">${famHtml}</div>`);
+                }
             } else {
                 let ah = F('Sin antecedentes familiares', V(p3, 32), true) + F('Reporte', V(p3, 33), true);
                 if (ah) h += SEC('Antecedentes heredofamiliares (AHF)', `<div class="grid">${ah}</div>`);
