@@ -490,20 +490,19 @@
             if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            /* Mapeo Familiar limpio por bloques (reemplaza las tablas rígidas anteriores) */
-            const p5Val = g('P5');
-            if (C(p5Val)) {
-                const rawFamiliars = p5Val.replace(/^\{|\}$/g, '').split(/,\s*(?=[A-Za-z\u00C0-\u00FF])/);
-                let famHtml = '';
-                rawFamiliars.forEach(fam => {
-                    const cleanFam = fam.trim();
-                    if (cleanFam) {
-                        famHtml += `<div class="f full" style="margin-bottom: 4px;"><div class="fv">${E(cleanFam)}</div></div>`;
-                    }
+            /* Mapeo Familiar restaurado en formato de tabla limpia y estructurada */
+            const rows5 = parseRows(g('P5'));
+            if (rows5.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>Parentesco / Familiar</th><th>Patologías Psiquiátricas, Médicas y Adicciones</th><th>Observaciones</th></tr></thead><tbody>';
+                rows5.forEach(r => {
+                    t += `<tr>
+                        <td>${E(r[0] || '')}</td>
+                        <td>${E(r[1] || '')}</td>
+                        <td>${E(r[2] || '')}</td>
+                    </tr>`;
                 });
-                if (famHtml) {
-                    h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', `<div class="grid" style="grid-template-columns: 1fr;">${famHtml}</div>`);
-                }
+                t += '</tbody></table>';
+                h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', t);
             } else {
                 let ah = F('Sin antecedentes familiares', V(p3, 32), true) + F('Reporte', V(p3, 33), true);
                 if (ah) h += SEC('Antecedentes heredofamiliares (AHF)', `<div class="grid">${ah}</div>`);
