@@ -486,8 +486,8 @@
             const isNiegaAGO = valNiegaAGO.toUpperCase() === 'X' || valNiegaAGO.toLowerCase() === 'si';
 
             if (isNiegaAGO) {
-                const notaAGO = V(p2, 44) || 'Paciente niega antecedentes ginecoobstétricos patológicos / No aplica';
-                a += SS('Antecedentes ginecoobstétricos (AGO)', `<div class="f full"><div class="fv">${E(notaAGO)}</div></div>`);
+                const notaAGO = V(p2, 44);
+                if (notaAGO) a += SS('Paciente niega AGO', `<div class="f full"><div class="fv">${E(notaAGO)}</div></div>`);
             } else {
                 let ago = '';
                 let fo = F('G', V(p2, 31)) + F('P', V(p2, 32)) + F('A', V(p2, 33)) + F('C', V(p2, 34));
@@ -520,7 +520,7 @@
             }
 
             let tr = F('Psicoterapia', V(p3, 13), true) + F('Enfoque', V(p3, 14)) + F('Duración', V(p3, 15)) + F('Apego', V(p3, 16));
-            if (tr) ps += SS('Historial de tratamientos anteriores', `<div class="grid">${tr}</div>`);
+            if (tr) ps += SS('Historial de Psicoterapia', `<div class="grid">${tr}</div>`);
 
             let su = F('Ideación Suicida', V(p3, 17)) + F('Intentos de Suicidio', V(p3, 18)) + F('Número de intentos', V(p3, 19)) + F('Edad / Año', V(p3, 20)) + F('Método(s)', V(p3, 21), true) + F('Hospitalización', V(p3, 22), true) + F('Autolesión', V(p3, 23), true);
             if (su) ps += SS('Intentos de suicidio y autolesión', `<div class="grid">${su}</div>`);
