@@ -528,7 +528,7 @@
                 let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
                 rows5.forEach(r => {
                     t += `<tr>
-                        <td>${E(r[0] || '')}</td>
+                        <td>${E((r[0] || '').replace(/^,\s*/, ''))}</td>
                         <td>${E(r[1] || '')}</td>
                         <td>${E(r[2] || '')}</td>
                         <td>${E(r[3] || '')}</td>
@@ -566,9 +566,9 @@
 
             const rows6 = parseRows(g('P6'));
             if (rows6.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Observaciones</th></tr></thead><tbody>';
+                let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Motivo de Suspensión</th></tr></thead><tbody>';
                 rows6.forEach(r => {
-                    t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
+                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
                 });
                 t += '</tbody></table>';
                 h += SEC('Historial de Tratamientos Anteriores', t);
