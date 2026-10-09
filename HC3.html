@@ -482,11 +482,11 @@
                 if (appVals) a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${appVals}</div>`);
             }
 
-            const valNiegaAGO = V(p2, 43);
-            const isNiegaAGO = valNiegaAGO.toUpperCase() === 'X' || valNiegaAGO.toLowerCase() === 'si';
+            const idxNegarAGO = p2.findIndex((val, i) => i >= 27 && val.trim().toUpperCase() === 'X');
+            const isNiegaAGO = idxNegarAGO !== -1 || V(p2, 43).toLowerCase() === 'si';
 
             if (isNiegaAGO) {
-                const notaAGO = V(p2, 44);
+                const notaAGO = idxNegarAGO !== -1 ? V(p2, idxNegarAGO + 1) : V(p2, 44);
                 if (notaAGO) a += SS('Paciente niega AGO', `<div class="f full"><div class="fv">${E(notaAGO)}</div></div>`);
             } else {
                 let ago = '';
