@@ -506,8 +506,18 @@
                 ps += SS('Primera vez en Psiquiatría', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 0), true)}${F('Nota', V(p3, 1), true)}</div>`);
             }
 
-            let dx = F('Trastorno Depresivo', V(p3, 2)) + F('Trastorno Bipolar', V(p3, 3)) + F('Trastornos de Ansiedad', V(p3, 4)) + F('TOC', V(p3, 5)) + F('TEPT', V(p3, 6), true) + F('Espectro psicótico', V(p3, 7), true) + F('TDAH', V(p3, 8)) + F('Neurodesarrollo', V(p3, 9)) + F('TCA', V(p3, 10)) + F('Personalidad', V(p3, 11)) + F('Otro', V(p3, 12), true);
+            let dx = F('Trastorno Depresivo', V(p3, 2)) + F('Trastorno Bipolar', V(p3, 3)) + F('Trastornos de Ansiedad', V(p3, 4)) + F('TOC', V(p3, 5)) + F('TEPT', V(p3, 6), true) + F('Espectro psicótico', V(p3, 7), true) + F('TDAH', V(p3, 8)) + F('Neurodesarrollo', V(p3, 9)) + F('TCA', V(p3, 10)) + F('Personalidad', V(p3, 11)) + F('Otro diagnóstico psiquiátrico previo', V(p3, 12), true);
             if (dx) ps += SS('Historial de diagnósticos previos', `<div class="grid">${dx}</div>`);
+
+            const rows6 = parseRows(g('P6'));
+            if (rows6.length > 0) {
+                let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Motivo de Suspensión</th></tr></thead><tbody>';
+                rows6.forEach(r => {
+                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
+                });
+                t += '</tbody></table>';
+                ps += SS('Historial de Tratamientos Anteriores', t);
+            }
 
             let tr = F('Psicoterapia', V(p3, 13), true) + F('Enfoque', V(p3, 14)) + F('Duración', V(p3, 15)) + F('Apego', V(p3, 16));
             if (tr) ps += SS('Historial de tratamientos anteriores', `<div class="grid">${tr}</div>`);
@@ -556,22 +566,12 @@
 
             const rows4 = parseRows(g('P4'));
             if (rows4.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Tipo de Diagnóstico</th><th>CIE-11 ID</th><th>Especificador de Gravedad</th><th>Curso / Episodio</th><th>Disfunción</th><th>Rasgos Prominentes</th></tr></thead><tbody>';
+                let t = '<table class="tbl"><thead><tr><th>CIE-11 ID</th><th>Tipo de Diagnóstico</th><th>Especificador de Gravedad</th><th>Especificador de Curso / Episodio</th><th>Severidad de la Disfunción de Personalidad</th><th>Rasgos de Dominio Prominentes</th></tr></thead><tbody>';
                 rows4.forEach(r => {
-                    t += `<tr><td>${E(r[0] || '')}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td></tr>`;
+                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td></tr>`;
                 });
                 t += '</tbody></table>';
                 h += SEC('Conclusiones Diagnósticas (CIE-11)', t);
-            }
-
-            const rows6 = parseRows(g('P6'));
-            if (rows6.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Motivo de Suspensión</th></tr></thead><tbody>';
-                rows6.forEach(r => {
-                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
-                });
-                t += '</tbody></table>';
-                h += SEC('Historial de Tratamientos Anteriores', t);
             }
 
             let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
