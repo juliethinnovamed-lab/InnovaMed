@@ -150,12 +150,28 @@
             gap: 4px 10px;
         }
 
+        /* Contenedor específico para agrupar de 3 en 3 (TCE, Pérdida de Conciencia, Duración) */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 4px 10px;
+            grid-column: 1 / -1;
+            background: #fcfcfc;
+            border: 1px solid var(--b);
+            padding: 4px 6px;
+            border-radius: 3px;
+        }
+
         .f {
             padding: 3px 2px;
             break-inside: avoid;
             min-width: 0;
             text-align: left;
             border-bottom: 1px dotted var(--b);
+        }
+
+        .grid-3 .f {
+            border-bottom: none; /* Sin línea punteada interna para mantenerlo limpio como bloque unido */
         }
 
         .f.full {
@@ -242,7 +258,6 @@
             font-size: 10px;
         }
 
-        /* Estilos exclusivos para la tabla de mapeo familiar */
         .tbl-familiar {
             table-layout: fixed;
             font-size: 8px;
@@ -489,9 +504,16 @@
                 const textAPP = V(p2, 48) || 'Negar APP';
                 a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
             } else {
-                let appVals = F('Traumatismo Craneoencefálico (TCE)', V(p2, 17)) + 
-                              F('Pérdida de conciencia', V(p2, 18)) + 
-                              F('Duración', V(p2, 19)) + 
+                // Bloque agrupado de 3 en 3 para TCE, Pérdida de conciencia y Duración
+                let tceBlock = '';
+                const tceVal = V(p2, 17);
+                const percVal = V(p2, 18);
+                const durVal = V(p2, 19);
+                if (tceVal || percVal || durVal) {
+                    tceBlock = `<div class="grid-3">${F('Traumatismo Craneoencefálico (TCE)', tceVal)}${F('Pérdida de conciencia', percVal)}${F('Duración', durVal)}</div>`;
+                }
+
+                let appVals = tceBlock + 
                               F('Epilepsia / Crisis convulsivas', V(p2, 20)) + 
                               F('Tratamiento Actual', V(p2, 21)) + 
                               F('Notas / Especificar', V(p2, 22)) + 
@@ -572,7 +594,6 @@
             if (bio) ps += SS('e. Tratamientos Biológicos No Farmacológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            /* Mapeo Familiar: una fila por registro y una columna por campo de AppSheet */
             const rows5 = parseRows(g('P5'));
             if (rows5.length > 0) {
                 let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
@@ -591,7 +612,7 @@
                 t += '</tbody></table>';
                 h += SEC('1. Mapeo Dinámico por Familiar', t);
             } else {
-                let ah = F('Sin antecedentes familiares de importancia', V(p3, 52), true) + F('Reporte', V(p3, 53), true);
+                let ah = F('Sin antecedentes familiares de importance', V(p3, 52), true) + F('Reporte', V(p3, 53), true);
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
