@@ -480,45 +480,74 @@
             if (m) h += SEC('Examen Mental Actual (EMA)', m);
 
             let a = '';
-            let per = F('Producto de embarazo', V(p2, 0)) + F('Semanas de embarazo', V(p2, 1)) + F('Respiró y lloró al nacer', V(p2, 2)) + F('Alimentación', V(p2, 3)) + F('Desarrollo psicomotor', V(p2, 4)) + F('Control postural', V(p2, 5)) + F('Sostener la cabeza', V(p2, 6)) + F('Sentarse sin apoyo y ponerse de pie', V(p2, 7)) + F('Gatear', V(p2, 8)) + F('Caminar', V(p2, 9)) + F('Correr y saltar con uno o ambos pies', V(p2, 10)) + F('Equilibrio', V(p2, 11)) + F('Caminar en línea recta', V(p2, 12));
+            let per = F('Producto de embarazo', V(p2, 0)) + F('Semanas de embarazo', V(p2, 1)) + F('Respiró y lloró al nacer', V(p2, 2)) + F('Alimentación', V(p2, 3)) + F('Desarrollo psicomotor', V(p2, 4)) + F('Control postural', V(p2, 5)) + F('Sostener la cabeza', V(p2, 6)) + F('Sentarse sin apoyo y ponerse de pie', V(p2, 7)) + F('Locomoción', V(p2, 8)) + F('Gatear', V(p2, 9)) + F('Caminar', V(p2, 10)) + F('Correr y saltar con uno o ambos pies', V(p2, 11)) + F('Equilibrio', V(p2, 12)) + F('Mantenerse estable de pie o sobre un solo pie', V(p2, 13)) + F('Caminar en línea recta', V(p2, 14));
             if (per) a += SS('Perinatales y desarrollo (menores de 18 años)', `<div class="grid">${per}</div>`);
 
-            const idxNegarAPP = p2.findIndex(val => val.toUpperCase() === 'X' && (p2[p2.indexOf(val) + 1] || '').toLowerCase().includes('antecedentes'));
-            const isNegarAPP = idxNegarAPP !== -1 || V(p2, 26).toUpperCase() === 'X';
+            const isNegarAPP = V(p2, 47).toUpperCase() === 'X';
 
             if (isNegarAPP) {
-                const textAPP = (idxNegarAPP !== -1 && p2[idxNegarAPP + 1]) ? p2[idxNegarAPP + 1] : 'Paciente niega APP';
-                a += SS('Antecedentes médicos patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
+                const textAPP = V(p2, 48) || 'Negar APP';
+                a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
             } else {
-                let appVals = F('Traumatismo Craneoencefálico (TCE)', V(p2, 13)) + F('Pérdida de conciencia', V(p2, 14)) + F('Duración', V(p2, 15)) + F('Epilepsia / Crisis convulsivas', V(p2, 16)) + F('Endocrinos / Metabólicos', V(p2, 17)) + F('Cardiovasculares', V(p2, 18)) + F('Renales y Hepáticos', V(p2, 19)) + F('Tipo de Cirugía / causa', V(p2, 20)) + F('Año', V(p2, 21)) + F('Cirugía Bariátrica', V(p2, 22)) + F('Delirium postoperatorio previo', V(p2, 23)) + F('Alergias a medicamentos generales', V(p2, 24), true) + F('Reacciones graves a psicofármacos previos', V(p2, 25), true);
-                if (appVals) a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${appVals}</div>`);
+                let appVals = F('Traumatismo Craneoencefálico (TCE)', V(p2, 17)) + 
+                              F('Pérdida de conciencia', V(p2, 18)) + 
+                              F('Duración', V(p2, 19)) + 
+                              F('Epilepsia / Crisis convulsivas', V(p2, 20)) + 
+                              F('Tratamiento Actual', V(p2, 21)) + 
+                              F('Notas / Especificar', V(p2, 22)) + 
+                              F('Enfermedad Vascular Cerebral (EVC)', V(p2, 23)) + 
+                              F('Tratamiento Actual (EVC)', V(p2, 24)) + 
+                              F('Notas / Especificar (EVC)', V(p2, 25)) + 
+                              F('Deterioro Cognitivo / Demencia', V(p2, 26)) + 
+                              F('Tratamiento Actual (Demencia)', V(p2, 27)) + 
+                              F('Notas / Especificar (Demencia)', V(p2, 28)) + 
+                              F('Cefaleas crónicas / Migraña', V(p2, 29)) + 
+                              F('Tratamiento Actual (Cefaleas)', V(p2, 30)) + 
+                              F('Notas / Especificar (Cefaleas)', V(p2, 31)) + 
+                              F('Endocrinos / Metabólicos', V(p2, 36)) + 
+                              F('Cardiovasculares', V(p2, 37)) + 
+                              F('Renales y Hepáticos', V(p2, 38)) + 
+                              F('Año', V(p2, 40)) + 
+                              F('Tipo de Cirugía/causa', V(p2, 41)) + 
+                              F('Cirugía Bariátrica', V(p2, 42)) + 
+                              F('Delirium postoperatorio previo', V(p2, 43)) + 
+                              F('Alergias a medicamentos generales', V(p2, 45), true) + 
+                              F('Reacciones graves a psicofármacos previos', V(p2, 46), true);
+                if (appVals) a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="grid">${appVals}</div>`);
             }
 
-            const isNiegaAGO = V(p2, 27).trim().toUpperCase() === 'X';
+            const isNiegaAGO = V(p2, 67).trim().toUpperCase() === 'X';
 
             if (isNiegaAGO) {
-                const notaAGO = V(p2, 44);
+                const notaAGO = V(p2, 68);
                 if (notaAGO) a += SS('Paciente niega AGO', `<div class="f full"><div class="fv">${E(notaAGO)}</div></div>`);
             } else {
                 let ago = '';
-                let fo = F('G', V(p2, 32)) + F('P', V(p2, 33)) + F('A', V(p2, 34)) + F('C', V(p2, 35));
-                if (fo) ago += `<div class="f full"><span class="fl">Fórmula obstétrica</span><div class="formula">${fo}</div></div>`;
-                ago += F('Menarca', V(p2, 28)) + F('Ciclos menstruales', V(p2, 29)) + F('Duración y frecuencia', V(p2, 30)) + F('FUM', V(p2, 31)) + F('Hijos vivos', V(p2, 36)) + F('Complicaciones obstétricas', V(p2, 37), true) + F('Estado actual', V(p2, 38)) + F('Embarazo actual', V(p2, 39)) + F('Semanas de gestación', V(p2, 40)) + F('Lactancia activa', V(p2, 41)) + F('Anticonceptivos hormonales', V(p2, 42)) + F('Nombre / Tipo', V(p2, 43));
+                let fo = F('G', V(p2, 55)) + F('P', V(p2, 56)) + F('A', V(p2, 57)) + F('C', V(p2, 58));
+                if (fo) ago += `<div class="f full"><span class="fl">Fórmula Obstétrica</span><div class="formula">${fo}</div></div>`;
+                ago += F('Menarca', V(p2, 50)) + F('Ciclos menstruales', V(p2, 51)) + F('Duración y frecuencia', V(p2, 52)) + F('FUM', V(p2, 53)) + F('Hijos vivos', V(p2, 59)) + F('Complicaciones obstétricas', V(p2, 60), true) + F('Estado actual', V(p2, 61)) + F('Embarazo actual', V(p2, 62)) + F('Semanas de gestación', V(p2, 63)) + F('Lactancia activa', V(p2, 64)) + F('Anticonceptivos hormonales', V(p2, 65)) + F('Nombre / Tipo', V(p2, 66));
                 if (ago) a += SS('Antecedentes ginecoobstétricos (AGO)', `<div class="grid">${ago}</div>`);
             }
             if (a) h += SEC('Antecedentes personales', a);
 
             let ps = '';
-            const isPrimeraVez = V(p3, 0).toUpperCase() === 'X' || p3.some(val => val.toUpperCase() === 'X' && (p3[p3.indexOf(val) + 1] || '').toLowerCase().includes('primera vez'));
-            if (isPrimeraVez) {
-                const textPrimeraVez = V(p3, 1) || 'El paciente niega contacto previo con servicios de salud mental o tratamientos psiquiátricos.';
-                ps += `<div class="f full" style="margin-bottom:6px;"><div class="fv">${E(textPrimeraVez)}</div></div>`;
-            } else if (C(V(p3, 0))) {
-                ps += SS('Primera vez en Psiquiatría', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 0), true)}${F('Nota', V(p3, 1), true)}</div>`);
+            const isPrimeraVez = V(p3, 1).toUpperCase() === 'X';
+            if (isPrimeraVez || C(V(p3, 1))) {
+                ps += SS('3. Antecedentes psiquiátricos previos (APP-Psi)', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 1))}${F('Nota primera vez', V(p3, 2), true)}</div>`);
             }
 
-            let dx = F('Trastorno Depresivo', V(p3, 2)) + F('Trastorno Bipolar', V(p3, 3)) + F('Trastornos de Ansiedad', V(p3, 4)) + F('TOC', V(p3, 5)) + F('TEPT', V(p3, 6), true) + F('Espectro psicótico', V(p3, 7), true) + F('TDAH', V(p3, 8)) + F('Neurodesarrollo', V(p3, 9)) + F('TCA', V(p3, 10)) + F('Personalidad', V(p3, 11)) + F('Otro diagnóstico psiquiátrico previo', V(p3, 12), true);
-            if (dx) ps += SS('Historial de diagnósticos previos', `<div class="grid">${dx}</div>`);
+            let dx = F('Trastorno Depresivo', V(p3, 4)) + F('Edad / Año diagnóstico', V(p3, 5)) + 
+                     F('Trastorno Bipolar', V(p3, 6)) + F('Edad / Año diagnóstico', V(p3, 7)) + 
+                     F('Trastornos de Ansiedad', V(p3, 8)) + F('Edad / Año diagnóstico', V(p3, 9)) + 
+                     F('TOC', V(p3, 10)) + F('Edad / Año diagnóstico', V(p3, 11)) + 
+                     F('TEPT', V(p3, 12)) + F('Edad / Año diagnóstico', V(p3, 13)) + 
+                     F('Espectro psicótico', V(p3, 14)) + F('Edad / Año diagnóstico', V(p3, 15)) + 
+                     F('TDAH', V(p3, 16)) + F('Edad / Año diagnóstico', V(p3, 17)) + 
+                     F('Neurodesarrollo', V(p3, 18)) + F('Edad / Año diagnóstico', V(p3, 19)) + 
+                     F('TCA', V(p3, 20)) + F('Edad / Año diagnóstico', V(p3, 21)) + 
+                     F('Personalidad', V(p3, 22)) + F('Edad / Año diagnóstico', V(p3, 23)) + 
+                     F('Otro diagnóstico psiquiátrico previo', V(p3, 24), true);
+            if (dx) ps += SS('a. Historial de Diagnósticos Previos', `<div class="grid">${dx}</div>`);
 
             const rows6 = parseRows(g('P6'));
             if (rows6.length > 0) {
@@ -527,20 +556,20 @@
                     t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
                 });
                 t += '</tbody></table>';
-                ps += SS('Historial de Tratamientos Anteriores', t);
+                ps += SS('b. Historial de Tratamientos Anteriores', t);
             }
 
-            let tr = F('Psicoterapia', V(p3, 13), true) + F('Enfoque', V(p3, 14)) + F('Duración', V(p3, 15)) + F('Apego', V(p3, 16));
+            let tr = F('Psicoterapia', V(p3, 26), true) + F('Enfoque', V(p3, 27)) + F('Duración', V(p3, 28)) + F('Apego', V(p3, 29));
             if (tr) ps += SS('Historial de Psicoterapia', `<div class="grid">${tr}</div>`);
 
-            let su = F('Ideación Suicida', V(p3, 17)) + F('Intentos de Suicidio', V(p3, 18)) + F('Número de intentos', V(p3, 19)) + F('Edad / Año', V(p3, 20)) + F('Método(s)', V(p3, 21), true) + F('Hospitalización', V(p3, 22), true) + F('Autolesión', V(p3, 23), true);
-            if (su) ps += SS('Intentos de suicidio y autolesión', `<div class="grid">${su}</div>`);
+            let su = F('Historial de Ideación Suicida', V(p3, 31)) + F('Historial de Intentos de Suicidio', V(p3, 32)) + F('Número de intentos', V(p3, 33)) + F('Edad / Año del intento más grave', V(p3, 34)) + F('Método(s)', V(p3, 35), true) + F('Hospitalización', V(p3, 36), true) + F('Conductas de Autolesión no suicidas', V(p3, 37), true);
+            if (su) ps += SS('c. Intentos de Suicidio y Conductas de Autolesión (Sección Crítica)', `<div class="grid">${su}</div>`);
 
-            let inx = F('Internamientos previos', V(p3, 24), true) + F('Número total', V(p3, 25)) + F('Último internamiento', V(p3, 26)) + F('Causa principal', V(p3, 27), true) + F('Tipo de ingreso', V(p3, 28));
-            if (inx) ps += SS('Historial de internamientos', `<div class="grid">${inx}</div>`);
+            let inx = F('Hospitalizaciones Psiquiátricas Previas', V(p3, 39), true) + F('Número total', V(p3, 40)) + F('Año y duración del último internamiento', V(p3, 41)) + F('Causa principal', V(p3, 42), true) + F('Tipo de ingreso', V(p3, 43));
+            if (inx) ps += SS('d. Historial de Internamientos Psiquiátricos', `<div class="grid">${inx}</div>`);
 
-            let bio = F('TEC', V(p3, 29), true) + F('EMT', V(p3, 30), true) + F('Otro (tDCS / Ketamina)', V(p3, 31), true);
-            if (bio) ps += SS('Tratamientos biológicos', `<div class="grid">${bio}</div>`);
+            let bio = F('TEC', V(p3, 45), true) + F('Especificar TEC', V(p3, 46), true) + F('EMT', V(p3, 47), true) + F('Especificar EMT', V(p3, 48), true) + F('Otro (tDCS / Ketamina)', V(p3, 49), true) + F('Especificar Otro', V(p3, 50), true);
+            if (bio) ps += SS('e. Tratamientos Biológicos No Farmacológicos', `<div class="grid">${bio}</div>`);
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
             /* Mapeo Familiar: una fila por registro y una columna por campo de AppSheet */
@@ -560,24 +589,25 @@
                     </tr>`;
                 });
                 t += '</tbody></table>';
-                h += SEC('Mapeo Familiar y Antecedentes Heredofamiliares', t);
+                h += SEC('1. Mapeo Dinámico por Familiar', t);
             } else {
-                let ah = F('Sin antecedentes familiares', V(p3, 32), true) + F('Reporte', V(p3, 33), true);
-                if (ah) h += SEC('Antecedentes heredofamiliares (AHF)', `<div class="grid">${ah}</div>`);
+                let ah = F('Sin antecedentes familiares de importancia', V(p3, 52), true) + F('Reporte', V(p3, 53), true);
+                if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
             let hb = '';
-            hb += SS('Sueño / descanso', `<div class="grid">${F('Horas de sueño', V(p3, 34))}${F('Calidad del sueño', V(p3, 35))}</div>`);
-            hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p3, 36))}${F('Descripción', V(p3, 37), true)}</div>`);
-            hb += SS('Actividad física', `<div class="grid">${F('Frecuencia', V(p3, 38))}${F('Ejercicio', V(p3, 39))}</div>`);
-            hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p3, 40))}${F('Supervisión', V(p3, 41))}${F('Contenido', V(p3, 42), true)}</div>`);
-            hb += SS('Estresores', `<div class="grid">${F('Exposición', V(p3, 43), true)}</div>`);
-            const noConsumeSustancias = V(p3, 44).trim().toUpperCase() === 'X';
-            const notaSustancias = noConsumeSustancias ? F('Nota', V(p3, 45), true) : '';
-            if (noConsumeSustancias && notaSustancias) {
-                hb += SS('Consumo y dependencia de sustancias', `<div class="grid">${notaSustancias}</div>`);
-            }
-            if (hb) h += SEC('Hábitos psicobiológicos', hb);
+            hb += SS('Sueño / descanso', `<div class="grid">${F('Horas promedio de sueño nocturno', V(p3, 58))}${F('Calidad del sueño', V(p3, 59))}</div>`);
+            hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p3, 61))}${F('Descripción', V(p3, 62), true)}</div>`);
+            hb += SS('Actividad física', `<div class="grid">${F('Frecuencia semanal', V(p3, 64))}${F('Tipo de ejercicio', V(p3, 65))}</div>`);
+            hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p3, 67))}${F('Supervisión', V(p3, 68))}${F('Contenido de tipo', V(p3, 69), true)}</div>`);
+            hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${F('Exposición', V(p3, 70), true)}</div>`);
+            
+            const noConsumeSustancias = V(p3, 72).trim().toUpperCase() === 'X';
+            let sust = F('No consume', V(p3, 72)) + F('Nota', V(p3, 73), true) + 
+                       F('Café / Cafeína', V(p3, 74)) + F('Frecuencia y Cantidad', V(p3, 75)) + F('Impacto clínico percibido', V(p3, 76));
+            if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', `<div class="grid">${sust}</div>`);
+            
+            if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
 
             const rows4 = parseRows(g('P4'));
             if (rows4.length > 0) {
@@ -586,7 +616,7 @@
                     t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td></tr>`;
                 });
                 t += '</tbody></table>';
-                h += SEC('Conclusiones Diagnósticas (CIE-11)', t);
+                h += SEC('CONCLUSIONES DIAGNÓSTICAS (CIE-11)', t);
             }
 
             let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
