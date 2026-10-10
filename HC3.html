@@ -452,6 +452,18 @@
 
             let h = '';
 
+            const datosPersonalesExtra =
+                F('Fecha de ingreso', g('Fecha+Ingreso') || g('Fecha Ingreso')) +
+                F('Fecha de nacimiento', g('F+%2F+N') || g('F+%2F+N') || g('F / N')) +
+                F('Lugar de nacimiento', g('Lugar+de+Nacimiento') || g('Lugar de Nacimiento')) +
+                F('Dirección del paciente', g('Direccion+Paciente') || g('Dirección del paciente')) +
+                F('Estado civil', g('Estado+civil') || g('Estado civil')) +
+                F('Profesión / Ocupación', g('Profesion+%2F+Ocupacion') || g('Profesion / Ocupacion') || g('Profesión / Ocupación')) +
+                F('Contacto de emergencia', g('Contacto+de+emergencia') || g('Contacto de emergencia'), true);
+            if (datosPersonalesExtra) {
+                h += SEC('Datos personales complementarios', `<div class="grid">${datosPersonalesExtra}</div>`);
+            }
+
             let x = F('Motivo de consulta', V(p1, 0), true) + F('Enfermedad actual', V(p1, 1), true);
             let v = F('TA', V(p1, 2)) + F('FC', V(p1, 3)) + F('FR', V(p1, 4)) + F('Circunferencia abdominal', V(p1, 5)) + F('Peso', V(p1, 6)) + F('Talla', V(p1, 7)) + F('IMC', V(p1, 8));
             if (v) x += SS('Constantes vitales y somatometría', `<div class="grid">${v}</div>`);
@@ -560,7 +572,11 @@
             hb += SS('Actividad física', `<div class="grid">${F('Frecuencia', V(p3, 38))}${F('Ejercicio', V(p3, 39))}</div>`);
             hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p3, 40))}${F('Supervisión', V(p3, 41))}${F('Contenido', V(p3, 42), true)}</div>`);
             hb += SS('Estresores', `<div class="grid">${F('Exposición', V(p3, 43), true)}</div>`);
-            hb += SS('Sustancias', `<div class="grid">${F('No consume', V(p3, 44))}${F('Nota', V(p3, 45), true)}</div>`);
+            const noConsumeSustancias = V(p3, 44).trim().toUpperCase() === 'X';
+            const notaSustancias = noConsumeSustancias ? F('Nota', V(p3, 45), true) : '';
+            if (noConsumeSustancias && notaSustancias) {
+                hb += SS('Consumo y dependencia de sustancias', `<div class="grid">${notaSustancias}</div>`);
+            }
             if (hb) h += SEC('Hábitos psicobiológicos', hb);
 
             const rows4 = parseRows(g('P4'));
