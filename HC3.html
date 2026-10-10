@@ -482,17 +482,16 @@
                 if (appVals) a += SS('Antecedentes médicos patológicos (APP)', `<div class="grid">${appVals}</div>`);
             }
 
-            const idxNegarAGO = p2.findIndex((val, i) => i >= 27 && val.trim().toUpperCase() === 'X');
-            const isNiegaAGO = idxNegarAGO !== -1 || V(p2, 43).toLowerCase() === 'si';
+            const isNiegaAGO = V(p2, 27).trim().toUpperCase() === 'X';
 
             if (isNiegaAGO) {
-                const notaAGO = idxNegarAGO !== -1 ? V(p2, idxNegarAGO + 1) : V(p2, 44);
+                const notaAGO = V(p2, 44);
                 if (notaAGO) a += SS('Paciente niega AGO', `<div class="f full"><div class="fv">${E(notaAGO)}</div></div>`);
             } else {
                 let ago = '';
-                let fo = F('G', V(p2, 31)) + F('P', V(p2, 32)) + F('A', V(p2, 33)) + F('C', V(p2, 34));
+                let fo = F('G', V(p2, 32)) + F('P', V(p2, 33)) + F('A', V(p2, 34)) + F('C', V(p2, 35));
                 if (fo) ago += `<div class="f full"><span class="fl">Fórmula obstétrica</span><div class="formula">${fo}</div></div>`;
-                ago += F('Menarca', V(p2, 27)) + F('Ciclos menstruales', V(p2, 28)) + F('Duración y frecuencia', V(p2, 29)) + F('FUM', V(p2, 30)) + F('Hijos vivos', V(p2, 35)) + F('Complicaciones obstétricas', V(p2, 36), true) + F('Estado actual', V(p2, 37)) + F('Embarazo actual', V(p2, 38)) + F('Semanas de gestación', V(p2, 39)) + F('Lactancia activa', V(p2, 40)) + F('Anticonceptivos hormonales', V(p2, 41)) + F('Nombre / Tipo', V(p2, 42));
+                ago += F('Menarca', V(p2, 28)) + F('Ciclos menstruales', V(p2, 29)) + F('Duración y frecuencia', V(p2, 30)) + F('FUM', V(p2, 31)) + F('Hijos vivos', V(p2, 36)) + F('Complicaciones obstétricas', V(p2, 37), true) + F('Estado actual', V(p2, 38)) + F('Embarazo actual', V(p2, 39)) + F('Semanas de gestación', V(p2, 40)) + F('Lactancia activa', V(p2, 41)) + F('Anticonceptivos hormonales', V(p2, 42)) + F('Nombre / Tipo', V(p2, 43));
                 if (ago) a += SS('Antecedentes ginecoobstétricos (AGO)', `<div class="grid">${ago}</div>`);
             }
             if (a) h += SEC('Antecedentes personales', a);
