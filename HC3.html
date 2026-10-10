@@ -453,13 +453,13 @@
             let h = '';
 
             const datosPersonalesExtra =
-                F('Fecha de ingreso', g('Fecha+Ingreso') || g('Fecha Ingreso')) +
-                F('Fecha de nacimiento', g('F+%2F+N') || g('F+%2F+N') || g('F / N')) +
-                F('Lugar de nacimiento', g('Lugar+de+Nacimiento') || g('Lugar de Nacimiento')) +
-                F('Dirección del paciente', g('Direccion+Paciente') || g('Dirección del paciente')) +
-                F('Estado civil', g('Estado+civil') || g('Estado civil')) +
-                F('Profesión / Ocupación', g('Profesion+%2F+Ocupacion') || g('Profesion / Ocupacion') || g('Profesión / Ocupación')) +
-                F('Contacto de emergencia', g('Contacto+de+emergencia') || g('Contacto de emergencia'), true);
+                F('Fecha de ingreso', g('FechaIngreso')) +
+                F('Fecha de nacimiento', g('FechaNacimiento')) +
+                F('Lugar de nacimiento', g('LugarNacimiento')) +
+                F('Dirección del paciente', g('DireccionPaciente')) +
+                F('Estado civil', g('EstadoCivil')) +
+                F('Profesión / Ocupación', g('ProfesionOcupacion')) +
+                F('Contacto de emergencia', g('ContactoEmergencia'), true);
             if (datosPersonalesExtra) {
                 h += SEC('Datos personales complementarios', `<div class="grid">${datosPersonalesExtra}</div>`);
             }
