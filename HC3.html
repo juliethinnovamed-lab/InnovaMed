@@ -150,7 +150,7 @@
             gap: 4px 10px;
         }
 
-        /* Contenedor específico para agrupar de 3 en 3 (TCE, Pérdida de Conciencia, Duración) */
+        /* Contenedor específico para agrupar de 3 en 3 */
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -171,7 +171,7 @@
         }
 
         .grid-3 .f {
-            border-bottom: none; /* Sin línea punteada interna para mantenerlo limpio como bloque unido */
+            border-bottom: none;
         }
 
         .f.full {
@@ -504,28 +504,44 @@
                 const textAPP = V(p2, 48) || 'Negar APP';
                 a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
             } else {
-                // Bloque agrupado de 3 en 3 para TCE, Pérdida de conciencia y Duración
+                // 1. TCE (3 campos)
                 let tceBlock = '';
-                const tceVal = V(p2, 17);
-                const percVal = V(p2, 18);
-                const durVal = V(p2, 19);
-                if (tceVal || percVal || durVal) {
-                    tceBlock = `<div class="grid-3">${F('Traumatismo Craneoencefálico (TCE)', tceVal)}${F('Pérdida de conciencia', percVal)}${F('Duración', durVal)}</div>`;
+                if (V(p2, 17) || V(p2, 18) || V(p2, 19)) {
+                    tceBlock = `<div class="grid-3">${F('Traumatismo Craneoencefálico (TCE)', V(p2, 17))}${F('Pérdida de conciencia', V(p2, 18))}${F('Duración', V(p2, 19))}</div>`;
                 }
 
-                let appVals = tceBlock + 
-                              F('Epilepsia / Crisis convulsivas', V(p2, 20)) + 
-                              F('Tratamiento Actual', V(p2, 21)) + 
-                              F('Notas / Especificar', V(p2, 22)) + 
-                              F('Enfermedad Vascular Cerebral (EVC)', V(p2, 23)) + 
-                              F('Tratamiento Actual (EVC)', V(p2, 24)) + 
-                              F('Notas / Especificar (EVC)', V(p2, 25)) + 
-                              F('Deterioro Cognitivo / Demencia', V(p2, 26)) + 
-                              F('Tratamiento Actual (Demencia)', V(p2, 27)) + 
-                              F('Notas / Especificar (Demencia)', V(p2, 28)) + 
-                              F('Cefaleas crónicas / Migraña', V(p2, 29)) + 
-                              F('Tratamiento Actual (Cefaleas)', V(p2, 30)) + 
-                              F('Notas / Especificar (Cefaleas)', V(p2, 31)) + 
+                // 2. Epilepsia / Crisis convulsivas (3 campos)
+                let epilBlock = '';
+                if (V(p2, 20) || V(p2, 21) || V(p2, 22)) {
+                    epilBlock = `<div class="grid-3">${F('Epilepsia / Crisis convulsivas', V(p2, 20))}${F('Tratamiento Actual', V(p2, 21))}${F('Notas / Especificar', V(p2, 22))}</div>`;
+                }
+
+                // 3. EVC (3 campos)
+                let evcBlock = '';
+                if (V(p2, 23) || V(p2, 24) || V(p2, 25)) {
+                    evcBlock = `<div class="grid-3">${F('Enfermedad Vascular Cerebral (EVC)', V(p2, 23))}${F('Tratamiento Actual', V(p2, 24))}${F('Notas / Especificar', V(p2, 25))}</div>`;
+                }
+
+                // 4. Demencia (3 campos)
+                let demBlock = '';
+                if (V(p2, 26) || V(p2, 27) || V(p2, 28)) {
+                    demBlock = `<div class="grid-3">${F('Deterioro Cognitivo / Demencia', V(p2, 26))}${F('Tratamiento Actual', V(p2, 27))}${F('Notas / Especificar', V(p2, 28))}</div>`;
+                }
+
+                // 5. Cefaleas crónicas / Migraña (3 campos)
+                let cefBlock = '';
+                if (V(p2, 29) || V(p2, 30) || V(p2, 31)) {
+                    cefBlock = `<div class="grid-3">${F('Cefaleas crónicas / Migraña', V(p2, 29))}${F('Tratamiento Actual', V(p2, 30))}${F('Notas / Especificar', V(p2, 31))}</div>`;
+                }
+
+                // 6. Otro trastorno neurológico (3 campos: Otro trastorno neurológico, cual, Tratamiento Actual / Notas) -> aquí tenemos 4 columnas en app (Otro, cual, Tratamiento, Notas), las agrupamos en grid especial o adaptamos
+                let otroNeuBlock = '';
+                if (V(p2, 32) || V(p2, 33) || V(p2, 34) || V(p2, 35)) {
+                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', V(p2, 32))}${F('Cual', V(p2, 33))}${F('Tratamiento Actual', V(p2, 34))}</div>` + 
+                                   (V(p2, 35) ? `<div class="grid">${F('Notas / Especificar', V(p2, 35), true)}</div>` : '');
+                }
+
+                let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock +
                               F('Endocrinos / Metabólicos', V(p2, 36)) + 
                               F('Cardiovasculares', V(p2, 37)) + 
                               F('Renales y Hepáticos', V(p2, 38)) + 
@@ -612,7 +628,7 @@
                 t += '</tbody></table>';
                 h += SEC('1. Mapeo Dinámico por Familiar', t);
             } else {
-                let ah = F('Sin antecedentes familiares de importance', V(p3, 52), true) + F('Reporte', V(p3, 53), true);
+                let ah = F('Sin antecedentes familiares de importancia', V(p3, 52), true) + F('Reporte', V(p3, 53), true);
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
