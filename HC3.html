@@ -162,7 +162,7 @@
             border-radius: 3px;
         }
 
-        /* Contenedor específico para agrupar de 2 en 2 (Diagnósticos Psiquiátricos) */
+        /* Contenedor específico para agrupar de 2 en 2 (Diagnósticos / Tratamientos biológicos) */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -617,7 +617,6 @@
                 }
             });
 
-            // "Otro diagnóstico psiquiátrico previo" abajo fuera del cuadro
             const otroDxVal = V(p3, 24);
             const otroDx = otroDxVal ? F('Otro diagnóstico psiquiátrico previo', otroDxVal, true) : '';
 
@@ -643,14 +642,30 @@
             let inx = F('Hospitalizaciones Psiquiátricas Previas', V(p3, 39), true) + F('Número total', V(p3, 40)) + F('Año y duración del último internamiento', V(p3, 41)) + F('Causa principal', V(p3, 42), true) + F('Tipo de ingreso', V(p3, 43));
             if (inx) ps += SS('d. Historial de Internamientos Psiquiátricos', `<div class="grid">${inx}</div>`);
 
-            let bio = F('TEC', V(p3, 45), true) + F('Especificar TEC', V(p3, 46), true) + F('EMT', V(p3, 47), true) + F('Especificar EMT', V(p3, 48), true) + F('Otro (tDCS / Ketamina)', V(p3, 49), true) + F('Especificar Otro', V(p3, 50), true);
-            if (bio) ps += SS('e. Tratamientos Biológicos No Farmacológicos', `<div class="grid">${bio}</div>`);
+            // TRATAMIENTOS BIOLÓGICOS NO FARMACOLÓGICOS (DE 2 EN 2)
+            const bioPairs = [
+                ['Terapia Electroconvulsiva (TEC) anterior', 45, 46],
+                ['Estimulación Magnética Transcraneal (EMT) anterior', 47, 48],
+                ['Otro (tDCS, Ketamina / Esketamina IV o Intranasal)', 49, 50]
+            ];
+
+            let bioBlocks = '';
+            bioPairs.forEach(([labelBio, idxB, idxSpec]) => {
+                const valB = V(p3, idxB);
+                const valSpec = V(p3, idxSpec);
+                if (valB || valSpec) {
+                    bioBlocks += `<div class="grid-2">${F(labelBio, valB)}${F('Especificar año, número de sesiones y respuesta', valSpec)}</div>`;
+                }
+            });
+
+            if (bioBlocks) ps += SS('e. Tratamientos Biológicos No Farmacológicos', bioBlocks);
+
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
             const rows5 = parseRows(g('P5'));
             if (rows5.length > 0) {
                 let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
-                rows5.forEach(r => {
+                rows5.rows5.forEach?.(r => {}) || rows5.forEach(r => {
                     t += `<tr>
                         <td>${E((r[0] || '').replace(/^,\s*/, ''))}</td>
                         <td>${E(r[1] || '')}</td>
