@@ -534,11 +534,11 @@
                     cefBlock = `<div class="grid-3">${F('Cefaleas crónicas / Migraña', V(p2, 29))}${F('Tratamiento Actual', V(p2, 30))}${F('Notas / Especificar', V(p2, 31))}</div>`;
                 }
 
-                // 6. Otro trastorno neurológico (3 campos: Otro trastorno neurológico, cual, Tratamiento Actual / Notas) -> aquí tenemos 4 columnas en app (Otro, cual, Tratamiento, Notas), las agrupamos en grid especial o adaptamos
+                // 6. Otro trastorno neurológico (3 campos: usando el texto de "cual" en la 1ra casilla en lugar de "Sí")
                 let otroNeuBlock = '';
                 if (V(p2, 32) || V(p2, 33) || V(p2, 34) || V(p2, 35)) {
-                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', V(p2, 32))}${F('Cual', V(p2, 33))}${F('Tratamiento Actual', V(p2, 34))}</div>` + 
-                                   (V(p2, 35) ? `<div class="grid">${F('Notas / Especificar', V(p2, 35), true)}</div>` : '');
+                    const textoCual = V(p2, 33) || V(p2, 32);
+                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', textoCual)}${F('Tratamiento Actual', V(p2, 34))}${F('Notas / Especificar', V(p2, 35))}</div>`;
                 }
 
                 let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock +
