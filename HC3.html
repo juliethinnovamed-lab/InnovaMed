@@ -687,12 +687,43 @@
             hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p3, 61))}${F('Descripción', V(p3, 62), true)}</div>`);
             hb += SS('Actividad física', `<div class="grid">${F('Frecuencia semanal', V(p3, 64))}${F('Tipo de ejercicio', V(p3, 65))}</div>`);
             hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p3, 67))}${F('Supervisión', V(p3, 68))}${F('Contenido de tipo', V(p3, 69), true)}</div>`);
-            hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${F('Exposición', V(p3, 70), true)}</div>`);
+            hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${F('Exposición', V(p3, 71), true)}</div>`);
             
-            const noConsumeSustancias = V(p3, 72).trim().toUpperCase() === 'X';
             let sust = F('No consume', V(p3, 72)) + F('Nota', V(p3, 73), true) + 
                        F('Café / Cafeína', V(p3, 74)) + F('Frecuencia y Cantidad', V(p3, 75)) + F('Impacto clínico percibido', V(p3, 76));
-            if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', `<div class="grid">${sust}</div>`);
+
+            const renderSubst = (title, iEstatus, iEdad, iFreq, iCant, iFecha, iCrit, iExtra = null) => {
+                const estatus = V(p3, iEstatus);
+                const edad = V(p3, iEdad);
+                const freq = V(p3, iFreq);
+                const cant = V(p3, iCant);
+                const fecha = V(p3, iFecha);
+                const crit = V(p3, iCrit);
+                const extra = iExtra !== null ? V(p3, iExtra) : '';
+                
+                if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
+                
+                let content = '';
+                if (extra) content += F('CAGE Automatizado', extra);
+                content += F('Estatus de consumo', estatus) +
+                           F('Edad de inicio del consumo', edad) +
+                           F('Frecuencia actual', freq) +
+                           F('Cantidad / Patrón', cant) +
+                           F('Fecha de último consumo', fecha) +
+                           F('Criterios Clínicos Rápidos', crit, true);
+                           
+                return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div><div class="grid">${content}</div>`;
+            };
+
+            sust += renderSubst('Tabaco / Nicotina', 78, 79, 80, 81, 82, 83);
+            sust += renderSubst('Chimó / Tabaco mascado', 85, 86, 87, 88, 89, 90);
+            sust += renderSubst('Alcohol', 93, 94, 95, 96, 97, 98, 92);
+            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 100, 101, 102, 103, 104, 105);
+            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 107, 108, 109, 110, 111, 112);
+            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 114, 115, 116, 117, 118, 119);
+            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 121, 122, 123, 124, 125, 126);
+
+            if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
             
             if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
 
