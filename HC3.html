@@ -548,7 +548,7 @@
                 if (appVals) a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="grid">${appVals}</div>`);
             }
 
-            // Bloque AGO sin exclusión mutua: se muestran todos los datos registrados y adicionalmente la nota o negación si existe
+            // Bloque AGO: muestra los datos ginecoobstétricos normales y solo muestra la negación si está indicada
             let ago = '';
             let fo = F('G', V(p2, 55)) + F('P', V(p2, 56)) + F('A', V(p2, 57)) + F('C', V(p2, 58));
             if (fo) ago += `<div class="f full"><span class="fl">Fórmula Obstétrica</span><div class="formula">${fo}</div></div>`;
@@ -564,11 +564,19 @@
                    F('Semanas de gestación', V(p2, 63)) + 
                    F('Lactancia activa', V(p2, 64)) + 
                    F('Anticonceptivos hormonales', V(p2, 65)) + 
-                   F('Nombre / Tipo', V(p2, 66)) +
-                   F('AGO Negativos / No Aplica', V(p2, 67)) + 
-                   F('Paciente niega AGO', V(p2, 68), true);
+                   F('Nombre / Tipo', V(p2, 66));
 
-            if (ago) a += SS('Antecedentes Ginecoobstétricos (AGO)', `<div class="grid">${ago}</div>`);
+            const valAgoNeg = V(p2, 67);
+            const valNiegaAgo = V(p2, 68);
+
+            if (valAgoNeg) {
+                ago += F('AGO Negativos / No Aplica', valAgoNeg);
+            }
+            if (valNiegaAgo) {
+                ago += F('Paciente niega AGO', valNiegaAgo, true);
+            }
+
+            if (ago) a += SS('Antecedentes ginecoobstétricos (AGO)', `<div class="grid">${ago}</div>`);
 
             if (a) h += SEC('Antecedentes personales', a);
 
