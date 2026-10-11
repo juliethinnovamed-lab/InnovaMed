@@ -683,13 +683,23 @@
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
-            // --- SECCIÓN: HÁBITOS PSICOBIOLÓGICOS Y SUSTANCIAS (P7) ---
+            // --- SECCIÓN: HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
             let hb = '';
-            hb += SS('Sueño / descanso', `<div class="grid">${F('Horas promedio de sueño nocturno', V(p7, 8))}${F('Calidad del sueño', V(p7, 9))}</div>`);
-            hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p7, 11))}${F('Descripción', V(p7, 12), true)}</div>`);
-            hb += SS('Actividad física', `<div class="grid">${F('Frecuencia semanal', V(p7, 14))}${F('Tipo de ejercicio', V(p7, 15))}</div>`);
-            hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p7, 17))}${F('Supervisión', V(p7, 18))}${F('Contenido de tipo', V(p7, 19), true)}</div>`);
-            hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${F('Exposición', V(p7, 20), true)}</div>`);
+            
+            let sueno = F('Horas promedio de sueño nocturno', V(p7, 7)) + F('Calidad del sueño', V(p7, 8));
+            if (sueno) hb += SS('Sueño / descanso', `<div class="grid">${sueno}</div>`);
+
+            let alim = F('Frecuencia', V(p7, 10)) + F('Descripción', V(p7, 11), true);
+            if (alim) hb += SS('Alimentación', `<div class="grid">${alim}</div>`);
+
+            let ejer = F('Frecuencia semanal', V(p7, 13)) + F('Tipo de ejercicio', V(p7, 14));
+            if (ejer) hb += SS('Actividad física', `<div class="grid">${ejer}</div>`);
+
+            let pant = F('h/día', V(p7, 16)) + F('Supervisión', V(p7, 17)) + F('Contenido de tipo', V(p7, 18), true);
+            if (pant) hb += SS('Uso de pantallas', `<div class="grid">${pant}</div>`);
+
+            let estres = F('Exposición', V(p7, 20), true);
+            if (estres) hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${estres}</div>`);
             
             let sust = F('No consume', V(p7, 22)) + F('Nota', V(p7, 23), true) + 
                        F('Café / Cafeína', V(p7, 24)) + F('Frecuencia y Cantidad', V(p7, 25)) + F('Impacto clínico percibido', V(p7, 26));
