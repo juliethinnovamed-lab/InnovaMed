@@ -150,7 +150,7 @@
             gap: 4px 10px;
         }
 
-        /* Contenedor específico para agrupar de 3 en 3 (Neurológicos) */
+        /* Contenedor para agrupar de 3 en 3 */
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -162,7 +162,7 @@
             border-radius: 3px;
         }
 
-        /* Contenedor específico para agrupar de 2 en 2 (Diagnósticos Psiquiátricos) */
+        /* Contenedor específico para agrupar de 2 en 2 */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -594,43 +594,37 @@
                 ps += SS('3. Antecedentes psiquiátricos previos (APP-Psi)', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 1))}${F('Nota primera vez', V(p3, 2), true)}</div>`);
             }
 
-            // Agrupación de 2 en 2 para Historial de Diagnósticos Previos (Trastorno + Edad/Año)
-            let dxBlocks = '';
-            const pairsDx = [
-                [4, 5],   // Trastorno Depresivo y Edad/Año
-                [6, 7],   // Trastorno Bipolar y Edad/Año
-                [8, 9],   // Trastornos de Ansiedad y Edad/Año
-                [10, 11], // TOC y Edad/Año
-                [12, 13], // TEPT y Edad/Año
-                [14, 15], // Espectro psicótico y Edad/Año
-                [16, 17], // TDAH y Edad/Año
-                [18, 19], // Neurodesarrollo y Edad/Año
-                [20, 21], // TCA y Edad/Año
-                [22, 23]  // Personalidad y Edad/Año
+            // LISTA DINÁMICA DE DIAGNÓSTICOS CON SUS ETIQUETAS EXACTAS (DE 2 EN 2)
+            const listaDx = [
+                'Trastorno Depresivo',
+                'Trastorno Bipolar',
+                'Trastornos de Ansiedad',
+                'TOC',
+                'TEPT',
+                'Espectro Psicótico',
+                'TDAH',
+                'Neurodesarrollo',
+                'TCA',
+                'Trastorno de la Personalidad'
             ];
 
-            pairsDx.forEach(([iTranstorno, iEdad]) => {
-                const valTrastorno = V(p3, iTranstorno);
-                const valEdad = V(p3, iEdad);
+            let dxBlocks = '';
+            // Recorremos desde el elemento 3 de P3 asignando cada trastorno con su edad/año contiguo
+            let idxP3 = 3; 
+            listaDx.forEach(nombreTrastorno => {
+                const valTrastorno = V(p3, idxP3);
+                const valEdad = V(p3, idxP3 + 1);
+
                 if (valTrastorno || valEdad) {
-                    // Nombres correspondientes de las columnas de AppSheet
-                    const nombresCols = {
-                        4: 'Trastorno Depresivo',
-                        6: 'Trastorno Bipolar',
-                        8: 'Trastornos de Ansiedad',
-                        10: 'Trastorno Obsesivo-Compulsivo (TOC)',
-                        12: 'Trastorno por Estrés Postraumático (TEPT)',
-                        14: 'Trastorno del Espectro de la Esquizofrenia',
-                        16: 'Trastorno por Déficit de Atención e Hiperactividad (TDAH)',
-                        18: 'Trastorno del Neurodesarrollo',
-                        20: 'Trastornos de la Conducta Alimentaria',
-                        22: 'Trastorno de la Personalidad'
-                    };
-                    dxBlocks += `<div class="grid-2">${F(nombresCols[iTranstorno], valTrastorno)}${F('Edad de diagnóstico / Año', valEdad)}</div>`;
+                    dxBlocks += `<div class="grid-2">${F(nombreTrastorno, valTrastorno)}${F('Edad de diagnóstico / Año', valEdad)}</div>`;
                 }
+                idxP3 += 2;
             });
 
-            const otroDx = F('Otro diagnóstico psiquiátrico previo', V(p3, 24), true);
+            // "Otro diagnóstico psiquiátrico previo" suele venir después de las parejas
+            const otroDxVal = V(p3, idxP3);
+            const otroDx = otroDxVal ? F('Otro diagnóstico psiquiátrico previo', otroDxVal, true) : '';
+
             let dx = dxBlocks + otroDx;
             if (dx) ps += SS('a. Historial de Diagnósticos Previos', dx);
 
