@@ -477,6 +477,7 @@
             const p1 = A('P1');
             const p2 = A('P2');
             const p3 = A('P3');
+            const p7 = A('P7');
 
             let h = '';
 
@@ -589,22 +590,22 @@
             if (a) h += SEC('Antecedentes personales', a);
 
             let ps = '';
-            const isPrimeraVez = V(p3, 1).toUpperCase() === 'X';
-            if (isPrimeraVez || C(V(p3, 1))) {
-                ps += SS('3. Antecedentes psiquiátricos previos (APP-Psi)', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 1))}${F('Nota primera vez', V(p3, 2), true)}</div>`);
+            const isPrimeraVez = V(p3, 0).toUpperCase() === 'X';
+            if (isPrimeraVez || C(V(p3, 0))) {
+                ps += SS('3. Antecedentes psiquiátricos previos (APP-Psi)', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 0))}${F('Nota primera vez', V(p3, 1), true)}</div>`);
             }
 
             const dxPairs = [
-                ['Trastorno Depresivo', 4, 5],
-                ['Trastorno Bipolar', 6, 7],
-                ['Trastornos de Ansiedad', 8, 9],
-                ['Trastorno Obsesivo-Compulsivo (TOC) o trastornos relacionados', 10, 11],
-                ['Trastorno por Estrés Postraumático (TEPT) o del desarrollo/apego', 12, 13],
-                ['Trastorno del Espectro de la Esquizofrenia / Otros trastornos psicóticos', 14, 15],
-                ['Trastorno por Déficit de Atención e Hiperactividad (TDAH)', 16, 17],
-                ['Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)', 18, 19],
-                ['Trastornos de la Conducta Alimentaria (Anorexia, Bulimia, PICA, etc.)', 20, 21],
-                ['Trastorno de la Personalidad', 22, 23]
+                ['Trastorno Depresivo', 3, 4],
+                ['Trastorno Bipolar', 5, 6],
+                ['Trastornos de Ansiedad', 7, 8],
+                ['Trastorno Obsesivo-Compulsivo (TOC) o trastornos relacionados', 9, 10],
+                ['Trastorno por Estrés Postraumático (TEPT) o del desarrollo/apego', 11, 12],
+                ['Trastorno del Espectro de la Esquizofrenia / Otros trastornos psicóticos', 13, 14],
+                ['Trastorno por Déficit de Atención e Hiperactividad (TDAH)', 15, 16],
+                ['Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)', 17, 18],
+                ['Trastornos de la Conducta Alimentaria (Anorexia, Bulimia, PICA, etc.)', 19, 20],
+                ['Trastorno de la Personalidad', 21, 22]
             ];
 
             let dxBlocks = '';
@@ -616,7 +617,7 @@
                 }
             });
 
-            const otroDxVal = V(p3, 24);
+            const otroDxVal = V(p3, 23);
             const otroDx = otroDxVal ? F('Otro diagnóstico psiquiátrico previo', otroDxVal, true) : '';
 
             let dx = dxBlocks + otroDx;
@@ -632,19 +633,19 @@
                 ps += SS('b. Historial de Tratamientos Anteriores', t);
             }
 
-            let tr = F('Psicoterapia', V(p3, 26), true) + F('Enfoque', V(p3, 27)) + F('Duración', V(p3, 28)) + F('Apego', V(p3, 29));
+            let tr = F('Psicoterapia', V(p3, 25), true) + F('Enfoque', V(p3, 26)) + F('Duración', V(p3, 27)) + F('Apego', V(p3, 28));
             if (tr) ps += SS('Historial de Psicoterapia', `<div class="grid">${tr}</div>`);
 
-            let su = F('Historial de Ideación Suicida', V(p3, 31)) + F('Historial de Intentos de Suicidio', V(p3, 32)) + F('Número de intentos', V(p3, 33)) + F('Edad / Año del intento más grave', V(p3, 34)) + F('Método(s)', V(p3, 35), true) + F('Hospitalización', V(p3, 36), true) + F('Conductas de Autolesión no suicidas', V(p3, 37), true);
+            let su = F('Historial de Ideación Suicida', V(p3, 30)) + F('Historial de Intentos de Suicidio', V(p3, 31)) + F('Número de intentos', V(p3, 32)) + F('Edad / Año del intento más grave', V(p3, 33)) + F('Método(s)', V(p3, 34), true) + F('Hospitalización', V(p3, 35), true) + F('Conductas de Autolesión no suicidas', V(p3, 36), true);
             if (su) ps += SS('c. Intentos de Suicidio y Conductas de Autolesión (Sección Crítica)', `<div class="grid">${su}</div>`);
 
-            let inx = F('Hospitalizaciones Psiquiátricas Previas', V(p3, 39), true) + F('Número total', V(p3, 40)) + F('Año y duración del último internamiento', V(p3, 41)) + F('Causa principal', V(p3, 42), true) + F('Tipo de ingreso', V(p3, 43));
+            let inx = F('Hospitalizaciones Psiquiátricas Previas', V(p3, 38), true) + F('Número total', V(p3, 39)) + F('Año y duración del último internamiento', V(p3, 40)) + F('Causa principal', V(p3, 41), true) + F('Tipo de ingreso', V(p3, 42));
             if (inx) ps += SS('d. Historial de Internamientos Psiquiátricos', `<div class="grid">${inx}</div>`);
 
             const bioPairs = [
-                ['Terapia Electroconvulsiva (TEC) anterior', 45, 46],
-                ['Estimulación Magnética Transcraneal (EMT) anterior', 47, 48],
-                ['Otro (tDCS, Ketamina / Esketamina IV o Intranasal)', 49, 50]
+                ['Terapia Electroconvulsiva (TEC) anterior', 44, 45],
+                ['Estimulación Magnética Transcraneal (EMT) anterior', 46, 47],
+                ['Otro (tDCS, Ketamina / Esketamina IV o Intranasal)', 48, 49]
             ];
 
             let bioBlocks = '';
@@ -678,28 +679,28 @@
                 t += '</tbody></table>';
                 h += SEC('1. Mapeo Dinámico por Familiar', t);
             } else {
-                let ah = F('Sin antecedentes familiares de importancia', V(p3, 52), true) + F('Reporte', V(p3, 53), true);
+                let ah = F('Sin antecedentes familiares de importancia', V(p7, 1), true) + F('Reporte', V(p7, 2), true);
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
             let hb = '';
-            hb += SS('Sueño / descanso', `<div class="grid">${F('Horas promedio de sueño nocturno', V(p3, 58))}${F('Calidad del sueño', V(p3, 59))}</div>`);
-            hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p3, 61))}${F('Descripción', V(p3, 62), true)}</div>`);
-            hb += SS('Actividad física', `<div class="grid">${F('Frecuencia semanal', V(p3, 64))}${F('Tipo de ejercicio', V(p3, 65))}</div>`);
-            hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p3, 67))}${F('Supervisión', V(p3, 68))}${F('Contenido de tipo', V(p3, 69), true)}</div>`);
-            hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${F('Exposición', V(p3, 71), true)}</div>`);
+            hb += SS('Sueño / descanso', `<div class="grid">${F('Horas promedio de sueño nocturno', V(p7, 7))}${F('Calidad del sueño', V(p7, 8))}</div>`);
+            hb += SS('Alimentación', `<div class="grid">${F('Frecuencia', V(p7, 10))}${F('Descripción', V(p7, 11), true)}</div>`);
+            hb += SS('Actividad física', `<div class="grid">${F('Frecuencia semanal', V(p7, 13))}${F('Tipo de ejercicio', V(p7, 14))}</div>`);
+            hb += SS('Uso de pantallas', `<div class="grid">${F('h/día', V(p7, 16))}${F('Supervisión', V(p7, 17))}${F('Contenido de tipo', V(p7, 18), true)}</div>`);
+            hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${F('Exposición', V(p7, 20), true)}</div>`);
             
-            let sust = F('No consume', V(p3, 72)) + F('Nota', V(p3, 73), true) + 
-                       F('Café / Cafeína', V(p3, 74)) + F('Frecuencia y Cantidad', V(p3, 75)) + F('Impacto clínico percibido', V(p3, 76));
+            let sust = F('No consume', V(p7, 22)) + F('Nota', V(p7, 23), true) + 
+                       F('Café / Cafeína', V(p7, 24)) + F('Frecuencia y Cantidad', V(p7, 25)) + F('Impacto clínico percibido', V(p7, 26));
 
             const renderSubst = (title, iEstatus, iEdad, iFreq, iCant, iFecha, iCrit, iExtra = null) => {
-                const estatus = V(p3, iEstatus);
-                const edad = V(p3, iEdad);
-                const freq = V(p3, iFreq);
-                const cant = V(p3, iCant);
-                const fecha = V(p3, iFecha);
-                const crit = V(p3, iCrit);
-                const extra = iExtra !== null ? V(p3, iExtra) : '';
+                const estatus = V(p7, iEstatus);
+                const edad = V(p7, iEdad);
+                const freq = V(p7, iFreq);
+                const cant = V(p7, iCant);
+                const fecha = V(p7, iFecha);
+                const crit = V(p7, iCrit);
+                const extra = iExtra !== null ? V(p7, iExtra) : '';
                 
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
                 
@@ -715,13 +716,13 @@
                 return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div><div class="grid">${content}</div>`;
             };
 
-            sust += renderSubst('Tabaco / Nicotina', 78, 79, 80, 81, 82, 83);
-            sust += renderSubst('Chimó / Tabaco mascado', 85, 86, 87, 88, 89, 90);
-            sust += renderSubst('Alcohol', 93, 94, 95, 96, 97, 98, 92);
-            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 100, 101, 102, 103, 104, 105);
-            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 107, 108, 109, 110, 111, 112);
-            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 114, 115, 116, 117, 118, 119);
-            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 121, 122, 123, 124, 125, 126);
+            sust += renderSubst('Tabaco / Nicotina', 28, 29, 30, 31, 32, 33);
+            sust += renderSubst('Chimó / Tabaco mascado', 35, 36, 37, 38, 39, 40);
+            sust += renderSubst('Alcohol', 43, 44, 45, 46, 47, 48, 42);
+            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 50, 51, 52, 53, 54, 55);
+            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 57, 58, 59, 60, 61, 62);
+            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 64, 65, 66, 67, 68, 69);
+            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 71, 72, 73, 74, 75, 76);
 
             if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
             
