@@ -686,21 +686,19 @@
             // --- SECCIÓN: HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
             let hb = '';
             
-            let sueno = F('Horas promedio de sueño nocturno', V(p7, 7)) + F('Calidad del sueño', V(p7, 8));
-            if (sueno) hb += SS('Sueño / descanso', `<div class="grid">${sueno}</div>`);
+            let hbGeneral = F('Horas promedio de sueño nocturno', V(p7, 7)) + 
+                            F('Calidad del sueño', V(p7, 8)) + 
+                            F('Frecuencia de alimentación', V(p7, 10)) + 
+                            F('Descripción de alimentación', V(p7, 11), true) + 
+                            F('Frecuencia semanal de ejercicio', V(p7, 13)) + 
+                            F('Tipo de ejercicio', V(p7, 14)) + 
+                            F('Uso de pantallas (h/día)', V(p7, 16)) + 
+                            F('Supervisión de pantallas', V(p7, 17)) + 
+                            F('Contenido de pantallas', V(p7, 18), true) + 
+                            F('Exposición a estresores ambientales', V(p7, 20), true);
+                            
+            if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
-            let alim = F('Frecuencia', V(p7, 10)) + F('Descripción', V(p7, 11), true);
-            if (alim) hb += SS('Alimentación', `<div class="grid">${alim}</div>`);
-
-            let ejer = F('Frecuencia semanal', V(p7, 13)) + F('Tipo de ejercicio', V(p7, 14));
-            if (ejer) hb += SS('Actividad física', `<div class="grid">${ejer}</div>`);
-
-            let pant = F('h/día', V(p7, 16)) + F('Supervisión', V(p7, 17)) + F('Contenido de tipo', V(p7, 18), true);
-            if (pant) hb += SS('Uso de pantallas', `<div class="grid">${pant}</div>`);
-
-            let estres = F('Exposición', V(p7, 20), true);
-            if (estres) hb += SS('Exposición a Estresores Crónicos Ambientales', `<div class="grid">${estres}</div>`);
-            
             let sust = F('No consume', V(p7, 22)) + F('Nota', V(p7, 23), true) + 
                        F('Café / Cafeína', V(p7, 24)) + F('Frecuencia y Cantidad', V(p7, 25)) + F('Impacto clínico percibido', V(p7, 26));
 
