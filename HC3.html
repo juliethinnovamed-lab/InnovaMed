@@ -150,7 +150,7 @@
             gap: 4px 10px;
         }
 
-        /* Contenedor para agrupar de 3 en 3 */
+        /* Contenedor específico para agrupar de 3 en 3 (Neurológicos) */
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -162,7 +162,7 @@
             border-radius: 3px;
         }
 
-        /* Contenedor específico para agrupar de 2 en 2 */
+        /* Contenedor específico para agrupar de 2 en 2 (Diagnósticos Psiquiátricos) */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -594,35 +594,31 @@
                 ps += SS('3. Antecedentes psiquiátricos previos (APP-Psi)', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 1))}${F('Nota primera vez', V(p3, 2), true)}</div>`);
             }
 
-            // LISTA DINÁMICA DE DIAGNÓSTICOS CON SUS ETIQUETAS EXACTAS (DE 2 EN 2)
-            const listaDx = [
-                'Trastorno Depresivo',
-                'Trastorno Bipolar',
-                'Trastornos de Ansiedad',
-                'TOC',
-                'TEPT',
-                'Espectro Psicótico',
-                'TDAH',
-                'Neurodesarrollo',
-                'TCA',
-                'Trastorno de la Personalidad'
+            // PARES EXACTOS DE DIAGNÓSTICOS PSIQUIÁTRICOS (DE 2 EN 2)
+            const dxPairs = [
+                ['Trastorno Depresivo', 4, 5],
+                ['Trastorno Bipolar', 6, 7],
+                ['Trastornos de Ansiedad', 8, 9],
+                ['Trastorno Obsesivo-Compulsivo (TOC) o trastornos relacionados', 10, 11],
+                ['Trastorno por Estrés Postraumático (TEPT) o del desarrollo/apego', 12, 13],
+                ['Trastorno del Espectro de la Esquizofrenia / Otros trastornos psicóticos', 14, 15],
+                ['Trastorno por Déficit de Atención e Hiperactividad (TDAH)', 16, 17],
+                ['Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)', 18, 19],
+                ['Trastornos de la Conducta Alimentaria (Anorexia, Bulimia, PICA, etc.)', 20, 21],
+                ['Trastorno de la Personalidad', 22, 23]
             ];
 
             let dxBlocks = '';
-            // Recorremos desde el elemento 3 de P3 asignando cada trastorno con su edad/año contiguo
-            let idxP3 = 3; 
-            listaDx.forEach(nombreTrastorno => {
-                const valTrastorno = V(p3, idxP3);
-                const valEdad = V(p3, idxP3 + 1);
-
-                if (valTrastorno || valEdad) {
-                    dxBlocks += `<div class="grid-2">${F(nombreTrastorno, valTrastorno)}${F('Edad de diagnóstico / Año', valEdad)}</div>`;
+            dxPairs.forEach(([labelTrastorno, idxT, idxE]) => {
+                const valT = V(p3, idxT);
+                const valE = V(p3, idxE);
+                if (valT || valE) {
+                    dxBlocks += `<div class="grid-2">${F(labelTrastorno, valT)}${F('Edad de diagnóstico / Año', valE)}</div>`;
                 }
-                idxP3 += 2;
             });
 
-            // "Otro diagnóstico psiquiátrico previo" suele venir después de las parejas
-            const otroDxVal = V(p3, idxP3);
+            // "Otro diagnóstico psiquiátrico previo" abajo fuera del cuadro
+            const otroDxVal = V(p3, 24);
             const otroDx = otroDxVal ? F('Otro diagnóstico psiquiátrico previo', otroDxVal, true) : '';
 
             let dx = dxBlocks + otroDx;
