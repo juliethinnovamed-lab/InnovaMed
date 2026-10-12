@@ -688,13 +688,18 @@
                 F('Contenido de pantallas', V(p7, 18), true);
             if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
-            const sustBase =
-                F('No consume', V(p7, 21)) +
-                F('Nota', V(p7, 22), true) +
+            // "No consume" es un campo de control: nunca se imprime.
+            // La Nota solo se muestra cuando No consume está marcado con X.
+            const noConsumeMarcado = V(p7, 21).toUpperCase() === 'X';
+            const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 22), true) : '';
+            let sust = notaNoConsumo ? `<div class="grid">${notaNoConsumo}</div>` : '';
+
+            // Estas tres respuestas forman un único conjunto visual en una fila.
+            const cafeina =
                 F('Café / Cafeína', V(p7, 23)) +
                 F('Frecuencia y Cantidad', V(p7, 24)) +
                 F('Impacto clínico percibido', V(p7, 25));
-            let sust = sustBase ? `<div class="grid">${sustBase}</div>` : '';
+            if (cafeina) sust += `<div class="grid-3">${cafeina}</div>`;
 
             const renderSubst = (title, iEstatus, iEdad, iFreq, iCant, iFecha, iCrit, iExtra = null) => {
                 const estatus = V(p7, iEstatus);
