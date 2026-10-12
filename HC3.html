@@ -660,47 +660,41 @@
 
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
-            // --- SECCIÓN: HEREDOFAMILIARES (P5 O P7) ---
+            // --- SECCIÓN: ANTECEDENTES HEREDOFAMILIARES (P5 / P7) ---
             const rows5 = parseRows(g('P5'));
             if (rows5.length > 0) {
                 let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
                 rows5.forEach(r => {
-                    t += `<tr>
-                        <td>${E((r[0] || '').replace(/^,\s*/, ''))}</td>
-                        <td>${E(r[1] || '')}</td>
-                        <td>${E(r[2] || '')}</td>
-                        <td>${E(r[3] || '')}</td>
-                        <td>${E(r[4] || '')}</td>
-                        <td>${E(r[5] || '')}</td>
-                        <td>${E(r[6] || '')}</td>
-                        <td>${E(r[7] || '')}</td>
-                    </tr>`;
+                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td><td>${E(r[6] || '')}</td><td>${E(r[7] || '')}</td></tr>`;
                 });
                 t += '</tbody></table>';
                 h += SEC('1. Mapeo Dinámico por Familiar', t);
             } else {
-                let ah = F('Sin antecedentes familiares de importancia', V(p7, 1), true) + F('Reporte', V(p7, 2), true);
+                const ah = F('Sin antecedentes familiares de importancia', V(p7, 1), true) + F('Reporte', V(p7, 2), true);
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
             // --- SECCIÓN: HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
             let hb = '';
-            
-            let hbGeneral = F('Horas promedio de sueño nocturno', V(p7, 7)) + 
-                            F('Calidad del sueño', V(p7, 8)) + 
-                            F('Frecuencia de alimentación', V(p7, 10)) + 
-                            F('Descripción de alimentación', V(p7, 11), true) + 
-                            F('Frecuencia semanal de ejercicio', V(p7, 13)) + 
-                            F('Tipo de ejercicio', V(p7, 14)) + 
-                            F('Uso de pantallas (h/día)', V(p7, 16)) + 
-                            F('Supervisión de pantallas', V(p7, 17)) + 
-                            F('Contenido de pantallas', V(p7, 18), true) + 
-                            F('Exposición a estresores ambientales', V(p7, 20), true);
-                            
+            const hbGeneral =
+                F('Horas promedio de sueño nocturno', V(p7, 7)) +
+                F('Calidad del sueño', V(p7, 8)) +
+                F('Frecuencia de alimentación', V(p7, 10)) +
+                F('Descripción de alimentación', V(p7, 11), true) +
+                F('Frecuencia semanal de ejercicio', V(p7, 13)) +
+                F('Tipo de ejercicio', V(p7, 14)) +
+                F('Uso de pantallas (h/día)', V(p7, 16)) +
+                F('Supervisión de pantallas', V(p7, 17)) +
+                F('Contenido de pantallas', V(p7, 18), true);
             if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
-            let sust = F('No consume', V(p7, 22)) + F('Nota', V(p7, 23), true) + 
-                       F('Café / Cafeína', V(p7, 24)) + F('Frecuencia y Cantidad', V(p7, 25)) + F('Impacto clínico percibido', V(p7, 26));
+            const sustBase =
+                F('No consume', V(p7, 21)) +
+                F('Nota', V(p7, 22), true) +
+                F('Café / Cafeína', V(p7, 23)) +
+                F('Frecuencia y Cantidad', V(p7, 24)) +
+                F('Impacto clínico percibido', V(p7, 25));
+            let sust = sustBase ? `<div class="grid">${sustBase}</div>` : '';
 
             const renderSubst = (title, iEstatus, iEdad, iFreq, iCant, iFecha, iCrit, iExtra = null) => {
                 const estatus = V(p7, iEstatus);
@@ -710,32 +704,39 @@
                 const fecha = V(p7, iFecha);
                 const crit = V(p7, iCrit);
                 const extra = iExtra !== null ? V(p7, iExtra) : '';
-                
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
-                
                 let content = '';
                 if (extra) content += F('CAGE Automatizado', extra);
                 content += F('Estatus de consumo', estatus) +
-                           F('Edad de inicio del consumo', edad) +
-                           F('Frecuencia actual', freq) +
-                           F('Cantidad / Patrón', cant) +
-                           F('Fecha de último consumo', fecha) +
-                           F('Criterios Clínicos Rápidos', crit, true);
-               
+                    F('Edad de inicio del consumo', edad) +
+                    F('Frecuencia actual', freq) +
+                    F('Cantidad / Patrón', cant) +
+                    F('Fecha de último consumo', fecha) +
+                    F('Criterios Clínicos Rápidos', crit, true);
                 return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div><div class="grid">${content}</div>`;
             };
 
-            sust += renderSubst('Tabaco / Nicotina', 28, 29, 30, 31, 32, 33);
-            sust += renderSubst('Chimó / Tabaco mascado', 35, 36, 37, 38, 39, 40);
-            sust += renderSubst('Alcohol', 43, 44, 45, 46, 47, 48, 42);
-            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 50, 51, 52, 53, 54, 55);
-            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 57, 58, 59, 60, 61, 62);
-            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 64, 65, 66, 67, 68, 69);
-            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 71, 72, 73, 74, 75, 76);
-
+            sust += renderSubst('Tabaco / Nicotina', 27, 28, 29, 30, 31, 32);
+            sust += renderSubst('Chimó / Tabaco mascado', 34, 35, 36, 37, 38, 39);
+            sust += renderSubst('Alcohol', 42, 43, 44, 45, 46, 47, 41);
+            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 49, 50, 51, 52, 53, 54);
+            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 56, 57, 58, 59, 60, 61);
+            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 63, 64, 65, 66, 67, 68);
+            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 70, 71, 72, 73, 74, 75);
             if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
-            
             if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
+
+            // Diagnóstico temporal: añadir ?debug=1 al final de la URL para verificar
+            // si el navegador recibió los parámetros P3 y P7 desde AppSheet.
+            if (q.get('debug') === '1') {
+                const debugInfo = [
+                    `P3 recibido: ${g('P3') ? 'sí' : 'NO'} (${g('P3').length} caracteres)`,
+                    `P7 recibido: ${g('P7') ? 'sí' : 'NO'} (${g('P7').length} caracteres)`,
+                    `P7 campos separados: ${p7.length}`,
+                    `P7 muestra inicial: ${g('P7').slice(0, 180) || '(vacío)'}`
+                ].join('\n');
+                h += SEC('DIAGNÓSTICO TÉCNICO (solo debug=1)', `<div class="f full"><div class="fv">${E(debugInfo)}</div></div>`);
+            }
 
             // --- CONCLUSIONES DIAGNÓSTICAS ---
             const rows4 = parseRows(g('P4'));
