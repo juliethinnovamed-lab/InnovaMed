@@ -685,7 +685,7 @@
                 t += '</tbody></table>';
                 h += SEC('1. Mapeo Dinámico por Familiar', t);
             } else {
-                const ah = F('Sin antecedentes familiares de importancia', V(p7, 1), true) + F('Reporte', V(p7, 2), true);
+                const ah = F('Sin antecedentes familiares de importance', V(p7, 1), true) + F('Reporte', V(p7, 2), true);
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
@@ -703,13 +703,10 @@
                 F('Contenido de pantallas', V(p7, 18), true);
             if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
-            // "No consume" es un campo de control: nunca se imprime.
-            // La Nota solo se muestra cuando No consume está marcado con X.
             const noConsumeMarcado = V(p7, 21).toUpperCase() === 'X';
             const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 22), true) : '';
             let sust = notaNoConsumo ? `<div class="grid">${notaNoConsumo}</div>` : '';
 
-            // Estas tres respuestas forman un único conjunto visual en una fila.
             const cafeina =
                 F('Café / Cafeína', V(p7, 23)) +
                 F('Frecuencia y Cantidad', V(p7, 24)) +
@@ -726,29 +723,30 @@
                 const critFormato = iCrit === 32 ? crit.replace(/\s*,\s*/g, '\n') : crit;
                 const extra = iExtra !== null ? V(p7, iExtra) : '';
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
+                
                 let content = '';
                 if (extra) content += F('CAGE Automatizado', extra);
-               ```javascript
-```javascript
-if (title === 'Chimó / Tabaco mascado') {
-    const datosChimo = F('Estatus de consumo', estatus) +
-        F('Edad de inicio del consumo', edad) +
-        F('Frecuencia actual', freq) +
-        F('Cantidad / Patrón', cant) +
-        F('Fecha de último consumo', fecha);
 
-    content = `<div class="grid-5">${datosChimo}</div>`;
-    content += F('Criterios Clínicos Rápidos', critFormato, true);
-} else {
-    content += F('Estatus de consumo', estatus) +
-        F('Edad de inicio del consumo', edad) +
-        F('Frecuencia actual', freq) +
-        F('Cantidad / Patrón', cant) +
-        F('Fecha de último consumo', fecha) +
-        F('Criterios Clínicos Rápidos', critFormato, true);
-}
+                if (title === 'Chimó / Tabaco mascado') {
+                    const datosChimo = F('Estatus de consumo', estatus) +
+                        F('Edad de inicio del consumo', edad) +
+                        F('Frecuencia actual', freq) +
+                        F('Cantidad / Patrón', cant) +
+                        F('Fecha de último consumo', fecha);
 
-return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${content.startsWith('<div class="grid-5">') ? content : `<div class="grid">${content}</div>`}`;
+                    content = `<div class="grid-5">${datosChimo}</div>`;
+                    content += F('Criterios Clínicos Rápidos', critFormato, true);
+                } else {
+                    content += F('Estatus de consumo', estatus) +
+                        F('Edad de inicio del consumo', edad) +
+                        F('Frecuencia actual', freq) +
+                        F('Cantidad / Patrón', cant) +
+                        F('Fecha de último consumo', fecha) +
+                        F('Criterios Clínicos Rápidos', critFormato, true);
+                }
+
+                return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${content.startsWith('<div class="grid-5">') ? content : `<div class="grid">${content}</div>`}`;
+            };
 
             sust += renderSubst('Tabaco / Nicotina', 27, 28, 29, 30, 31, 32);
             sust += renderSubst('Chimó / Tabaco mascado', 34, 35, 36, 37, 38, 39);
@@ -757,11 +755,10 @@ return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1
             sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 56, 57, 58, 59, 60, 61);
             sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 63, 64, 65, 66, 67, 68);
             sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 70, 71, 72, 73, 74, 75);
+            
             if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
             if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
 
-            // Diagnóstico temporal: añadir ?debug=1 al final de la URL para verificar
-            // si el navegador recibió los parámetros P3 y P7 desde AppSheet.
             if (q.get('debug') === '1') {
                 const debugInfo = [
                     `P3 recibido: ${g('P3') ? 'sí' : 'NO'} (${g('P3').length} caracteres)`,
