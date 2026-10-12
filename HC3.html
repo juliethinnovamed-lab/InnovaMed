@@ -728,14 +728,13 @@
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
                 let content = '';
                 if (extra) content += F('CAGE Automatizado', extra);
-                if (title === 'Tabaco / Nicotina' || title === 'Chimó / Tabaco mascado') {
-                    const datosConsumo = F('Estatus de consumo', estatus) +
+                if (title === 'Chimó / Tabaco mascado') {
+                    const datosChimo = F('Estatus de consumo', estatus) +
                         F('Edad de inicio del consumo', edad) +
                         F('Frecuencia actual', freq) +
                         F('Cantidad / Patrón', cant) +
                         F('Fecha de último consumo', fecha);
-                    content = `<div class="grid-5">${datosConsumo}</div>`;
-                    // Los criterios clínicos quedan debajo de la tabla, nunca dentro de sus cinco columnas.
+                    content = `<div class="grid-5">${datosChimo}</div>`;
                     if (crit) content += `<div class="grid">${F('Criterios Clínicos Rápidos', critFormato, true)}</div>`;
                 } else {
                     content += F('Estatus de consumo', estatus) +
