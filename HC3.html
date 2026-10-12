@@ -728,24 +728,27 @@
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
                 let content = '';
                 if (extra) content += F('CAGE Automatizado', extra);
-                if (title === 'Chimó / Tabaco mascado') {
-                    const datosChimo = F('Estatus de consumo', estatus) +
-                        F('Edad de inicio del consumo', edad) +
-                        F('Frecuencia actual', freq) +
-                        F('Cantidad / Patrón', cant) +
-                        F('Fecha de último consumo', fecha);
-                    content = `<div class="grid-5">${datosChimo}</div>`;
-                    if (crit) content += `<div class="grid">${F('Criterios Clínicos Rápidos', critFormato, true)}</div>`;
-                } else {
-                    content += F('Estatus de consumo', estatus) +
-                        F('Edad de inicio del consumo', edad) +
-                        F('Frecuencia actual', freq) +
-                        F('Cantidad / Patrón', cant) +
-                        F('Fecha de último consumo', fecha) +
-                        F('Criterios Clínicos Rápidos', critFormato, true);
-                }
-                return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${content.startsWith('<div class="grid-5">') ? content : `<div class="grid">${content}</div>`}`;
-            };
+               ```javascript
+```javascript
+if (title === 'Chimó / Tabaco mascado') {
+    const datosChimo = F('Estatus de consumo', estatus) +
+        F('Edad de inicio del consumo', edad) +
+        F('Frecuencia actual', freq) +
+        F('Cantidad / Patrón', cant) +
+        F('Fecha de último consumo', fecha);
+
+    content = `<div class="grid-5">${datosChimo}</div>`;
+    content += F('Criterios Clínicos Rápidos', critFormato, true);
+} else {
+    content += F('Estatus de consumo', estatus) +
+        F('Edad de inicio del consumo', edad) +
+        F('Frecuencia actual', freq) +
+        F('Cantidad / Patrón', cant) +
+        F('Fecha de último consumo', fecha) +
+        F('Criterios Clínicos Rápidos', critFormato, true);
+}
+
+return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${content.startsWith('<div class="grid-5">') ? content : `<div class="grid">${content}</div>`}`;
 
             sust += renderSubst('Tabaco / Nicotina', 27, 28, 29, 30, 31, 32);
             sust += renderSubst('Chimó / Tabaco mascado', 34, 35, 36, 37, 38, 39);
