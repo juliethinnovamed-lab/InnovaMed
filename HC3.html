@@ -446,10 +446,20 @@
             }
 
             const C = v => String(v ?? '').trim();
+
+            const getValue = (...keys) => {
+                for (let k of keys) {
+                    if (data[k] !== undefined && data[k] !== null && String(data[k]).trim() !== '') {
+                        return String(data[k]).trim();
+                    }
+                }
+                return '';
+            };
             
             const getBlob = (...keys) => {
                 for (let k of keys) {
-                    if (data[k]) return String(data[k]).split('|');
+                    const val = getValue(k);
+                    if (val) return val.split('|');
                 }
                 return [];
             };
@@ -491,18 +501,28 @@
                 return String(v).split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
             };
 
+            // Rellenar Títulos y Datos del Médico / Centro Médico
+            const tituloDoc = getValue('Titulo', 'Título', 'Centro Medico.Titulo');
+            if (tituloDoc) document.getElementById('titulo').textContent = tituloDoc;
+
+            const subtituloDoc = getValue('Subtitulo', 'Subtítulo', 'Centro Medico.Subtítulo');
+            if (subtituloDoc) document.getElementById('subtitulo').textContent = subtituloDoc;
+
+            const medicoTratante = getValue('Medico tratante', 'Medico Tratante', 'Médico tratante');
+            const especialidadMedica = getValue('Especialidad Medica', 'Especialidad', 'Especialidad Médica');
+
             const instInfo = [
-                data['Medico tratante'] ? `<strong>Médico tratante:</strong> ${data['Medico tratante']}` : '',
-                data['Especialidad'] ? `<strong>Especialidad:</strong> ${data['Especialidad']}` : ''
+                medicoTratante ? `<strong>Médico tratante:</strong> ${medicoTratante}` : '',
+                especialidadMedica ? `<strong>Especialidad:</strong> ${especialidadMedica}` : ''
             ].filter(Boolean).join(' &nbsp;|&nbsp; ');
             document.getElementById('info-institucion').innerHTML = instInfo;
 
             const pi = [
-                ['Paciente', data['Nombre y Apellido']],
-                ['Sexo', data['Sexo']],
-                ['Cédula', data['Cedula']],
-                ['Edad', data['Edad']],
-                ['Teléfono', data['Telefono']]
+                ['Paciente', getValue('Nombre y Apellido', 'Paciente')],
+                ['Sexo', getValue('Sexo')],
+                ['Cédula', getValue('Cedula', 'Cédula')],
+                ['Edad', getValue('Edad')],
+                ['Teléfono', getValue('Telefono', 'Teléfono')]
             ].filter(x => C(x[1]));
 
             const patientContainer = document.getElementById('patient');
@@ -520,13 +540,13 @@
             let h = '';
 
             const datosPersonalesExtra =
-                F('Fecha de ingreso', DF(data['Fecha Ingreso'])) +
-                F('Fecha de nacimiento', DF(data['F / N'])) +
-                F('Lugar de nacimiento', data['Lugar de Nacimiento']) +
-                F('Dirección del paciente', data['Dirección']) +
-                F('Estado civil', data['Estado civil']) +
-                F('Profesión / Ocupación', data['Profesion / Ocupacion']) +
-                F('Contacto de emergencia', data['Contacto de emergencia'], true);
+                F('Fecha de ingreso', DF(getValue('Fecha Ingreso', 'FechaIngreso'))) +
+                F('Fecha de nacimiento', DF(getValue('F / N', 'FechaNacimiento', 'Fecha de nacimiento'))) +
+                F('Lugar de nacimiento', getValue('Lugar de Nacimiento', 'LugarNacimiento')) +
+                F('Dirección del paciente', getValue('Dirección', 'DireccionPaciente', 'Direccion')) +
+                F('Estado civil', getValue('Estado civil', 'EstadoCivil')) +
+                F('Profesión / Ocupación', getValue('Profesion / Ocupacion', 'ProfesionOcupacion')) +
+                F('Contacto de emergencia', getValue('Contacto de emergencia', 'ContactoEmergencia'), true);
             if (datosPersonalesExtra) {
                 h += SEC('Datos personales complementarios', `<div class="grid">${datosPersonalesExtra}</div>`);
             }
@@ -662,7 +682,7 @@
             let dx = dxBlocks + otroDx;
             if (dx) ps += SS('a. Historial de Diagnósticos Previos', dx);
 
-            const rows6 = parseRows(data['P6']);
+            const rows6 = parseRows(getValue('P6'));
             if (rows6.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Motivo de Suspensión</th></tr></thead><tbody>';
                 rows6.forEach(r => {
@@ -701,7 +721,7 @@
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
             // --- SECCIÓN: ANTECEDENTES HEREDOFAMILIARES (P5 / P7) ---
-            const rows5 = parseRows(data['P5']);
+            const rows5 = parseRows(getValue('P5'));
             if (rows5.length > 0) {
                 let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
                 rows5.forEach(r => {
@@ -780,7 +800,7 @@
             if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
 
             // --- CONCLUSIONES DIAGNÓSTICAS ---
-            const rows4 = parseRows(data['P4']);
+            const rows4 = parseRows(getValue('P4'));
             if (rows4.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>CIE-11 ID</th><th>Tipo de Diagnóstico</th><th>Especificador de Gravedad</th><th>Especificador de Curso / Episodio</th><th>Severidad de la Disfunción de Personalidad</th><th>Rasgos de Dominio Prominentes</th></tr></thead><tbody>';
                 rows4.forEach(r => {
@@ -790,14 +810,26 @@
                 h += SEC('CONCLUSIONES DIAGNÓSTICAS (CIE-11)', t);
             }
 
-            let extra = F('Escolaridad', data['Escolaridad']) + F('Religión', data['Religion']);
+            let extra = F('Escolaridad', getValue('Escolaridad')) + F('Religión', getValue('Religion', 'Religión'));
             if (extra) h = `<section class="sec"><div class="st">Datos personales complementarios</div><div class="grid">${extra}</div></section>` + h;
 
             document.getElementById('content').innerHTML = h;
             if (!h.trim()) document.getElementById('empty').style.display = 'block';
 
-            const foot = ['Direccion', 'Numero de telefono principal', 'Numero secundario', 'Whatsapp', 'Redes sociales', 'Correo electronico'].map(k => data[k]).map(C).filter(Boolean);
-            document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
+            // Pie de página (Dirección, Teléfono, WhatsApp, Redes, etc.)
+            const footKeys = [
+                'Direccion', 'Dirección', 'Centro Medico.Dirección',
+                'Numero de telefono principal', 'Telefono principal', 'Centro Medico.Numero de telefono principal',
+                'Numero secundario', 'Centro Medico.Numero secundario',
+                'Whatsapp', 'Centro Medico.Whatsapp',
+                'Redes sociales', 'Centro Medico.Redes sociales',
+                'Correo electronico', 'Correo electrónico', 'Centro Medico.Correo electronico'
+            ];
+            
+            const foot = footKeys.map(k => getValue(k)).filter(Boolean);
+            // Eliminar duplicados si los hubiera
+            const uniqueFoot = [...new Set(foot)];
+            document.getElementById('footer').innerHTML = uniqueFoot.map(x => `<span>${E(x)}</span>`).join('');
         })();
     </script>
 </body>
