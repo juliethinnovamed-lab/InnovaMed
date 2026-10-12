@@ -708,6 +708,7 @@
                 const cant = V(p7, iCant);
                 const fecha = V(p7, iFecha);
                 const crit = V(p7, iCrit);
+                const critFormato = iCrit === 32 ? crit.replace(/\s*,\s*/g, '\n') : crit;
                 const extra = iExtra !== null ? V(p7, iExtra) : '';
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
                 let content = '';
@@ -717,7 +718,7 @@
                     F('Frecuencia actual', freq) +
                     F('Cantidad / Patrón', cant) +
                     F('Fecha de último consumo', fecha) +
-                    F('Criterios Clínicos Rápidos', crit, true);
+                    F('Criterios Clínicos Rápidos', critFormato, true);
                 return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div><div class="grid">${content}</div>`;
             };
 
