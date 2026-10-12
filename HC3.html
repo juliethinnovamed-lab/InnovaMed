@@ -424,7 +424,6 @@
                 return;
             }
 
-            // URL de tu Web App de Google Apps Script
             const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzEI2zkOEQoSYn3ltP9Ea2SfWBsucVBBcltoU-uAN9EHWp6Hx6TIfZjTXyZ1hWHNCPqsQ/exec';
 
             let data = {};
@@ -447,12 +446,26 @@
             }
 
             const C = v => String(v ?? '').trim();
-            const A = k => { const x = data[k] || ''; return x === '' ? [] : String(x).split('|'); };
+            
+            const getBlob = (...keys) => {
+                for (let k of keys) {
+                    if (data[k]) return String(data[k]).split('|');
+                }
+                return [];
+            };
+
             const V = (a, i) => C(a && a[i] !== undefined ? a[i] : '');
 
             const FX = v => {
                 const val = C(v);
                 return val.toUpperCase() === 'X' ? 'Sí' : val;
+            };
+
+            const DF = v => {
+                const val = C(v);
+                if (!val) return '';
+                if (val.includes('T')) return val.split('T')[0].split('-').reverse().join('/');
+                return val;
             };
 
             const E = v => String(v ?? '')
@@ -499,16 +512,16 @@
                 patientContainer.style.display = 'none';
             }
 
-            const p1 = A('VC_Blob_Clinica');
-            const p2 = A('VC_Blob_Antecedentes');
-            const p3 = A('VC_Blob_Psiquiatria');
-            const p7 = A('VC_Blob_Habitos');
+            const p1 = getBlob('VC_Blob_Clinica', 'P1', 'p1');
+            const p2 = getBlob('VC_Blob_Antecedentes', 'P2', 'p2');
+            const p3 = getBlob('VC_Blob_Psiquiatria', 'P3', 'p3');
+            const p7 = getBlob('VC_Blob_Habitos', 'P7', 'p7');
 
             let h = '';
 
             const datosPersonalesExtra =
-                F('Fecha de ingreso', data['Fecha Ingreso']) +
-                F('Fecha de nacimiento', data['F / N']) +
+                F('Fecha de ingreso', DF(data['Fecha Ingreso'])) +
+                F('Fecha de nacimiento', DF(data['F / N'])) +
                 F('Lugar de nacimiento', data['Lugar de Nacimiento']) +
                 F('Dirección del paciente', data['Dirección']) +
                 F('Estado civil', data['Estado civil']) +
