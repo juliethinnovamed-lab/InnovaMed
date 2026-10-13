@@ -420,7 +420,7 @@
     <script>
         (() => {
             const q = new URLSearchParams(location.search);
-            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgzwwfxzrDZT_CUAo1ex2bytUMaLzo6H2jzOoUbyw8uuXBXYqfoVWDTrr4-HzrH7uFw/exec';
+            const APPS_SCRIPT_URL = 'PEGAR_AQUI_URL_WEB_APP_APPS_SCRIPT';
 
             function render() {
             const g = k => {
@@ -497,6 +497,8 @@
             let h = '';
 
             const datosPersonalesExtra =
+                F('Escolaridad', g('Escolaridad')) +
+                F('Religión', g('Religion')) +
                 F('Fecha de ingreso', g('FechaIngreso')) +
                 F('Fecha de nacimiento', g('FechaNacimiento')) +
                 F('Lugar de nacimiento', g('LugarNacimiento')) +
@@ -787,9 +789,6 @@
             if (textoDiagnostico) {
                 h += SEC('Notas y juicio clínico', `<div class="grid">${textoDiagnostico}</div>`);
             }
-
-            let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
-            if (extra) h = `<section class="sec"><div class="st">Datos personales complementarios</div><div class="grid">${extra}</div></section>` + h;
 
             document.getElementById('content').innerHTML = h;
             if (!h.trim()) document.getElementById('empty').style.display = 'block';
