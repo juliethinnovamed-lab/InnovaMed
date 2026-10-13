@@ -420,7 +420,7 @@
     <script>
         (() => {
             const q = new URLSearchParams(location.search);
-            const APPS_SCRIPT_URL = 'PEGAR_AQUI_URL_WEB_APP_APPS_SCRIPT';
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgzwwfxzrDZT_CUAo1ex2bytUMaLzo6H2jzOoUbyw8uuXBXYqfoVWDTrr4-HzrH7uFw/exec';
 
             function render() {
             const g = k => {
@@ -639,13 +639,6 @@
             let dx = dxBlocks + otroDx;
             if (dx) ps += SS('a. Historial de Diagnósticos Previos', dx);
 
-            // Impresión diagnóstica y discusión (P3, índice 25).
-            // Se mantiene como bloque independiente y a texto completo.
-            const impresionDiagnostica = V(p3, 25);
-            if (impresionDiagnostica) {
-                ps += SS('Impresión diagnóstica y discusión', `<div class="grid">${F('', impresionDiagnostica, true)}</div>`);
-            }
-
             const rows6 = parseRows(g('P6'));
             if (rows6.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Motivo de Suspensión</th></tr></thead><tbody>';
@@ -787,6 +780,14 @@
                 h += SEC('CONCLUSIONES DIAGNÓSTICAS (CIE-11)', t);
             }
 
+            // Campos almacenados directamente en la tabla paciente; no dependen de índices del blob P3.
+            const notasDiagnosticas = F('Notas Diagnósticas y Juicio Clínico', g('NotasDiagnosticas'), true);
+            const impresionDiagnostica = F('Impresión diagnóstica y discusión', g('ImpresionDiagnostica'), true);
+            const textoDiagnostico = notasDiagnosticas + impresionDiagnostica;
+            if (textoDiagnostico) {
+                h += SEC('Notas y juicio clínico', `<div class="grid">${textoDiagnostico}</div>`);
+            }
+
             let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
             if (extra) h = `<section class="sec"><div class="st">Datos personales complementarios</div><div class="grid">${extra}</div></section>` + h;
 
@@ -806,6 +807,8 @@
                     return;
                 }
                 ['P1','P2','P3','P4','P5','P6','P7'].forEach(k => q.set(k, data[k] || ''));
+                q.set('NotasDiagnosticas', data.NotasDiagnosticas || '');
+                q.set('ImpresionDiagnostica', data.ImpresionDiagnostica || '');
                 render();
             };
 
