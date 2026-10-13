@@ -728,26 +728,23 @@
                 const critFormato = iCrit === 32 ? crit.replace(/\s*,\s*/g, '\n') : crit;
                 const extra = iExtra !== null ? V(p7, iExtra) : '';
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
-                let content = '';
-                if (extra) content += F('CAGE Automatizado', extra);
-                if (title === 'Tabaco / Nicotina' || title === 'Chimó / Tabaco mascado') {
-                    const datosConsumo = F('Estatus de consumo', estatus) +
-                        F('Edad de inicio del consumo', edad) +
-                        F('Frecuencia actual', freq) +
-                        F('Cantidad / Patrón', cant) +
-                        F('Fecha de último consumo', fecha);
-                    content = `<div class="grid-5">${datosConsumo}</div>`;
-                    // Los criterios clínicos quedan debajo de la tabla, nunca dentro de sus cinco columnas.
-                    if (crit) content += `<div class="grid">${F('Criterios Clínicos Rápidos', critFormato, true)}</div>`;
-                } else {
-                    content += F('Estatus de consumo', estatus) +
-                        F('Edad de inicio del consumo', edad) +
-                        F('Frecuencia actual', freq) +
-                        F('Cantidad / Patrón', cant) +
-                        F('Fecha de último consumo', fecha) +
-                        F('Criterios Clínicos Rápidos', critFormato, true);
-                }
-                return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${content.startsWith('<div class="grid-5">') ? content : `<div class="grid">${content}</div>`}`;
+
+                // Los parámetros adicionales conservan su posición: CAGE antes de la tabla;
+                // los criterios clínicos después de ella. La tabla contiene solo los cinco campos comunes.
+                let beforeTable = '';
+                let afterTable = '';
+                if (extra) beforeTable += `<div class="grid">${F('CAGE Automatizado', extra)}</div>`;
+
+                const datosConsumo = F('Estatus de consumo', estatus) +
+                    F('Edad de inicio del consumo', edad) +
+                    F('Frecuencia actual', freq) +
+                    F('Cantidad / Patrón', cant) +
+                    F('Fecha de último consumo', fecha);
+                const tablaConsumo = datosConsumo ? `<div class="grid-5">${datosConsumo}</div>` : '';
+
+                if (crit) afterTable += `<div class="grid">${F('Criterios Clínicos Rápidos', critFormato, true)}</div>`;
+
+                return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${beforeTable}${tablaConsumo}${afterTable}`;
             };
 
             sust += renderSubst('Tabaco / Nicotina', 27, 28, 29, 30, 31, 32);
