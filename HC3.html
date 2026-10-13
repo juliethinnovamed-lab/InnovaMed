@@ -301,6 +301,20 @@
             overflow-wrap: anywhere;
         }
 
+        .tbl-familiar th:nth-child(1) { width: 14%; }
+        .tbl-familiar th:nth-child(2) { width: 5%; }
+        .tbl-familiar th:nth-child(3) { width: 7%; }
+        .tbl-familiar th:nth-child(4) { width: 17%; }
+        .tbl-familiar th:nth-child(5) { width: 9%; }
+        .tbl-familiar th:nth-child(6) { width: 9%; }
+        .tbl-familiar th:nth-child(7) { width: 17%; }
+        .tbl-familiar th:nth-child(8) { width: 22%; }
+
+        .tbl-familiar tr {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
         .footer {
             position: fixed;
             left: 15mm;
@@ -341,14 +355,6 @@
             text-align: center;
             color: var(--m);
             padding: 20px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 14px;
-            color: var(--m);
-            font-weight: bold;
         }
 
         @page {
@@ -397,14 +403,13 @@
                 <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" alt="Logo">
             </div>
             <div class="hm">
-                <h1 class="title" id="titulo">HISTORIA CLÍNICA PSIQUIÁTRICA</h1>
-                <div class="sub" id="subtitulo">Evaluación Integral</div>
+                <h1 class="title" id="titulo"></h1>
+                <div class="sub" id="subtitulo"></div>
                 <div class="docline" id="info-institucion"></div>
             </div>
         </header>
 
         <div class="patient" id="patient"></div>
-        <div id="loading" class="loading">Cargando datos clínicos del paciente...</div>
         <div id="content"></div>
         <div id="empty" class="empty" style="display:none">No se encontraron datos clínicos para mostrar.</div>
 
@@ -413,69 +418,28 @@
     <footer class="footer" id="footer"></footer>
 
     <script>
-        (async () => {
+        (() => {
             const q = new URLSearchParams(location.search);
-            const recordId = q.get('id');
+            const APPS_SCRIPT_URL = 'PEGAR_AQUI_URL_WEB_APP_APPS_SCRIPT';
 
-            if (!recordId) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('empty').style.display = 'block';
-                document.getElementById('empty').textContent = 'Error: No se especificó el ID del paciente en la URL.';
-                return;
-            }
-
-            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzEI2zkOEQoSYn3ltP9Ea2SfWBsucVBBcltoU-uAN9EHWp6Hx6TIfZjTXyZ1hWHNCPqsQ/exec';
-
-            let data = {};
-            try {
-                const response = await fetch(`${WEB_APP_URL}?id=${recordId}`);
-                data = await response.json();
-            } catch (err) {
-                console.error('Error al conectar con Google Sheets:', err);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('empty').style.display = 'block';
-                document.getElementById('empty').textContent = 'Error de conexión al obtener los datos del paciente.';
-                return;
-            }
-
-            document.getElementById('loading').style.display = 'none';
-
-            if (!data || Object.keys(data).length === 0) {
-                document.getElementById('empty').style.display = 'block';
-                return;
-            }
-
-            const C = v => String(v ?? '').trim();
-
-            const getValue = (...keys) => {
-                for (let k of keys) {
-                    if (data[k] !== undefined && data[k] !== null && String(data[k]).trim() !== '') {
-                        return String(data[k]).trim();
-                    }
+            function render() {
+            const g = k => {
+                if (q.has(k)) return q.get(k) || '';
+                const altKey = k.replace(/\+/g, ' ');
+                if (q.has(altKey)) return q.get(altKey) || '';
+                for (let [key, val] of q.entries()) {
+                    if (key.replace(/\s+/g, '+') === k.replace(/\s+/g, '+')) return val;
                 }
                 return '';
             };
-            
-            const getBlob = (...keys) => {
-                for (let k of keys) {
-                    const val = getValue(k);
-                    if (val) return val.split('|');
-                }
-                return [];
-            };
 
+            const C = v => String(v ?? '').trim();
+            const A = k => { const x = g(k); return x === '' ? [] : x.split('|'); };
             const V = (a, i) => C(a && a[i] !== undefined ? a[i] : '');
 
             const FX = v => {
                 const val = C(v);
                 return val.toUpperCase() === 'X' ? 'Sí' : val;
-            };
-
-            const DF = v => {
-                const val = C(v);
-                if (!val) return '';
-                if (val.includes('T')) return val.split('T')[0].split('-').reverse().join('/');
-                return val;
             };
 
             const E = v => String(v ?? '')
@@ -498,31 +462,24 @@
 
             const parseRows = v => {
                 if (!C(v)) return [];
-                return String(v).split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
+                return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
             };
 
-            // Rellenar Títulos y Datos del Médico / Centro Médico
-            const tituloDoc = getValue('Titulo', 'Título', 'Centro Medico.Titulo');
-            if (tituloDoc) document.getElementById('titulo').textContent = tituloDoc;
-
-            const subtituloDoc = getValue('Subtitulo', 'Subtítulo', 'Centro Medico.Subtítulo');
-            if (subtituloDoc) document.getElementById('subtitulo').textContent = subtituloDoc;
-
-            const medicoTratante = getValue('Medico tratante', 'Medico Tratante', 'Médico tratante');
-            const especialidadMedica = getValue('Especialidad Medica', 'Especialidad', 'Especialidad Médica');
-
+            document.getElementById('titulo').textContent = g('Titulo') || 'HISTORIA CLÍNICA PSIQUIÁTRICA';
+            document.getElementById('subtitulo').textContent = g('Subtitulo');
+            
             const instInfo = [
-                medicoTratante ? `<strong>Médico tratante:</strong> ${medicoTratante}` : '',
-                especialidadMedica ? `<strong>Especialidad:</strong> ${especialidadMedica}` : ''
+                g('Medico+tratante') || g('Medico tratante') ? `<strong>Médico tratante:</strong> ${g('Medico+tratante') || g('Medico tratante')}` : '',
+                g('Especialidad+Medica') || g('Especialidad Medica') ? `<strong>Especialidad:</strong> ${g('Especialidad+Medica') || g('Especialidad Medica')}` : ''
             ].filter(Boolean).join(' &nbsp;|&nbsp; ');
             document.getElementById('info-institucion').innerHTML = instInfo;
 
             const pi = [
-                ['Paciente', getValue('Nombre y Apellido', 'Paciente')],
-                ['Sexo', getValue('Sexo')],
-                ['Cédula', getValue('Cedula', 'Cédula')],
-                ['Edad', getValue('Edad')],
-                ['Teléfono', getValue('Telefono', 'Teléfono')]
+                ['Paciente', g('Paciente')],
+                ['Sexo', g('Sexo')],
+                ['Cédula', g('Cedula')],
+                ['Edad', g('Edad')],
+                ['Teléfono', g('Telefono')]
             ].filter(x => C(x[1]));
 
             const patientContainer = document.getElementById('patient');
@@ -532,21 +489,21 @@
                 patientContainer.style.display = 'none';
             }
 
-            const p1 = getBlob('VC_Blob_Clinica', 'P1', 'p1');
-            const p2 = getBlob('VC_Blob_Antecedentes', 'P2', 'p2');
-            const p3 = getBlob('VC_Blob_Psiquiatria', 'P3', 'p3');
-            const p7 = getBlob('VC_Blob_Habitos', 'P7', 'p7');
+            const p1 = A('P1');
+            const p2 = A('P2');
+            const p3 = A('P3');
+            const p7 = A('P7');
 
             let h = '';
 
             const datosPersonalesExtra =
-                F('Fecha de ingreso', DF(getValue('Fecha Ingreso', 'FechaIngreso'))) +
-                F('Fecha de nacimiento', DF(getValue('F / N', 'FechaNacimiento', 'Fecha de nacimiento'))) +
-                F('Lugar de nacimiento', getValue('Lugar de Nacimiento', 'LugarNacimiento')) +
-                F('Dirección del paciente', getValue('Dirección', 'DireccionPaciente', 'Direccion')) +
-                F('Estado civil', getValue('Estado civil', 'EstadoCivil')) +
-                F('Profesión / Ocupación', getValue('Profesion / Ocupacion', 'ProfesionOcupacion')) +
-                F('Contacto de emergencia', getValue('Contacto de emergencia', 'ContactoEmergencia'), true);
+                F('Fecha de ingreso', g('FechaIngreso')) +
+                F('Fecha de nacimiento', g('FechaNacimiento')) +
+                F('Lugar de nacimiento', g('LugarNacimiento')) +
+                F('Dirección del paciente', g('DireccionPaciente')) +
+                F('Estado civil', g('EstadoCivil')) +
+                F('Profesión / Ocupación', g('ProfesionOcupacion')) +
+                F('Contacto de emergencia', g('ContactoEmergencia'), true);
             if (datosPersonalesExtra) {
                 h += SEC('Datos personales complementarios', `<div class="grid">${datosPersonalesExtra}</div>`);
             }
@@ -682,7 +639,7 @@
             let dx = dxBlocks + otroDx;
             if (dx) ps += SS('a. Historial de Diagnósticos Previos', dx);
 
-            const rows6 = parseRows(getValue('P6'));
+            const rows6 = parseRows(g('P6'));
             if (rows6.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Motivo de Suspensión</th></tr></thead><tbody>';
                 rows6.forEach(r => {
@@ -721,7 +678,7 @@
             if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
 
             // --- SECCIÓN: ANTECEDENTES HEREDOFAMILIARES (P5 / P7) ---
-            const rows5 = parseRows(getValue('P5'));
+            const rows5 = parseRows(g('P5'));
             if (rows5.length > 0) {
                 let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
                 rows5.forEach(r => {
@@ -748,10 +705,13 @@
                 F('Contenido de pantallas', V(p7, 18), true);
             if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
+            // "No consume" es un campo de control: nunca se imprime.
+            // La Nota solo se muestra cuando No consume está marcado con X.
             const noConsumeMarcado = V(p7, 21).toUpperCase() === 'X';
             const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 22), true) : '';
             let sust = notaNoConsumo ? `<div class="grid">${notaNoConsumo}</div>` : '';
 
+            // Estas tres respuestas forman un único conjunto visual en una fila.
             const cafeina =
                 F('Café / Cafeína', V(p7, 23)) +
                 F('Frecuencia y Cantidad', V(p7, 24)) +
@@ -777,6 +737,7 @@
                         F('Cantidad / Patrón', cant) +
                         F('Fecha de último consumo', fecha);
                     content = `<div class="grid-5">${datosConsumo}</div>`;
+                    // Los criterios clínicos quedan debajo de la tabla, nunca dentro de sus cinco columnas.
                     if (crit) content += `<div class="grid">${F('Criterios Clínicos Rápidos', critFormato, true)}</div>`;
                 } else {
                     content += F('Estatus de consumo', estatus) +
@@ -799,8 +760,20 @@
             if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
             if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
 
+            // Diagnóstico temporal: añadir ?debug=1 al final de la URL para verificar
+            // si el navegador recibió los parámetros P3 y P7 desde AppSheet.
+            if (q.get('debug') === '1') {
+                const debugInfo = [
+                    `P3 recibido: ${g('P3') ? 'sí' : 'NO'} (${g('P3').length} caracteres)`,
+                    `P7 recibido: ${g('P7') ? 'sí' : 'NO'} (${g('P7').length} caracteres)`,
+                    `P7 campos separados: ${p7.length}`,
+                    `P7 muestra inicial: ${g('P7').slice(0, 180) || '(vacío)'}`
+                ].join('\n');
+                h += SEC('DIAGNÓSTICO TÉCNICO (solo debug=1)', `<div class="f full"><div class="fv">${E(debugInfo)}</div></div>`);
+            }
+
             // --- CONCLUSIONES DIAGNÓSTICAS ---
-            const rows4 = parseRows(getValue('P4'));
+            const rows4 = parseRows(g('P4'));
             if (rows4.length > 0) {
                 let t = '<table class="tbl"><thead><tr><th>CIE-11 ID</th><th>Tipo de Diagnóstico</th><th>Especificador de Gravedad</th><th>Especificador de Curso / Episodio</th><th>Severidad de la Disfunción de Personalidad</th><th>Rasgos de Dominio Prominentes</th></tr></thead><tbody>';
                 rows4.forEach(r => {
@@ -810,26 +783,46 @@
                 h += SEC('CONCLUSIONES DIAGNÓSTICAS (CIE-11)', t);
             }
 
-            let extra = F('Escolaridad', getValue('Escolaridad')) + F('Religión', getValue('Religion', 'Religión'));
+            let extra = F('Escolaridad', g('Escolaridad')) + F('Religión', g('Religion'));
             if (extra) h = `<section class="sec"><div class="st">Datos personales complementarios</div><div class="grid">${extra}</div></section>` + h;
 
             document.getElementById('content').innerHTML = h;
             if (!h.trim()) document.getElementById('empty').style.display = 'block';
 
-            // Pie de página (Dirección, Teléfono, WhatsApp, Redes, etc.)
-            const footKeys = [
-                'Direccion', 'Dirección', 'Centro Medico.Dirección',
-                'Numero de telefono principal', 'Telefono principal', 'Centro Medico.Numero de telefono principal',
-                'Numero secundario', 'Centro Medico.Numero secundario',
-                'Whatsapp', 'Centro Medico.Whatsapp',
-                'Redes sociales', 'Centro Medico.Redes sociales',
-                'Correo electronico', 'Correo electrónico', 'Centro Medico.Correo electronico'
-            ];
-            
-            const foot = footKeys.map(k => getValue(k)).filter(Boolean);
-            // Eliminar duplicados si los hubiera
-            const uniqueFoot = [...new Set(foot)];
-            document.getElementById('footer').innerHTML = uniqueFoot.map(x => `<span>${E(x)}</span>`).join('');
+            const foot = ['Direccion', 'Numero+de+telefono+principal', 'Numero+secundario', 'Whatsapp', 'Redes+sociales', 'Correo+electronico'].map(g).map(C).filter(Boolean);
+            document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
+            }
+
+            // El HTML conserva los parámetros breves de presentación y solicita los bloques
+            // clínicos al Apps Script usando únicamente el ID del paciente.
+            window.InnovamedHC3Receive = data => {
+                if (!data || data.ok !== true) {
+                    document.getElementById('content').textContent = 'No se pudo cargar la historia clínica. ' + String(data && data.error ? data.error : 'Respuesta no válida del servidor.');
+                    document.getElementById('empty').style.display = 'none';
+                    return;
+                }
+                ['P1','P2','P3','P4','P5','P6','P7'].forEach(k => q.set(k, data[k] || ''));
+                render();
+            };
+
+            const patientId = q.get('id');
+            if (patientId) {
+                if (APPS_SCRIPT_URL.includes('PEGAR_AQUI')) {
+                    document.getElementById('content').textContent = 'Falta configurar la URL del Apps Script en el archivo HTML.';
+                } else {
+                    const script = document.createElement('script');
+                    script.onerror = () => {
+                        document.getElementById('content').textContent = 'No fue posible conectar con el servicio de datos clínicos.';
+                    };
+                    script.src = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.includes('?') ? '&' : '?') +
+                        'id=' + encodeURIComponent(patientId) +
+                        '&k=' + encodeURIComponent(q.get('k') || '') +
+                        '&callback=InnovamedHC3Receive';
+                    document.head.appendChild(script);
+                }
+            } else {
+                render();
+            }
         })();
     </script>
 </body>
