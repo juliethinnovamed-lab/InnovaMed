@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -639,6 +638,13 @@
 
             let dx = dxBlocks + otroDx;
             if (dx) ps += SS('a. Historial de Diagnósticos Previos', dx);
+
+            // Impresión diagnóstica y discusión (P3, índice 25).
+            // Se mantiene como bloque independiente y a texto completo.
+            const impresionDiagnostica = V(p3, 25);
+            if (impresionDiagnostica) {
+                ps += SS('Impresión diagnóstica y discusión', `<div class="grid">${F('', impresionDiagnostica, true)}</div>`);
+            }
 
             const rows6 = parseRows(g('P6'));
             if (rows6.length > 0) {
