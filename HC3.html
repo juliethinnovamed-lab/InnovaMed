@@ -529,10 +529,10 @@
             let per = F('Producto de embarazo', V(p2, 0)) + F('Semanas de embarazo', V(p2, 1)) + F('Respiró y lloró al nacer', V(p2, 2)) + F('Alimentación', V(p2, 3)) + F('Desarrollo psicomotor', V(p2, 4)) + F('Control postural', V(p2, 5)) + F('Sostener la cabeza', V(p2, 6)) + F('Sentarse sin apoyo y ponerse de pie', V(p2, 7)) + F('Locomoción', V(p2, 8)) + F('Gatear', V(p2, 9)) + F('Caminar', V(p2, 10)) + F('Correr y saltar con uno o ambos pies', V(p2, 11)) + F('Equilibrio', V(p2, 12)) + F('Mantenerse estable de pie o sobre un solo pie', V(p2, 13)) + F('Caminar en línea recta', V(p2, 14));
             if (per) a += SS('Perinatales y desarrollo (menores de 18 años)', `<div class="grid">${per}</div>`);
 
-            const isNegarAPP = V(p2, 47).toUpperCase() === 'X';
+            const isNegarAPP = V(p2, 148).toUpperCase() === 'X';
 
             if (isNegarAPP) {
-                const textAPP = V(p2, 48) || 'Negar APP';
+                const textAPP = V(p2, 149) || 'Paciente niega antecedentes médicos patológicos.';
                 a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
             } else {
                 let tceBlock = '';
@@ -542,63 +542,115 @@
 
                 let epilBlock = '';
                 if (V(p2, 20) || V(p2, 21) || V(p2, 22)) {
-                    epilBlock = `<div class="grid-3">${F('Epilepsia / Crisis convulsivas', V(p2, 20))}${F('Tratamiento Actual', V(p2, 21))}${F('Notas / Especificar', V(p2, 22))}</div>`;
+                    epilBlock = `<div class="grid-3">${F('Epilepsia / Crisis convulsivas', V(p2, 20))}${F('Tratamiento actual', V(p2, 21))}${F('Notas / Especificar', V(p2, 22))}</div>`;
                 }
 
                 let evcBlock = '';
                 if (V(p2, 23) || V(p2, 24) || V(p2, 25)) {
-                    evcBlock = `<div class="grid-3">${F('Enfermedad Vascular Cerebral (EVC)', V(p2, 23))}${F('Tratamiento Actual', V(p2, 24))}${F('Notas / Especificar', V(p2, 25))}</div>`;
+                    evcBlock = `<div class="grid-3">${F('Enfermedad Vascular Cerebral (EVC)', V(p2, 23))}${F('Tratamiento actual', V(p2, 24))}${F('Notas / Especificar', V(p2, 25))}</div>`;
                 }
 
                 let demBlock = '';
                 if (V(p2, 26) || V(p2, 27) || V(p2, 28)) {
-                    demBlock = `<div class="grid-3">${F('Deterioro Cognitivo / Demencia', V(p2, 26))}${F('Tratamiento Actual', V(p2, 27))}${F('Notas / Especificar', V(p2, 28))}</div>`;
+                    demBlock = `<div class="grid-3">${F('Deterioro Cognitivo / Demencia', V(p2, 26))}${F('Tratamiento actual', V(p2, 27))}${F('Notas / Especificar', V(p2, 28))}</div>`;
                 }
 
                 let cefBlock = '';
                 if (V(p2, 29) || V(p2, 30) || V(p2, 31)) {
-                    cefBlock = `<div class="grid-3">${F('Cefaleas crónicas / Migraña', V(p2, 29))}${F('Tratamiento Actual', V(p2, 30))}${F('Notas / Especificar', V(p2, 31))}</div>`;
+                    cefBlock = `<div class="grid-3">${F('Cefaleas crónicas / Migraña', V(p2, 29))}${F('Tratamiento actual', V(p2, 30))}${F('Notas / Especificar', V(p2, 31))}</div>`;
                 }
 
                 let otroNeuBlock = '';
                 if (V(p2, 32) || V(p2, 33) || V(p2, 34) || V(p2, 35)) {
                     const textoCual = V(p2, 33) || V(p2, 32);
-                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', textoCual)}${F('Tratamiento Actual', V(p2, 34))}${F('Notas / Especificar', V(p2, 35))}</div>`;
+                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', textoCual)}${F('Tratamiento actual', V(p2, 34))}${F('Notas / Especificar', V(p2, 35))}</div>`;
                 }
 
-                let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock +
-                              F('Endocrinos / Metabólicos', V(p2, 36)) + 
-                              F('Cardiovasculares', V(p2, 37)) + 
-                              F('Renales y Hepáticos', V(p2, 38)) + 
-                              F('Año', V(p2, 40)) + 
-                              F('Tipo de Cirugía/causa', V(p2, 41)) + 
-                              F('Cirugía Bariátrica', V(p2, 42)) + 
-                              F('Delirium postoperatorio previo', V(p2, 43)) + 
-                              F('Alergias a medicamentos generales', V(p2, 45), true) + 
-                              F('Reacciones graves a psicofármacos previos', V(p2, 46), true);
-                if (appVals) a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="grid">${appVals}</div>`);
+                const condicion = (nombre, idx, idxAnio, idxTratamiento) => {
+                    const campos = F(nombre, V(p2, idx)) + F('Año', V(p2, idxAnio)) + F('Tratamiento', V(p2, idxTratamiento));
+                    return campos ? `<div class="grid-3">${campos}</div>` : '';
+                };
+                const otraCondicion = (idx, idxCual, idxAnio, idxTratamiento) => {
+                    const campos = F('Otro', V(p2, idx)) + F('Cuál', V(p2, idxCual), true) + F('Año', V(p2, idxAnio)) + F('Tratamiento', V(p2, idxTratamiento), true);
+                    return campos ? `<div class="grid-3">${campos}</div>` : '';
+                };
+
+                let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock;
+
+                // Endocrinos / metabólicos: la columna del encabezado no se imprime como diagnóstico.
+                let endocrinos =
+                    condicion('Hipotiroidismo', 37, 38, 39) +
+                    condicion('Hipertiroidismo', 40, 41, 42) +
+                    condicion('Diabetes Mellitus Tipo 2', 43, 44, 45) +
+                    condicion('Diabetes Mellitus Tipo 1', 46, 47, 48) +
+                    condicion('Síndrome Metabólico / Dislipidemia', 49, 50, 51) +
+                    condicion('Síndrome de Ovario Poliquístico (SOP)', 52, 53, 54) +
+                    otraCondicion(55, 56, 57, 58);
+                if (endocrinos) appVals += SS('Endocrinos / Metabólicos', endocrinos);
+
+                let cardiovasculares =
+                    condicion('Hipertensión Arterial (HTA)', 60, 61, 62) +
+                    condicion('Cardiopatía Isquémica / Infarto previo', 63, 64, 65) +
+                    condicion('Insuficiencia Cardíaca', 66, 67, 68) +
+                    otraCondicion(69, 70, 71, 72);
+                if (cardiovasculares) appVals += SS('Cardiovasculares', cardiovasculares);
+
+                let renales =
+                    condicion('Enfermedad Renal Crónica (ERC)', 74, 75, 76) +
+                    condicion('Insuficiencia Hepática / Cirrosis', 77, 78, 79) +
+                    condicion('Hepatitis B o C', 80, 81, 82) +
+                    condicion('Lesión renal', 83, 84, 85) +
+                    condicion('Litiasis renal', 86, 87, 88) +
+                    condicion('ITU a repetición', 89, 90, 91) +
+                    condicion('ERC', 92, 93, 94) +
+                    condicion('Diálisis', 95, 96, 97) +
+                    condicion('Trasplante', 98, 99, 100) +
+                    otraCondicion(101, 102, 103, 104);
+                if (renales) appVals += SS('Renales', renales);
+
+                let hepaticosGI =
+                    condicion('Hígado graso', 106, 107, 108) +
+                    condicion('Hepatitis A', 109, 110, 111) +
+                    condicion('Hepatitis B', 112, 113, 114) +
+                    condicion('Hepatitis C', 115, 116, 117) +
+                    condicion('Insuficiencia hepática', 118, 119, 120) +
+                    condicion('Cirrosis', 121, 122, 123) +
+                    condicion('Gastritis', 124, 125, 126) +
+                    condicion('Reflujo gastroesofágico', 127, 128, 129) +
+                    condicion('Estreñimiento', 130, 131, 132) +
+                    condicion('Litiasis vesicular', 133, 134, 135) +
+                    otraCondicion(136, 137, 138, 139);
+                if (hepaticosGI) appVals += SS('Hepáticos y gastrointestinales', hepaticosGI);
+
+                const cirugia = F('Tipo de cirugía / causa', V(p2, 142), true) + F('Año', V(p2, 141)) + F('Cirugía bariátrica', V(p2, 143)) + F('Delirium postoperatorio previo', V(p2, 144));
+                if (cirugia) appVals += SS('Quirúrgicos y hospitalizaciones previas', `<div class="grid">${cirugia}</div>`);
+
+                const alergias = F('Alergias a medicamentos generales', V(p2, 146), true) + F('Reacciones graves a psicofármacos previos', V(p2, 147), true);
+                if (alergias) appVals += SS('Alergias y reacciones adversas a medicamentos (RAM)', `<div class="grid">${alergias}</div>`);
+
+                if (appVals) a += SS('1. Antecedentes Médicos Patológicos (APP)', appVals);
             }
 
             let ago = '';
-            let fo = F('G', V(p2, 55)) + F('P', V(p2, 56)) + F('A', V(p2, 57)) + F('C', V(p2, 58));
+            let fo = F('G', V(p2, 156)) + F('P', V(p2, 157)) + F('A', V(p2, 158)) + F('C', V(p2, 159));
             if (fo) ago += `<div class="f full"><span class="fl">Fórmula Obstétrica</span><div class="formula">${fo}</div></div>`;
-            
-            ago += F('Menarca', V(p2, 50)) + 
-                   F('Ciclos menstruales', V(p2, 51)) + 
-                   F('Duración y frecuencia', V(p2, 52)) + 
-                   F('FUM', V(p2, 53)) + 
-                   F('Hijos vivos', V(p2, 59)) + 
-                   F('Complicaciones obstétricas', V(p2, 60), true) + 
-                   F('Estado actual', V(p2, 61)) + 
-                   F('Embarazo actual', V(p2, 62)) + 
-                   F('Semanas de gestación', V(p2, 63)) + 
-                   F('Lactancia activa', V(p2, 64)) + 
-                   F('Anticonceptivos hormonales', V(p2, 65)) + 
-                   F('Nombre / Tipo', V(p2, 66));
 
-            const isNegarAGO = V(p2, 67).trim().toUpperCase() === 'X';
+            ago += F('Menarca', V(p2, 151)) +
+                   F('Ciclos menstruales', V(p2, 152)) +
+                   F('Duración y frecuencia', V(p2, 153)) +
+                   F('FUM', V(p2, 154)) +
+                   F('Hijos vivos', V(p2, 160)) +
+                   F('Complicaciones obstétricas', V(p2, 161), true) +
+                   F('Estado actual', V(p2, 162)) +
+                   F('Embarazo actual', V(p2, 163)) +
+                   F('Semanas de gestación', V(p2, 164)) +
+                   F('Lactancia activa', V(p2, 165)) +
+                   F('Uso de anticonceptivos hormonales', V(p2, 166)) +
+                   F('Nombre / Tipo', V(p2, 167));
+
+            const isNegarAGO = V(p2, 168).trim().toUpperCase() === 'X';
             if (isNegarAGO) {
-                const notaNiegaAGO = V(p2, 68) || 'Sin antecedentes ginecoobstétricos patológicos o de riesgo actuales.';
+                const notaNiegaAGO = V(p2, 169) || 'Sin antecedentes ginecoobstétricos patológicos o de riesgo actuales.';
                 ago += `<div class="f full"><span class="fl">Paciente niega AGO</span><div class="fv">${E(notaNiegaAGO)}</div></div>`;
             }
 
