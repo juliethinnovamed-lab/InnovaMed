@@ -622,7 +622,7 @@
                     otraCondicion(136, 137, 138, 139);
                 if (hepaticosGI) appVals += SS('Hepáticos y gastrointestinales', hepaticosGI);
 
-                const cirugia = F('Tipo de cirugía / causa', V(p2, 142), true) + F('Año', V(p2, 141)) + F('Cirugía bariátrica', V(p2, 143)) + F('Delirium postoperatorio previo', V(p2, 144));
+                const cirugia = F('Año', V(p2, 141)) + F('Tipo de cirugía / causa', V(p2, 142), true) + F('Cirugía bariátrica', V(p2, 143)) + F('Delirium postoperatorio previo', V(p2, 144));
                 if (cirugia) appVals += SS('Quirúrgicos y hospitalizaciones previas', `<div class="grid">${cirugia}</div>`);
 
                 const alergias = F('Alergias a medicamentos generales', V(p2, 146), true) + F('Reacciones graves a psicofármacos previos', V(p2, 147), true);
@@ -632,14 +632,15 @@
             }
 
             let ago = '';
-            let fo = F('G', V(p2, 156)) + F('P', V(p2, 157)) + F('A', V(p2, 158)) + F('C', V(p2, 159));
-            if (fo) ago += `<div class="f full"><span class="fl">Fórmula Obstétrica</span><div class="formula">${fo}</div></div>`;
-
             ago += F('Menarca', V(p2, 151)) +
                    F('Ciclos menstruales', V(p2, 152)) +
                    F('Duración y frecuencia', V(p2, 153)) +
-                   F('FUM', V(p2, 154)) +
-                   F('Hijos vivos', V(p2, 160)) +
+                   F('FUM', V(p2, 154));
+
+            let fo = F('G', V(p2, 156)) + F('P', V(p2, 157)) + F('A', V(p2, 158)) + F('C', V(p2, 159));
+            if (fo) ago += `<div class="f full"><span class="fl">Fórmula Obstétrica</span><div class="formula">${fo}</div></div>`;
+
+            ago += F('Hijos vivos', V(p2, 160)) +
                    F('Complicaciones obstétricas', V(p2, 161), true) +
                    F('Estado actual', V(p2, 162)) +
                    F('Embarazo actual', V(p2, 163)) +
