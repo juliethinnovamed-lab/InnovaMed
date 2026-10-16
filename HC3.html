@@ -159,6 +159,7 @@
             border: 1px solid var(--b);
             padding: 4px 6px;
             border-radius: 3px;
+            margin-bottom: 4px;
         }
 
         .grid-5 {
@@ -420,7 +421,7 @@
     <script>
         (async () => {
             const q = new URLSearchParams(location.search);
-            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgzwwfxzrDZT_CUAo1ex2bytUMaLzo6H2jzOoUbyw8uuXBXYqfoVWDTrr4-HzrH7uFw/exec';
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEI2zkOEQoSYn3ltP9Ea2SfWBsucVBBcltoU-uAN9EHWp6Hx6TIfZjTXyZ1hWHNCPqsQ/exec';
 
             function render() {
             const g = k => {
@@ -494,6 +495,13 @@
             const p3 = A('P3');
             const p7 = A('P7');
 
+            // Carga de las 5 nuevas columnas físicas desglosadas por tubería
+            const neuro = A('VC_APP_Neurologicos');
+            const endocrino = A('VC_APP_Endocrinos');
+            const cardio = A('VC_APP_Cardiovascular');
+            const renal = A('VC_APP_Renales');
+            const gastro = A('VC_APP_HepaticoGastrointestinal');
+
             let h = '';
 
             const datosPersonalesExtra =
@@ -535,91 +543,83 @@
                 const textAPP = V(p2, 149) || 'Paciente niega antecedentes médicos patológicos.';
                 a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
             } else {
-                let tceBlock = '';
-                if (V(p2, 17) || V(p2, 18) || V(p2, 19)) {
-                    tceBlock = `<div class="grid-3">${F('Traumatismo Craneoencefálico (TCE)', V(p2, 17))}${F('Pérdida de conciencia', V(p2, 18))}${F('Duración', V(p2, 19))}</div>`;
-                }
+                let appVals = '';
 
-                let epilBlock = '';
-                if (V(p2, 20) || V(p2, 21) || V(p2, 22)) {
-                    epilBlock = `<div class="grid-3">${F('Epilepsia / Crisis convulsivas', V(p2, 20))}${F('Tratamiento actual', V(p2, 21))}${F('Notas / Especificar', V(p2, 22))}</div>`;
-                }
+                // --- NEUROLÓGICOS ---
+                let tceBlock = (V(neuro, 1) || V(neuro, 2) || V(neuro, 3)) ? `<div class="grid-3">${F('TCE', V(neuro, 1))}${F('Pérdida de conciencia', V(neuro, 2))}${F('Duración', V(neuro, 3))}</div>` : '';
+                let epilBlock = (V(neuro, 4) || V(neuro, 5) || V(neuro, 6)) ? `<div class="grid-3">${F('Epilepsia / Convulsiones', V(neuro, 4))}${F('Tratamiento actual', V(neuro, 5))}${F('Notas / Especificar', V(neuro, 6))}</div>` : '';
+                let evcBlock = (V(neuro, 7) || V(neuro, 8) || V(neuro, 9)) ? `<div class="grid-3">${F('EVC', V(neuro, 7))}${F('Tratamiento actual', V(neuro, 8))}${F('Notas / Especificar', V(neuro, 9))}</div>` : '';
+                let demBlock = (V(neuro, 10) || V(neuro, 11) || V(neuro, 12)) ? `<div class="grid-3">${F('Deterioro Cognitivo / Demencia', V(neuro, 10))}${F('Tratamiento actual', V(neuro, 11))}${F('Notas / Especificar', V(neuro, 12))}</div>` : '';
+                let cefBlock = (V(neuro, 13) || V(neuro, 14) || V(neuro, 15)) ? `<div class="grid-3">${F('Cefaleas / Migraña', V(neuro, 13))}${F('Tratamiento actual', V(neuro, 14))}${F('Notas / Especificar', V(neuro, 15))}</div>` : '';
+                let otroNeuBlock = (V(neuro, 16) || V(neuro, 17) || V(neuro, 18) || V(neuro, 19)) ? `<div class="grid-3">${F('Otro trastorno neurológico', V(neuro, 17) || V(neuro, 16))}${F('Tratamiento actual', V(neuro, 18))}${F('Notas / Especificar', V(neuro, 19))}</div>` : '';
 
-                let evcBlock = '';
-                if (V(p2, 23) || V(p2, 24) || V(p2, 25)) {
-                    evcBlock = `<div class="grid-3">${F('Enfermedad Vascular Cerebral (EVC)', V(p2, 23))}${F('Tratamiento actual', V(p2, 24))}${F('Notas / Especificar', V(p2, 25))}</div>`;
-                }
+                let neurologicosTotal = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock;
+                if (neurologicosTotal) appVals += SS('Neurológicos', neurologicosTotal);
 
-                let demBlock = '';
-                if (V(p2, 26) || V(p2, 27) || V(p2, 28)) {
-                    demBlock = `<div class="grid-3">${F('Deterioro Cognitivo / Demencia', V(p2, 26))}${F('Tratamiento actual', V(p2, 27))}${F('Notas / Especificar', V(p2, 28))}</div>`;
-                }
-
-                let cefBlock = '';
-                if (V(p2, 29) || V(p2, 30) || V(p2, 31)) {
-                    cefBlock = `<div class="grid-3">${F('Cefaleas crónicas / Migraña', V(p2, 29))}${F('Tratamiento actual', V(p2, 30))}${F('Notas / Especificar', V(p2, 31))}</div>`;
-                }
-
-                let otroNeuBlock = '';
-                if (V(p2, 32) || V(p2, 33) || V(p2, 34) || V(p2, 35)) {
-                    const textoCual = V(p2, 33) || V(p2, 32);
-                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', textoCual)}${F('Tratamiento actual', V(p2, 34))}${F('Notas / Especificar', V(p2, 35))}</div>`;
-                }
-
-                const condicion = (nombre, idx, idxAnio, idxTratamiento) => {
-                    const campos = F(nombre, V(p2, idx)) + F('Año', V(p2, idxAnio)) + F('Tratamiento', V(p2, idxTratamiento));
-                    return campos ? `<div class="grid-3">${campos}</div>` : '';
-                };
-                const otraCondicion = (idx, idxCual, idxAnio, idxTratamiento) => {
-                    const campos = F('Otro', V(p2, idx)) + F('Cuál', V(p2, idxCual), true) + F('Año', V(p2, idxAnio)) + F('Tratamiento', V(p2, idxTratamiento), true);
-                    return campos ? `<div class="grid-3">${campos}</div>` : '';
+                // Función auxiliar para renderizar filas de 3 elementos (Diagnóstico, Año, Tratamiento)
+                const condicionArr = (arr, nombre, idxDiag, idxAnio, idxTrat) => {
+                    const diag = V(arr, idxDiag);
+                    const anio = V(arr, idxAnio);
+                    const trat = V(arr, idxTrat);
+                    if (!diag && !anio && !trat) return '';
+                    return `<div class="grid-3">${F(nombre, diag)}${F('Año', anio)}${F('Tratamiento', trat)}</div>`;
                 };
 
-                let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock;
+                const otraCondicionArr = (arr, idxDiag, idxCual, idxAnio, idxTrat) => {
+                    const diag = V(arr, idxDiag);
+                    const cual = V(arr, idxCual);
+                    const anio = V(arr, idxAnio);
+                    const trat = V(arr, idxTrat);
+                    if (!diag && !cual && !anio && !trat) return '';
+                    return `<div class="grid-3">${F('Otro', diag)}${F('Cuál', cual, true)}${F('Año', anio)}${F('Tratamiento', trat, true)}</div>`;
+                };
 
-                // Endocrinos / metabólicos: la columna del encabezado no se imprime como diagnóstico.
+                // --- ENDOCRINOS / METABÓLICOS ---
                 let endocrinos =
-                    condicion('Hipotiroidismo', 37, 38, 39) +
-                    condicion('Hipertiroidismo', 40, 41, 42) +
-                    condicion('Diabetes Mellitus Tipo 2', 43, 44, 45) +
-                    condicion('Diabetes Mellitus Tipo 1', 46, 47, 48) +
-                    condicion('Síndrome Metabólico / Dislipidemia', 49, 50, 51) +
-                    condicion('Síndrome de Ovario Poliquístico (SOP)', 52, 53, 54) +
-                    otraCondicion(55, 56, 57, 58);
+                    condicionArr(endocrino, 'Hipotiroidismo', 1, 2, 3) +
+                    condicionArr(endocrino, 'Hipertiroidismo', 4, 5, 6) +
+                    condicionArr(endocrino, 'Diabetes Mellitus Tipo 2', 7, 8, 9) +
+                    condicionArr(endocrino, 'Diabetes Mellitus Tipo 1', 10, 11, 12) +
+                    condicionArr(endocrino, 'Síndrome Metabólico / Dislipidemia', 13, 14, 15) +
+                    condicionArr(endocrino, 'Síndrome de Ovario Poliquístico (SOP)', 16, 17, 18) +
+                    otraCondicionArr(endocrino, 19, 20, 21, 22);
                 if (endocrinos) appVals += SS('Endocrinos / Metabólicos', endocrinos);
 
+                // --- CARDIOVASCULARES ---
                 let cardiovasculares =
-                    condicion('Hipertensión Arterial (HTA)', 60, 61, 62) +
-                    condicion('Cardiopatía Isquémica / Infarto previo', 63, 64, 65) +
-                    condicion('Insuficiencia Cardíaca', 66, 67, 68) +
-                    otraCondicion(69, 70, 71, 72);
+                    condicionArr(cardio, 'Hipertensión Arterial (HTA)', 1, 2, 3) +
+                    condicionArr(cardio, 'Cardiopatía Isquémica / Infarto previo', 4, 5, 6) +
+                    condicionArr(cardio, 'Insuficiencia Cardíaca', 7, 8, 9) +
+                    otraCondicionArr(cardio, 10, 11, 12, 13);
                 if (cardiovasculares) appVals += SS('Cardiovasculares', cardiovasculares);
 
+                // --- RENALES ---
                 let renales =
-                    condicion('Enfermedad Renal Crónica (ERC)', 74, 75, 76) +
-                    condicion('Insuficiencia Hepática / Cirrosis', 77, 78, 79) +
-                    condicion('Hepatitis B o C', 80, 81, 82) +
-                    condicion('Lesión renal', 83, 84, 85) +
-                    condicion('Litiasis renal', 86, 87, 88) +
-                    condicion('ITU a repetición', 89, 90, 91) +
-                    condicion('ERC', 92, 93, 94) +
-                    condicion('Diálisis', 95, 96, 97) +
-                    condicion('Trasplante', 98, 99, 100) +
-                    otraCondicion(101, 102, 103, 104);
+                    condicionArr(renal, 'Enfermedad Renal Crónica (ERC)', 1, 2, 3) +
+                    condicionArr(renal, 'Lesión renal', 4, 5, 6) +
+                    condicionArr(renal, 'Litiasis renal', 7, 8, 9) +
+                    condicionArr(renal, 'ITU a repetición', 10, 11, 12) +
+                    condicionArr(renal, 'ERC', 13, 14, 15) +
+                    condicionArr(renal, 'Diálisis', 16, 17, 18) +
+                    condicionArr(renal, 'Trasplante', 19, 20, 21) +
+                    otraCondicionArr(renal, 22, 23, 24, 25);
                 if (renales) appVals += SS('Renales', renales);
 
+                // --- HEPÁTICOS Y GASTROINTESTINALES ---
                 let hepaticosGI =
-                    condicion('Hígado graso', 106, 107, 108) +
-                    condicion('Hepatitis A', 109, 110, 111) +
-                    condicion('Hepatitis B', 112, 113, 114) +
-                    condicion('Hepatitis C', 115, 116, 117) +
-                    condicion('Insuficiencia hepática', 118, 119, 120) +
-                    condicion('Cirrosis', 121, 122, 123) +
-                    condicion('Gastritis', 124, 125, 126) +
-                    condicion('Reflujo gastroesofágico', 127, 128, 129) +
-                    condicion('Estreñimiento', 130, 131, 132) +
-                    condicion('Litiasis vesicular', 133, 134, 135) +
-                    otraCondicion(136, 137, 138, 139);
+                    condicionArr(gastro, 'Insuficiencia Hepática / Cirrosis', 1, 2, 3) +
+                    condicionArr(gastro, 'Hepatitis (B o C)', 4, 5, 6) +
+                    condicionArr(gastro, 'Hígado graso', 7, 8, 9) +
+                    condicionArr(gastro, 'Hepatitis A', 10, 11, 12) +
+                    condicionArr(gastro, 'Hepatitis B', 13, 14, 15) +
+                    condicionArr(gastro, 'Hepatitis C', 16, 17, 18) +
+                    condicionArr(gastro, 'Insuficiencia Hepática', 19, 20, 21) +
+                    condicionArr(gastro, 'Cirrosis', 22, 23, 24) +
+                    condicionArr(gastro, 'Gastritis', 25, 26, 27) +
+                    condicionArr(gastro, 'Reflujo gastroesofágico', 28, 29, 30) +
+                    condicionArr(gastro, 'Estreñimiento', 31, 32, 33) +
+                    condicionArr(gastro, 'Litiasis vesicular', 34, 35, 36) +
+                    otraCondicionArr(gastro, 37, 38, 39, 40);
                 if (hepaticosGI) appVals += SS('Hepáticos y gastrointestinales', hepaticosGI);
 
                 const cirugia = F('Año', V(p2, 141)) + F('Tipo de cirugía / causa', V(p2, 142), true) + F('Cirugía bariátrica', V(p2, 143)) + F('Delirium postoperatorio previo', V(p2, 144));
@@ -760,13 +760,10 @@
                 F('Contenido de pantallas', V(p7, 18), true);
             if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
-            // "No consume" es un campo de control: nunca se imprime.
-            // La Nota solo se muestra cuando No consume está marcado con X.
             const noConsumeMarcado = V(p7, 21).toUpperCase() === 'X';
             const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 22), true) : '';
             let sust = notaNoConsumo ? `<div class="grid">${notaNoConsumo}</div>` : '';
 
-            // Estas tres respuestas forman un único conjunto visual en una fila.
             const cafeina =
                 F('Café / Cafeína', V(p7, 23)) +
                 F('Frecuencia y Cantidad', V(p7, 24)) +
@@ -784,8 +781,6 @@
                 const extra = iExtra !== null ? V(p7, iExtra) : '';
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
 
-                // Los parámetros adicionales conservan su posición: CAGE antes de la tabla;
-                // los criterios clínicos después de ella. La tabla contiene solo los cinco campos comunes.
                 let beforeTable = '';
                 let afterTable = '';
                 if (extra) beforeTable += `<div class="grid">${F('CAGE Automatizado', extra)}</div>`;
@@ -812,14 +807,11 @@
             if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
             if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
 
-            // Diagnóstico temporal: añadir ?debug=1 al final de la URL para verificar
-            // si el navegador recibió los parámetros P3 y P7 desde AppSheet.
             if (q.get('debug') === '1') {
                 const debugInfo = [
                     `P3 recibido: ${g('P3') ? 'sí' : 'NO'} (${g('P3').length} caracteres)`,
                     `P7 recibido: ${g('P7') ? 'sí' : 'NO'} (${g('P7').length} caracteres)`,
-                    `P7 campos separados: ${p7.length}`,
-                    `P7 muestra inicial: ${g('P7').slice(0, 180) || '(vacío)'}`
+                    `VC_APP_Neurologicos: ${g('VC_APP_Neurologicos') ? 'sí' : 'NO'}`
                 ].join('\n');
                 h += SEC('DIAGNÓSTICO TÉCNICO (solo debug=1)', `<div class="f full"><div class="fv">${E(debugInfo)}</div></div>`);
             }
@@ -835,7 +827,6 @@
                 h += SEC('CONCLUSIONES DIAGNÓSTICAS (CIE-11)', t);
             }
 
-            // Campos almacenados directamente en la tabla paciente; no dependen de índices del blob P3.
             const notasDiagnosticas = F('Notas Diagnósticas y Juicio Clínico', g('NotasDiagnosticas'), true);
             const impresionDiagnostica = F('Impresión diagnóstica y discusión', g('ImpresionDiagnostica'), true);
             const textoDiagnostico = notasDiagnosticas + impresionDiagnostica;
@@ -850,8 +841,6 @@
             document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
             }
 
-            // Recuperar los bloques desde Apps Script. Se aceptan los nombres actuales
-            // y los nombres de columnas VC_Blob_* usados por la versión anterior.
             const patientId = q.get('id');
             const putIfPresent = (key, ...values) => {
                 for (const value of values) {
@@ -863,8 +852,6 @@
             };
 
             if (patientId) {
-                // Apps Script devuelve JSONP y exige id, token k y callback.
-                // La versión anterior usaba fetch + JSON y omitía k/callback, por lo que no era compatible.
                 window.InnovamedHC3Receive = data => {
                     if (!data || data.ok !== true) {
                         const detail = data && data.error ? data.error : 'Respuesta de datos no válida.';
@@ -880,6 +867,14 @@
                     putIfPresent('P5', data.P5, data.p5, data.VC_Blob_MapeoFamiliar);
                     putIfPresent('P6', data.P6, data.p6, data.VC_Blob_Tratamiento);
                     putIfPresent('P7', data.P7, data.p7, data.VC_Blob_Habitos);
+                    
+                    // Inyección de las 5 nuevas columnas recibidas desde el JSON del Apps Script
+                    putIfPresent('VC_APP_Neurologicos', data.VC_APP_Neurologicos);
+                    putIfPresent('VC_APP_Endocrinos', data.VC_APP_Endocrinos);
+                    putIfPresent('VC_APP_Renales', data.VC_APP_Renales);
+                    putIfPresent('VC_APP_Cardiovascular', data.VC_APP_Cardiovascular);
+                    putIfPresent('VC_APP_HepaticoGastrointestinal', data.VC_APP_HepaticoGastrointestinal);
+
                     putIfPresent('NotasDiagnosticas', data.NotasDiagnosticas);
                     putIfPresent('ImpresionDiagnostica', data.ImpresionDiagnostica);
                     render();
@@ -896,7 +891,6 @@
                     '&callback=InnovamedHC3Receive';
                 document.head.appendChild(script);
             } else {
-                // Permite abrir el HTML con parámetros P1–P7 directamente para pruebas.
                 render();
             }
         })();
