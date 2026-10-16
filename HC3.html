@@ -418,9 +418,9 @@
     <footer class="footer" id="footer"></footer>
 
     <script>
-        (() => {
+        (async () => {
             const q = new URLSearchParams(location.search);
-            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgzwwfxzrDZT_CUAo1ex2bytUMaLzo6H2jzOoUbyw8uuXBXYqfoVWDTrr4-HzrH7uFw/exec';
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEI2zkOEQoSYn3ltP9Ea2SfWBsucVBBcltoU-uAN9EHWp6Hx6TIfZjTXyZ1hWHNCPqsQ/exec';
 
             function render() {
             const g = k => {
@@ -497,14 +497,14 @@
             let h = '';
 
             const datosPersonalesExtra =
-                F('Escolaridad', g('Escolaridad')) +
-                F('Religión', g('Religion')) +
                 F('Fecha de ingreso', g('FechaIngreso')) +
                 F('Fecha de nacimiento', g('FechaNacimiento')) +
                 F('Lugar de nacimiento', g('LugarNacimiento')) +
                 F('Dirección del paciente', g('DireccionPaciente')) +
                 F('Estado civil', g('EstadoCivil')) +
                 F('Profesión / Ocupación', g('ProfesionOcupacion')) +
+                F('Escolaridad', g('Escolaridad')) +
+                F('Religión', g('Religion')) +
                 F('Contacto de emergencia', g('ContactoEmergencia'), true);
             if (datosPersonalesExtra) {
                 h += SEC('Datos personales complementarios', `<div class="grid">${datosPersonalesExtra}</div>`);
@@ -529,76 +529,76 @@
             let per = F('Producto de embarazo', V(p2, 0)) + F('Semanas de embarazo', V(p2, 1)) + F('Respiró y lloró al nacer', V(p2, 2)) + F('Alimentación', V(p2, 3)) + F('Desarrollo psicomotor', V(p2, 4)) + F('Control postural', V(p2, 5)) + F('Sostener la cabeza', V(p2, 6)) + F('Sentarse sin apoyo y ponerse de pie', V(p2, 7)) + F('Locomoción', V(p2, 8)) + F('Gatear', V(p2, 9)) + F('Caminar', V(p2, 10)) + F('Correr y saltar con uno o ambos pies', V(p2, 11)) + F('Equilibrio', V(p2, 12)) + F('Mantenerse estable de pie o sobre un solo pie', V(p2, 13)) + F('Caminar en línea recta', V(p2, 14));
             if (per) a += SS('Perinatales y desarrollo (menores de 18 años)', `<div class="grid">${per}</div>`);
 
-            const isNegarAPP = V(p2, 149).toUpperCase() === 'X';
+            const isNegarAPP = V(p2, 47).toUpperCase() === 'X';
 
             if (isNegarAPP) {
-                const textAPP = V(p2, 150) || 'Negar APP';
+                const textAPP = V(p2, 48) || 'Negar APP';
                 a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="f full"><div class="fv">${E(textAPP)}</div></div>`);
             } else {
                 let tceBlock = '';
-                if (V(p2, 18) || V(p2, 19) || V(p2, 20)) {
-                    tceBlock = `<div class="grid-3">${F('Traumatismo Craneoencefálico (TCE)', V(p2, 18))}${F('Pérdida de conciencia', V(p2, 19))}${F('Duración', V(p2, 20))}</div>`;
+                if (V(p2, 17) || V(p2, 18) || V(p2, 19)) {
+                    tceBlock = `<div class="grid-3">${F('Traumatismo Craneoencefálico (TCE)', V(p2, 17))}${F('Pérdida de conciencia', V(p2, 18))}${F('Duración', V(p2, 19))}</div>`;
                 }
 
                 let epilBlock = '';
-                if (V(p2, 21) || V(p2, 22) || V(p2, 23)) {
-                    epilBlock = `<div class="grid-3">${F('Epilepsia / Crisis convulsivas', V(p2, 21))}${F('Tratamiento Actual', V(p2, 22))}${F('Notas / Especificar', V(p2, 23))}</div>`;
+                if (V(p2, 20) || V(p2, 21) || V(p2, 22)) {
+                    epilBlock = `<div class="grid-3">${F('Epilepsia / Crisis convulsivas', V(p2, 20))}${F('Tratamiento Actual', V(p2, 21))}${F('Notas / Especificar', V(p2, 22))}</div>`;
                 }
 
                 let evcBlock = '';
-                if (V(p2, 24) || V(p2, 25) || V(p2, 26)) {
-                    evcBlock = `<div class="grid-3">${F('Enfermedad Vascular Cerebral (EVC)', V(p2, 24))}${F('Tratamiento Actual', V(p2, 25))}${F('Notas / Especificar', V(p2, 26))}</div>`;
+                if (V(p2, 23) || V(p2, 24) || V(p2, 25)) {
+                    evcBlock = `<div class="grid-3">${F('Enfermedad Vascular Cerebral (EVC)', V(p2, 23))}${F('Tratamiento Actual', V(p2, 24))}${F('Notas / Especificar', V(p2, 25))}</div>`;
                 }
 
                 let demBlock = '';
-                if (V(p2, 27) || V(p2, 28) || V(p2, 29)) {
-                    demBlock = `<div class="grid-3">${F('Deterioro Cognitivo / Demencia', V(p2, 27))}${F('Tratamiento Actual', V(p2, 28))}${F('Notas / Especificar', V(p2, 29))}</div>`;
+                if (V(p2, 26) || V(p2, 27) || V(p2, 28)) {
+                    demBlock = `<div class="grid-3">${F('Deterioro Cognitivo / Demencia', V(p2, 26))}${F('Tratamiento Actual', V(p2, 27))}${F('Notas / Especificar', V(p2, 28))}</div>`;
                 }
 
                 let cefBlock = '';
-                if (V(p2, 30) || V(p2, 31) || V(p2, 32)) {
-                    cefBlock = `<div class="grid-3">${F('Cefaleas crónicas / Migraña', V(p2, 30))}${F('Tratamiento Actual', V(p2, 31))}${F('Notas / Especificar', V(p2, 32))}</div>`;
+                if (V(p2, 29) || V(p2, 30) || V(p2, 31)) {
+                    cefBlock = `<div class="grid-3">${F('Cefaleas crónicas / Migraña', V(p2, 29))}${F('Tratamiento Actual', V(p2, 30))}${F('Notas / Especificar', V(p2, 31))}</div>`;
                 }
 
                 let otroNeuBlock = '';
-                if (V(p2, 33) || V(p2, 34) || V(p2, 35) || V(p2, 36)) {
-                    const textoCual = V(p2, 34) || V(p2, 33);
-                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', textoCual)}${F('Tratamiento Actual', V(p2, 35))}${F('Notas / Especificar', V(p2, 36))}</div>`;
+                if (V(p2, 32) || V(p2, 33) || V(p2, 34) || V(p2, 35)) {
+                    const textoCual = V(p2, 33) || V(p2, 32);
+                    otroNeuBlock = `<div class="grid-3">${F('Otro trastorno neurológico', textoCual)}${F('Tratamiento Actual', V(p2, 34))}${F('Notas / Especificar', V(p2, 35))}</div>`;
                 }
 
                 let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock +
-                              F('Endocrinos / Metabólicos', V(p2, 37)) + 
-                              F('Cardiovasculares', V(p2, 60)) + 
-                              F('Renales y Hepáticos', V(p2, 74)) + 
-                              F('Año', V(p2, 142)) + 
-                              F('Tipo de Cirugía/causa', V(p2, 143)) + 
-                              F('Cirugía Bariátrica', V(p2, 144)) + 
-                              F('Delirium postoperatorio previo', V(p2, 145)) + 
-                              F('Alergias a medicamentos generales', V(p2, 147), true) + 
-                              F('Reacciones graves a psicofármacos previos', V(p2, 148), true);
+                              F('Endocrinos / Metabólicos', V(p2, 36)) + 
+                              F('Cardiovasculares', V(p2, 37)) + 
+                              F('Renales y Hepáticos', V(p2, 38)) + 
+                              F('Año', V(p2, 40)) + 
+                              F('Tipo de Cirugía/causa', V(p2, 41)) + 
+                              F('Cirugía Bariátrica', V(p2, 42)) + 
+                              F('Delirium postoperatorio previo', V(p2, 43)) + 
+                              F('Alergias a medicamentos generales', V(p2, 45), true) + 
+                              F('Reacciones graves a psicofármacos previos', V(p2, 46), true);
                 if (appVals) a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="grid">${appVals}</div>`);
             }
 
             let ago = '';
-            let fo = F('G', V(p2, 157)) + F('P', V(p2, 158)) + F('A', V(p2, 159)) + F('C', V(p2, 160));
+            let fo = F('G', V(p2, 55)) + F('P', V(p2, 56)) + F('A', V(p2, 57)) + F('C', V(p2, 58));
             if (fo) ago += `<div class="f full"><span class="fl">Fórmula Obstétrica</span><div class="formula">${fo}</div></div>`;
             
-            ago += F('Menarca', V(p2, 152)) + 
-                   F('Ciclos menstruales', V(p2, 153)) + 
-                   F('Duración y frecuencia', V(p2, 154)) + 
-                   F('FUM', V(p2, 155)) + 
-                   F('Hijos vivos', V(p2, 161)) + 
-                   F('Complicaciones obstétricas', V(p2, 162), true) + 
-                   F('Estado actual', V(p2, 163)) + 
-                   F('Embarazo actual', V(p2, 164)) + 
-                   F('Semanas de gestación', V(p2, 165)) + 
-                   F('Lactancia activa', V(p2, 166)) + 
-                   F('Anticonceptivos hormonales', V(p2, 167)) + 
-                   F('Nombre / Tipo', V(p2, 168));
+            ago += F('Menarca', V(p2, 50)) + 
+                   F('Ciclos menstruales', V(p2, 51)) + 
+                   F('Duración y frecuencia', V(p2, 52)) + 
+                   F('FUM', V(p2, 53)) + 
+                   F('Hijos vivos', V(p2, 59)) + 
+                   F('Complicaciones obstétricas', V(p2, 60), true) + 
+                   F('Estado actual', V(p2, 61)) + 
+                   F('Embarazo actual', V(p2, 62)) + 
+                   F('Semanas de gestación', V(p2, 63)) + 
+                   F('Lactancia activa', V(p2, 64)) + 
+                   F('Anticonceptivos hormonales', V(p2, 65)) + 
+                   F('Nombre / Tipo', V(p2, 66));
 
-            const isNegarAGO = V(p2, 169).trim().toUpperCase() === 'X';
+            const isNegarAGO = V(p2, 67).trim().toUpperCase() === 'X';
             if (isNegarAGO) {
-                const notaNiegaAGO = V(p2, 170) || 'Sin antecedentes ginecoobstétricos patológicos o de riesgo actuales.';
+                const notaNiegaAGO = V(p2, 68) || 'Sin antecedentes ginecoobstétricos patológicos o de riesgo actuales.';
                 ago += `<div class="f full"><span class="fl">Paciente niega AGO</span><div class="fv">${E(notaNiegaAGO)}</div></div>`;
             }
 
@@ -693,7 +693,7 @@
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
-            // --- HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
+            // --- SECCIÓN: HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
             let hb = '';
             const hbGeneral =
                 F('Horas promedio de sueño nocturno', V(p7, 7)) +
@@ -707,10 +707,13 @@
                 F('Contenido de pantallas', V(p7, 18), true);
             if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
+            // "No consume" es un campo de control: nunca se imprime.
+            // La Nota solo se muestra cuando No consume está marcado con X.
             const noConsumeMarcado = V(p7, 21).toUpperCase() === 'X';
             const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 22), true) : '';
             let sust = notaNoConsumo ? `<div class="grid">${notaNoConsumo}</div>` : '';
 
+            // Estas tres respuestas forman un único conjunto visual en una fila.
             const cafeina =
                 F('Café / Cafeína', V(p7, 23)) +
                 F('Frecuencia y Cantidad', V(p7, 24)) +
@@ -724,10 +727,12 @@
                 const cant = V(p7, iCant);
                 const fecha = V(p7, iFecha);
                 const crit = V(p7, iCrit);
-                const critFormato = iCrit ? crit.replace(/\s*,\s*/g, '\n') : crit;
+                const critFormato = iCrit === 32 ? crit.replace(/\s*,\s*/g, '\n') : crit;
                 const extra = iExtra !== null ? V(p7, iExtra) : '';
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
 
+                // Los parámetros adicionales conservan su posición: CAGE antes de la tabla;
+                // los criterios clínicos después de ella. La tabla contiene solo los cinco campos comunes.
                 let beforeTable = '';
                 let afterTable = '';
                 if (extra) beforeTable += `<div class="grid">${F('CAGE Automatizado', extra)}</div>`;
@@ -744,7 +749,6 @@
                 return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${beforeTable}${tablaConsumo}${afterTable}`;
             };
 
-            // Índices exactos alineados al blob P7:
             sust += renderSubst('Tabaco / Nicotina', 27, 28, 29, 30, 31, 32);
             sust += renderSubst('Chimó / Tabaco mascado', 34, 35, 36, 37, 38, 39);
             sust += renderSubst('Alcohol', 42, 43, 44, 45, 46, 47, 41);
@@ -793,36 +797,74 @@
             document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
             }
 
-            // El HTML conserva los parámetros breves de presentación y solicita los bloques
-            // clínicos al Apps Script usando únicamente el ID del paciente.
-            window.InnovamedHC3Receive = data => {
-                if (!data || data.ok !== true) {
-                    document.getElementById('content').textContent = 'No se pudo cargar la historia clínica. ' + String(data && data.error ? data.error : 'Respuesta no válida del servidor.');
-                    document.getElementById('empty').style.display = 'none';
-                    return;
+            // Recuperar los bloques desde Apps Script. Se aceptan los nombres actuales
+            // y los nombres de columnas VC_Blob_* usados por la versión anterior.
+            const patientId = q.get('id');
+            const putIfPresent = (key, ...values) => {
+                for (const value of values) {
+                    if (value !== undefined && value !== null && String(value) !== '') {
+                        q.set(key, String(value));
+                        return;
+                    }
                 }
-                ['P1','P2','P3','P4','P5','P6','P7'].forEach(k => q.set(k, data[k] || ''));
-                q.set('NotasDiagnosticas', data.NotasDiagnosticas || '');
-                q.set('ImpresionDiagnostica', data.ImpresionDiagnostica || '');
-                render();
             };
 
-            const patientId = q.get('id');
             if (patientId) {
-                if (APPS_SCRIPT_URL.includes('PEGAR_AQUI')) {
-                    document.getElementById('content').textContent = 'Falta configurar la URL del Apps Script en el archivo HTML.';
-                } else {
-                    const script = document.createElement('script');
-                    script.onerror = () => {
-                        document.getElementById('content').textContent = 'No fue posible conectar con el servicio de datos clínicos.';
-                    };
-                    script.src = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.includes('?') ? '&' : '?') +
-                        'id=' + encodeURIComponent(patientId) +
-                        '&k=' + encodeURIComponent(q.get('k') || '') +
-                        '&callback=InnovamedHC3Receive';
-                    document.head.appendChild(script);
+                try {
+                    const response = await fetch(APPS_SCRIPT_URL + '?id=' + encodeURIComponent(patientId));
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    const data = await response.json();
+                    if (!data || typeof data !== 'object' || data.error) {
+                        throw new Error(data && data.error ? data.error : 'Respuesta de datos no válida.');
+                    }
+
+                    putIfPresent('P1', data.P1, data.p1, data.VC_Blob_Clinica);
+                    putIfPresent('P2', data.P2, data.p2, data.VC_Blob_Antecedentes);
+                    putIfPresent('P3', data.P3, data.p3, data.VC_Blob_Psiquiatria);
+                    putIfPresent('P4', data.P4, data.p4, data.VC_Blob_Diagnostico, data.VC_Blob_Diagnosticos);
+                    putIfPresent('P5', data.P5, data.p5, data.VC_Blob_MapeoFamiliar);
+                    putIfPresent('P6', data.P6, data.p6, data.VC_Blob_Tratamiento);
+                    putIfPresent('P7', data.P7, data.p7, data.VC_Blob_Habitos);
+
+                    putIfPresent('Paciente', data.Paciente, data['Nombre y Apellido'], data.Nombre_y_Apellido);
+                    putIfPresent('Sexo', data.Sexo);
+                    putIfPresent('Cedula', data.Cedula, data['Cédula']);
+                    putIfPresent('Edad', data.Edad);
+                    putIfPresent('Telefono', data.Telefono, data['Teléfono']);
+                    putIfPresent('FechaIngreso', data.FechaIngreso, data['Fecha Ingreso']);
+                    putIfPresent('FechaNacimiento', data.FechaNacimiento, data['F / N'], data['Fecha de nacimiento']);
+                    putIfPresent('LugarNacimiento', data.LugarNacimiento, data['Lugar de Nacimiento']);
+                    putIfPresent('DireccionPaciente', data.DireccionPaciente, data.Direccion, data['Dirección']);
+                    putIfPresent('EstadoCivil', data.EstadoCivil, data['Estado civil']);
+                    putIfPresent('ProfesionOcupacion', data.ProfesionOcupacion, data['Profesion / Ocupacion']);
+                    putIfPresent('Escolaridad', data.Escolaridad);
+                    putIfPresent('Religion', data.Religion, data['Religión']);
+                    putIfPresent('ContactoEmergencia', data.ContactoEmergencia, data['Contacto de emergencia']);
+                    putIfPresent('MotivoConsulta', data.MotivoConsulta, data['Motivo de Consulta']);
+                    putIfPresent('EnfermedadActual', data.EnfermedadActual, data['Enfermedad Actual']);
+                    putIfPresent('NotasDiagnosticas', data.NotasDiagnosticas, data['Notas Diagnósticas y Juicio Clínico']);
+                    putIfPresent('ImpresionDiagnostica', data.ImpresionDiagnostica, data['Impresión diagnóstica y discusión']);
+
+                    // Normalizar metadatos del centro/médico sin sobrescribir parámetros existentes.
+                    putIfPresent('Titulo', data.Titulo, data['Centro Medico.Titulo']);
+                    putIfPresent('Subtitulo', data.Subtitulo, data['Centro Medico.Subtítulo']);
+                    putIfPresent('Medico tratante', data['Medico tratante'], data['Médico tratante']);
+                    putIfPresent('Especialidad Medica', data['Especialidad Medica'], data['Especialidad Médica'], data.Especialidad);
+                    putIfPresent('Direccion', data.Direccion, data['Dirección']);
+                    putIfPresent('Numero+de+telefono+principal', data['Numero de telefono principal'], data['Número de teléfono principal']);
+                    putIfPresent('Numero+secundario', data['Numero secundario'], data['Número secundario']);
+                    putIfPresent('Whatsapp', data.Whatsapp, data.WhatsApp);
+                    putIfPresent('Redes+sociales', data['Redes sociales']);
+                    putIfPresent('Correo+electronico', data['Correo electronico'], data['Correo electrónico']);
+
+                    render();
+                } catch (err) {
+                    console.error('Error al cargar los datos clínicos:', err);
+                    document.getElementById('content').textContent = 'No se pudieron cargar los datos clínicos desde Apps Script. Verifica que la implementación esté activa y que devuelva los blobs P1–P7 (o sus columnas VC_Blob_*). Detalle: ' + String(err && err.message ? err.message : err);
+                    document.getElementById('empty').style.display = 'none';
                 }
             } else {
+                // Permite abrir el HTML con parámetros P1–P7 directamente para pruebas.
                 render();
             }
         })();
