@@ -1,4 +1,4 @@
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -862,12 +862,14 @@
             };
 
             if (patientId) {
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL + '?id=' + encodeURIComponent(patientId));
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    const data = await response.json();
-                    if (!data || typeof data !== 'object' || data.error) {
-                        throw new Error(data && data.error ? data.error : 'Respuesta de datos no válida.');
+                // Apps Script devuelve JSONP y exige id, token k y callback.
+                // La versión anterior usaba fetch + JSON y omitía k/callback, por lo que no era compatible.
+                window.InnovamedHC3Receive = data => {
+                    if (!data || data.ok !== true) {
+                        const detail = data && data.error ? data.error : 'Respuesta de datos no válida.';
+                        document.getElementById('content').textContent = 'No se pudieron cargar los datos clínicos desde Apps Script. ' + detail;
+                        document.getElementById('empty').style.display = 'none';
+                        return;
                     }
 
                     putIfPresent('P1', data.P1, data.p1, data.VC_Blob_Clinica);
@@ -877,44 +879,21 @@
                     putIfPresent('P5', data.P5, data.p5, data.VC_Blob_MapeoFamiliar);
                     putIfPresent('P6', data.P6, data.p6, data.VC_Blob_Tratamiento);
                     putIfPresent('P7', data.P7, data.p7, data.VC_Blob_Habitos);
-
-                    putIfPresent('Paciente', data.Paciente, data['Nombre y Apellido'], data.Nombre_y_Apellido);
-                    putIfPresent('Sexo', data.Sexo);
-                    putIfPresent('Cedula', data.Cedula, data['Cédula']);
-                    putIfPresent('Edad', data.Edad);
-                    putIfPresent('Telefono', data.Telefono, data['Teléfono']);
-                    putIfPresent('FechaIngreso', data.FechaIngreso, data['Fecha Ingreso']);
-                    putIfPresent('FechaNacimiento', data.FechaNacimiento, data['F / N'], data['Fecha de nacimiento']);
-                    putIfPresent('LugarNacimiento', data.LugarNacimiento, data['Lugar de Nacimiento']);
-                    putIfPresent('DireccionPaciente', data.DireccionPaciente, data.Direccion, data['Dirección']);
-                    putIfPresent('EstadoCivil', data.EstadoCivil, data['Estado civil']);
-                    putIfPresent('ProfesionOcupacion', data.ProfesionOcupacion, data['Profesion / Ocupacion']);
-                    putIfPresent('Escolaridad', data.Escolaridad);
-                    putIfPresent('Religion', data.Religion, data['Religión']);
-                    putIfPresent('ContactoEmergencia', data.ContactoEmergencia, data['Contacto de emergencia']);
-                    putIfPresent('MotivoConsulta', data.MotivoConsulta, data['Motivo de Consulta']);
-                    putIfPresent('EnfermedadActual', data.EnfermedadActual, data['Enfermedad Actual']);
-                    putIfPresent('NotasDiagnosticas', data.NotasDiagnosticas, data['Notas Diagnósticas y Juicio Clínico']);
-                    putIfPresent('ImpresionDiagnostica', data.ImpresionDiagnostica, data['Impresión diagnóstica y discusión']);
-
-                    // Normalizar metadatos del centro/médico sin sobrescribir parámetros existentes.
-                    putIfPresent('Titulo', data.Titulo, data['Centro Medico.Titulo']);
-                    putIfPresent('Subtitulo', data.Subtitulo, data['Centro Medico.Subtítulo']);
-                    putIfPresent('Medico tratante', data['Medico tratante'], data['Médico tratante']);
-                    putIfPresent('Especialidad Medica', data['Especialidad Medica'], data['Especialidad Médica'], data.Especialidad);
-                    putIfPresent('Direccion', data.Direccion, data['Dirección']);
-                    putIfPresent('Numero+de+telefono+principal', data['Numero de telefono principal'], data['Número de teléfono principal']);
-                    putIfPresent('Numero+secundario', data['Numero secundario'], data['Número secundario']);
-                    putIfPresent('Whatsapp', data.Whatsapp, data.WhatsApp);
-                    putIfPresent('Redes+sociales', data['Redes sociales']);
-                    putIfPresent('Correo+electronico', data['Correo electronico'], data['Correo electrónico']);
-
+                    putIfPresent('NotasDiagnosticas', data.NotasDiagnosticas);
+                    putIfPresent('ImpresionDiagnostica', data.ImpresionDiagnostica);
                     render();
-                } catch (err) {
-                    console.error('Error al cargar los datos clínicos:', err);
-                    document.getElementById('content').textContent = 'No se pudieron cargar los datos clínicos desde Apps Script. Verifica que la implementación esté activa y que devuelva los blobs P1–P7 (o sus columnas VC_Blob_*). Detalle: ' + String(err && err.message ? err.message : err);
+                };
+
+                const script = document.createElement('script');
+                script.onerror = () => {
+                    document.getElementById('content').textContent = 'No fue posible conectar con Apps Script. Verifica la URL publicada y los permisos de la aplicación web.';
                     document.getElementById('empty').style.display = 'none';
-                }
+                };
+                script.src = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.includes('?') ? '&' : '?') +
+                    'id=' + encodeURIComponent(patientId) +
+                    '&k=' + encodeURIComponent(q.get('k') || '') +
+                    '&callback=InnovamedHC3Receive';
+                document.head.appendChild(script);
             } else {
                 // Permite abrir el HTML con parámetros P1–P7 directamente para pruebas.
                 render();
