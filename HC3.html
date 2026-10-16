@@ -578,15 +578,28 @@
                 let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock;
 
                 // Endocrinos / metabólicos: la columna del encabezado no se imprime como diagnóstico.
-                let endocrinos =
-                    condicion('Hipotiroidismo', 37, 38, 39) +
-                    condicion('Hipertiroidismo', 40, 41, 42) +
-                    condicion('Diabetes Mellitus Tipo 2', 43, 44, 45) +
-                    condicion('Diabetes Mellitus Tipo 1', 46, 47, 48) +
-                    condicion('Síndrome Metabólico / Dislipidemia', 49, 50, 51) +
-                    condicion('Síndrome de Ovario Poliquístico (SOP)', 52, 53, 54) +
-                    otraCondicion(55, 56, 57, 58);
-                if (endocrinos) appVals += SS('Endocrinos / Metabólicos', endocrinos);
+                let appVals = tceBlock + epilBlock + evcBlock + demBlock + cefBlock + otroNeuBlock +
+                              F('Endocrinos / Metabólicos', V(p2, 37)) + 
+                              F('Cardiovasculares', V(p2, 60)) + 
+                              F('Renales', V(p2, 74)) + 
+                              F('Hepáticos y gastrointestinales', V(p2, 175)) + 
+                              F('Hígado graso', V(p2, 176)) + F('Año', V(p2, 177)) + F('Tratamiento', V(p2, 178)) +
+                              F('Hepatitis A', V(p2, 179)) + F('Año', V(p2, 180)) + F('Tratamiento', V(p2, 181)) +
+                              F('Hepatitis B', V(p2, 182)) + F('Año', V(p2, 183)) + F('Tratamiento', V(p2, 184)) +
+                              F('Hepatitis C', V(p2, 185)) + F('Año', V(p2, 186)) + F('Tratamiento', V(p2, 187)) +
+                              F('Insuficiencia Hepática', V(p2, 188)) + F('Año', V(p2, 189)) + F('Tratamiento', V(p2, 190)) +
+                              F('Cirrosis', V(p2, 191)) + F('Año', V(p2, 192)) + F('Tratamiento', V(p2, 193)) +
+                              F('Gastritis', V(p2, 194)) + F('Año', V(p2, 195)) + F('Tratamiento', V(p2, 196)) +
+                              F('Reflujo gastroesofágico', V(p2, 197)) + F('Año', V(p2, 198)) + F('Tratamiento', V(p2, 199)) +
+                              F('Estreñimiento', V(p2, 200)) + F('Año', V(p2, 201)) + F('Tratamiento', V(p2, 202)) +
+                              F('Litiasis Vesicular', V(p2, 203)) + F('Año', V(p2, 204)) + F('Tratamiento', V(p2, 205)) +
+                              F('Año', V(p2, 208)) + 
+                              F('Tipo de Cirugía/causa', V(p2, 209)) + 
+                              F('Cirugía Bariátrica', V(p2, 210)) + 
+                              F('Delirium postoperatorio previo', V(p2, 211)) + 
+                              F('Alergias a medicamentos generales', V(p2, 213), true) + 
+                              F('Reacciones graves a psicofármacos previos', V(p2, 214), true);
+                if (appVals) a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="grid">${appVals}</div>`);
 
                 let cardiovasculares =
                     condicion('Hipertensión Arterial (HTA)', 60, 61, 62) +
