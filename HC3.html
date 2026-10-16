@@ -693,28 +693,28 @@
                 if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
             }
 
-            // --- SECCIÓN: HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
+            // --- HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
             let hb = '';
             const hbGeneral =
-                F('Horas promedio de sueño nocturno', V(p7, 8)) +
-                F('Calidad del sueño', V(p7, 9)) +
-                F('Frecuencia de alimentación', V(p7, 11)) +
-                F('Descripción de alimentación', V(p7, 12), true) +
-                F('Frecuencia semanal de ejercicio', V(p7, 14)) +
-                F('Tipo de ejercicio', V(p7, 15)) +
-                F('Uso de pantallas (h/día)', V(p7, 17)) +
-                F('Supervisión de pantallas', V(p7, 18)) +
-                F('Contenido de pantallas', V(p7, 19), true);
+                F('Horas promedio de sueño nocturno', V(p7, 7)) +
+                F('Calidad del sueño', V(p7, 8)) +
+                F('Frecuencia de alimentación', V(p7, 10)) +
+                F('Descripción de alimentación', V(p7, 11), true) +
+                F('Frecuencia semanal de ejercicio', V(p7, 13)) +
+                F('Tipo de ejercicio', V(p7, 14)) +
+                F('Uso de pantallas (h/día)', V(p7, 16)) +
+                F('Supervisión de pantallas', V(p7, 17)) +
+                F('Contenido de pantallas', V(p7, 18), true);
             if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
 
-            const noConsumeMarcado = V(p7, 22).toUpperCase() === 'X';
-            const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 23), true) : '';
+            const noConsumeMarcado = V(p7, 21).toUpperCase() === 'X';
+            const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 22), true) : '';
             let sust = notaNoConsumo ? `<div class="grid">${notaNoConsumo}</div>` : '';
 
             const cafeina =
-                F('Café / Cafeína', V(p7, 24)) +
-                F('Frecuencia y Cantidad', V(p7, 25)) +
-                F('Impacto clínico percibido', V(p7, 26));
+                F('Café / Cafeína', V(p7, 23)) +
+                F('Frecuencia y Cantidad', V(p7, 24)) +
+                F('Impacto clínico percibido', V(p7, 25));
             if (cafeina) sust += `<div class="grid-3">${cafeina}</div>`;
 
             const renderSubst = (title, iEstatus, iEdad, iFreq, iCant, iFecha, iCrit, iExtra = null) => {
@@ -724,7 +724,7 @@
                 const cant = V(p7, iCant);
                 const fecha = V(p7, iFecha);
                 const crit = V(p7, iCrit);
-                const critFormato = iCrit === 33 ? crit.replace(/\s*,\s*/g, '\n') : crit;
+                const critFormato = iCrit ? crit.replace(/\s*,\s*/g, '\n') : crit;
                 const extra = iExtra !== null ? V(p7, iExtra) : '';
                 if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
 
@@ -744,13 +744,14 @@
                 return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${beforeTable}${tablaConsumo}${afterTable}`;
             };
 
-            sust += renderSubst('Tabaco / Nicotina', 28, 29, 30, 31, 32, 33);
-            sust += renderSubst('Chimó / Tabaco mascado', 35, 36, 37, 38, 39, 40);
-            sust += renderSubst('Alcohol', 43, 44, 45, 46, 47, 48, 42);
-            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 50, 51, 52, 53, 54, 55);
-            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 57, 58, 59, 60, 61, 62);
-            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 64, 65, 66, 67, 68, 69);
-            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 71, 72, 73, 74, 75, 76);
+            // Índices exactos alineados al blob P7:
+            sust += renderSubst('Tabaco / Nicotina', 27, 28, 29, 30, 31, 32);
+            sust += renderSubst('Chimó / Tabaco mascado', 34, 35, 36, 37, 38, 39);
+            sust += renderSubst('Alcohol', 42, 43, 44, 45, 46, 47, 41);
+            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 49, 50, 51, 52, 53, 54);
+            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 56, 57, 58, 59, 60, 61);
+            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 63, 64, 65, 66, 67, 68);
+            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 70, 71, 72, 73, 74, 75);
             if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
             if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
 
