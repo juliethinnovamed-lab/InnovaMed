@@ -51,7 +51,7 @@
             justify-content: space-between;
             padding: 0 25px;
             z-index: 9999;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
         }
 
         .action-buttons {
@@ -60,7 +60,7 @@
         }
 
         .btn-print {
-            background-color: #2b3e50;
+            background-color: var(--p);
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
             padding: 6px 12px;
@@ -127,7 +127,7 @@
             border-right: 1px dashed var(--b);
         }
 
-        /* MARCA DE AGUA CENTRADA EN CADA COLUMNA (MISMO ESTILO HC3) */
+        /* MARCA DE AGUA CENTRADA EN CADA COLUMNA */
         .watermark {
             position: absolute;
             top: 55%;
@@ -201,7 +201,7 @@
             display: inline-block;
         }
 
-        /* TITULOS SECCION DENTRO DEL CUERPO (ESTILO .st DE HC3) */
+        /* TÍTULOS DE SECCIÓN ESTILO HC3 (.st) */
         .section-header {
             color: var(--p);
             font-weight: 700;
@@ -222,7 +222,7 @@
             word-wrap: break-word;
         }
 
-        /* PIE DE PÁGINA (ESTILO .footer DE HC3) */
+        /* PIE DE PÁGINA ESTILO HC3 */
         .footer-container {
             position: absolute;
             bottom: 8mm;
@@ -297,7 +297,6 @@
             
             <!-- COLUMNA IZQUIERDA: RÉCIPE -->
             <div class="recipe-column left">
-                <!-- MARCA DE AGUA EN EL FONDO CENTRADO DE ESTA COLUMNA -->
                 <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
                 
                 <div class="column-content">
@@ -352,7 +351,6 @@
 
             <!-- COLUMNA DERECHA: INDICACIONES -->
             <div class="recipe-column right">
-                <!-- MARCA DE AGUA EN EL FONDO CENTRADO DE ESTA COLUMNA -->
                 <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
 
                 <div class="column-content">
