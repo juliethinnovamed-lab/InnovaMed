@@ -544,7 +544,8 @@
                 .patient-cell { vertical-align:top; padding:3pt 4pt !important; border-bottom:0.5pt solid #d0d7de; }
                 .lab { display:block; font-size:7pt !important; margin-bottom:2pt; }
                 .val { display:block; font-size:8.5pt !important; font-weight:normal !important; overflow-wrap:anywhere; }
-                .sec { margin:9pt 0 !important; }
+                /* Separación amplia entre secciones para que Word no las muestre conglomeradas. */
+                .sec { margin:18pt 0 20pt !important; padding-bottom:4pt !important; page-break-inside:auto; }
                 .st { font-size:9.5pt !important; padding:3pt 0 !important; margin:0 0 4pt !important; border-bottom:1pt solid #2b3e50; page-break-after:avoid; }
                 .sst { font-size:8.5pt !important; margin:5pt 0 3pt !important; page-break-after:avoid; }
                 .grid, .grid-2, .grid-3, .grid-5, .mental { display:table !important; width:100% !important; table-layout:fixed; border-collapse:collapse; margin:3pt 0 5pt !important; padding:0 !important; background:#fff !important; border:0.5pt solid #d0d7de; }
@@ -589,6 +590,14 @@
                 source.replaceWith(table);
             };
             const content = parsed.getElementById('content');
+            // Insertamos separadores reales entre secciones: Word a veces ignora los márgenes CSS de los div.
+            const topSections = Array.from(content.children).filter(el => el.classList.contains('sec'));
+            topSections.slice(0, -1).forEach(section => {
+                const spacer = parsed.createElement('p');
+                spacer.setAttribute('style', 'margin:0;padding:0;height:18pt;line-height:18pt;mso-line-height-rule:exactly;font-size:1pt;');
+                spacer.innerHTML = '&nbsp;';
+                section.after(spacer);
+            });
             Array.from(content.querySelectorAll('.grid, .grid-2, .grid-3, .grid-5, .mental')).reverse().forEach(el => {
                 const columns = el.classList.contains('grid-5') ? 5 : el.classList.contains('grid-3') ? 3 : 2;
                 tableFromChildren(el, columns);
