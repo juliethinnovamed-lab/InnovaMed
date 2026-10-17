@@ -340,23 +340,36 @@
             z-index: 20;
         }
 
-        .selection-panel {
-            max-width: 900px;
-            margin: 0 auto 15px;
-            padding: 16px;
-            border: 1px solid var(--b);
-            border-radius: 8px;
-            background: #fff;
-            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        .selection-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(20, 30, 40, .48);
+            backdrop-filter: blur(2px);
         }
-        .selection-panel h2 { margin: 0 0 8px; font-size: 16px; color: var(--p); }
-        .selection-panel p { margin: 0 0 12px; color: var(--m); }
-        .section-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; margin: 12px 0 16px; }
-        .section-option { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; }
+        .selection-backdrop[hidden] { display: none !important; }
+        .selection-panel {
+            width: min(760px, 100%);
+            max-height: min(82vh, 760px);
+            overflow: auto;
+            padding: 22px;
+            border: 1px solid rgba(0,0,0,.08);
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 18px 60px rgba(0,0,0,.28), 0 4px 14px rgba(0,0,0,.12);
+        }
+        .selection-panel h2 { margin: 0 0 8px; font-size: 18px; color: var(--p); }
+        .selection-panel p { margin: 0 0 14px; color: var(--m); }
+        .section-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin: 16px 0 20px; }
+        .section-option { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; padding: 8px; border-radius: 6px; background: #f7f9fb; }
+        .section-option input { margin-top: 1px; }
         .selection-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-        .selection-panel [hidden] { display: none !important; }
         .buttons { display: flex; flex-wrap: wrap; gap: 8px; }
-        @media (max-width: 600px) { .section-options { grid-template-columns: 1fr; } .logo { width: 90px; height: 90px; flex-basis: 90px; } .header { gap: 6px; } }
+        @media (max-width: 600px) { .selection-backdrop { padding: 10px; } .selection-panel { padding: 16px; max-height: 88vh; } .section-options { grid-template-columns: 1fr; } .logo { width: 90px; height: 90px; flex-basis: 90px; } .header { gap: 6px; } }
 
         button {
             border: 0;
@@ -415,18 +428,20 @@
         <button type="button" onclick="toggleSectionSelector()">Seleccionar secciones para imprimir</button>
     </div>
 
-    <div class="selection-panel" id="selection-panel" hidden>
-        <h2>Seleccionar secciones para el informe</h2>
-        <p>Marca una o varias secciones. El informe generado incluirá los datos del paciente y únicamente las secciones seleccionadas.</p>
-        <div class="selection-actions">
-            <button type="button" onclick="setAllSections(true)">Seleccionar todas</button>
-            <button type="button" onclick="setAllSections(false)">Deseleccionar todas</button>
-        </div>
-        <div class="section-options" id="section-options"></div>
-        <div class="selection-actions">
-            <button type="button" onclick="printSelectedSections()">Imprimir selección / PDF</button>
-            <button type="button" onclick="downloadSelectedWord()">Guardar selección en Word</button>
-            <button type="button" onclick="toggleSectionSelector(false)">Cerrar</button>
+    <div class="selection-backdrop" id="selection-backdrop" hidden onclick="if(event.target === this) toggleSectionSelector(false)">
+        <div class="selection-panel" id="selection-panel" role="dialog" aria-modal="true" aria-labelledby="selection-title">
+            <h2 id="selection-title">Seleccionar secciones para el informe</h2>
+            <p>Marca una o varias secciones. El informe generado incluirá los datos del paciente y únicamente las secciones seleccionadas.</p>
+            <div class="selection-actions">
+                <button type="button" onclick="setAllSections(true)">Seleccionar todas</button>
+                <button type="button" onclick="setAllSections(false)">Deseleccionar todas</button>
+            </div>
+            <div class="section-options" id="section-options"></div>
+            <div class="selection-actions">
+                <button type="button" onclick="printSelectedSections()">Imprimir selección / PDF</button>
+                <button type="button" onclick="downloadSelectedWord()">Guardar selección en Word</button>
+                <button type="button" onclick="toggleSectionSelector(false)">Cerrar</button>
+            </div>
         </div>
     </div>
 
@@ -453,10 +468,15 @@
 
     <script>
         function toggleSectionSelector(forceOpen) {
-            const panel = document.getElementById('selection-panel');
-            const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : panel.hidden;
-            panel.hidden = !shouldOpen;
-            if (shouldOpen) refreshSectionOptions();
+            const backdrop = document.getElementById('selection-backdrop');
+            const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : backdrop.hidden;
+            backdrop.hidden = !shouldOpen;
+            document.body.style.overflow = shouldOpen ? 'hidden' : '';
+            if (shouldOpen) {
+                refreshSectionOptions();
+                const firstCheck = document.querySelector('#section-options input[type="checkbox"]');
+                if (firstCheck) firstCheck.focus();
+            }
         }
 
         function refreshSectionOptions() {
@@ -500,7 +520,6 @@
             const patient = document.getElementById('patient');
             const header = document.querySelector('.header');
             const cloneHeader = header.cloneNode(true);
-            cloneHeader.querySelector('#titulo').textContent = 'Historia Clínica';
             const patientHtml = patient.style.display === 'none' ? '' : patient.outerHTML;
             return {headerHtml: cloneHeader.outerHTML, patientHtml, contentHtml: chosen.map(x => x.outerHTML).join(''), footerHtml: document.getElementById('footer').outerHTML};
         }
@@ -508,7 +527,7 @@
         function reportDocument(report) {
             const styles = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('\n');
             return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe médico - Historia Clínica</title><style>${styles}
-body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12mm;box-shadow:none}.header{break-inside:avoid}.footer{position:static;margin-top:20px;text-align:center}.buttons,.selection-panel{display:none!important}</style></head><body><main class="doc">${report.headerHtml}${report.patientHtml}<div id="content">${report.contentHtml}</div></main>${report.footerHtml}</body></html>`;
+body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12mm;box-shadow:none}.header{break-inside:avoid}.footer{position:static;margin-top:20px;text-align:center}.buttons,.selection-backdrop,.selection-panel{display:none!important}</style></head><body><main class="doc">${report.headerHtml}${report.patientHtml}<div id="content">${report.contentHtml}</div></main>${report.footerHtml}</body></html>`;
         }
 
         function printSelectedSections() {
@@ -539,7 +558,7 @@ body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12m
 
         (async () => {
             const q = new URLSearchParams(location.search);
-            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgzwwfxzrDZT_CUAo1ex2bytUMaLzo6H2jzOoUbyw8uuXBXYqfoVWDTrr4-HzrH7uFw/exec';
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEI2zkOEQoSYn3ltP9Ea2SfWBsucVBBcltoU-uAN9EHWp6Hx6TIfZjTXyZ1hWHNCPqsQ/exec';
 
             function render() {
             const g = k => {
@@ -584,8 +603,9 @@ body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12m
                 return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
             };
 
-            document.getElementById('titulo').textContent = 'Historia Clínica';
-            document.getElementById('subtitulo').textContent = g('Subtitulo');
+            const tituloReferencia = g('Titulo') || g('Título') || g('Tipo') || 'Historia Clínica';
+            document.getElementById('titulo').textContent = tituloReferencia;
+            document.getElementById('subtitulo').textContent = g('Subtitulo') || g('Subtítulo');
             
             const instInfo = [
                 g('Medico+tratante') || g('Medico tratante') ? `<strong>Médico tratante:</strong> ${g('Medico+tratante') || g('Medico tratante')}` : '',
