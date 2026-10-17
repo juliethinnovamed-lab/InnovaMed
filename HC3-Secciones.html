@@ -524,10 +524,122 @@
             return {headerHtml: cloneHeader.outerHTML, patientHtml, contentHtml: chosen.map(x => x.outerHTML).join(''), footerHtml: document.getElementById('footer').outerHTML};
         }
 
-        function reportDocument(report) {
+        function reportDocument(report, forWord = false) {
             const styles = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('\n');
-            return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe médico - Historia Clínica</title><style>${styles}
-body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12mm;box-shadow:none}.header{break-inside:avoid}.footer{position:static;margin-top:20px;text-align:center}.buttons,.selection-backdrop,.selection-panel{display:none!important}</style></head><body><main class="doc">${report.headerHtml}${report.patientHtml}<div id="content">${report.contentHtml}</div></main>${report.footerHtml}</body></html>`;
+            const wordStyles = forWord ? `
+                @page Section1 { size: 8.27in 11.69in; margin: 0.55in 0.55in 0.65in 0.55in; mso-header-margin:0.25in; mso-footer-margin:0.3in; }
+                div.Section1 { page:Section1; }
+                html,body { background:#fff !important; padding:0 !important; margin:0 !important; color:#24292f; font-family:Arial,Helvetica,sans-serif; font-size:9pt; line-height:1.2; }
+                p,div,span { mso-line-height-rule:at-least; }
+                .doc { width:100% !important; min-height:0 !important; margin:0 !important; padding:0 !important; box-shadow:none !important; }
+                table { border-collapse:collapse !important; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+                table.header-table { width:100% !important; table-layout:fixed; border-collapse:collapse !important; border-bottom:1.5pt solid #2b3e50; margin:0 0 8pt !important; }
+                td.logo-cell { width:82pt !important; vertical-align:middle; text-align:center; padding:0 8pt 6pt 0 !important; }
+                td.logo-cell img { display:block; width:70pt !important; height:70pt !important; max-width:70pt !important; max-height:70pt !important; }
+                td.info-cell { width:auto !important; vertical-align:middle; text-align:center; padding:0 4pt 6pt !important; }
+                .title { font-size:13pt !important; line-height:1.15; margin:0 0 3pt !important; }
+                .sub { font-size:9pt !important; margin:0 0 2pt !important; }
+                .docline { font-size:8pt !important; }
+                table.patient-data { width:100% !important; table-layout:fixed; border-collapse:collapse !important; margin:0 0 9pt !important; }
+                .patient-cell { vertical-align:top; padding:3pt 4pt !important; border-bottom:0.5pt solid #d0d7de; }
+                .lab { display:block; font-size:7pt !important; margin-bottom:2pt; }
+                .val { display:block; font-size:8.5pt !important; font-weight:normal !important; overflow-wrap:anywhere; }
+                .sec { margin:9pt 0 !important; }
+                .st { font-size:9.5pt !important; padding:3pt 0 !important; margin:0 0 4pt !important; border-bottom:1pt solid #2b3e50; page-break-after:avoid; }
+                .sst { font-size:8.5pt !important; margin:5pt 0 3pt !important; page-break-after:avoid; }
+                .grid, .grid-2, .grid-3, .grid-5, .mental { display:table !important; width:100% !important; table-layout:fixed; border-collapse:collapse; margin:3pt 0 5pt !important; padding:0 !important; background:#fff !important; border:0.5pt solid #d0d7de; }
+                .grid > tbody > tr > td, .grid-2 > tbody > tr > td, .grid-3 > tbody > tr > td, .grid-5 > tbody > tr > td, .mental > tbody > tr > td { vertical-align:top; padding:4pt 5pt; border:0.5pt solid #e0e4e8; }
+                .f, .mi { display:block !important; padding:3pt 2pt !important; border-bottom:0 !important; min-width:0 !important; page-break-inside:avoid; }
+                .fl, .mil { display:block; font-size:7pt !important; margin-bottom:2pt; }
+                .fv, .miv { display:block; font-size:8.5pt !important; line-height:1.25 !important; white-space:pre-wrap; overflow-wrap:anywhere; }
+                .tbl { width:100% !important; border-collapse:collapse !important; table-layout:fixed; font-size:8pt !important; }
+                .tbl th { font-size:7pt !important; padding:4pt 3pt !important; background:#eef3f6 !important; border:0.5pt solid #c7d0d8 !important; }
+                .tbl td { font-size:7.5pt !important; padding:4pt 3pt !important; border:0.5pt solid #d0d7de !important; overflow-wrap:anywhere; }
+                .footer { position:static !important; margin-top:14pt !important; padding-top:5pt !important; border-top:0.5pt solid #d0d7de; text-align:center; font-size:7pt !important; }
+                .buttons, .selection-backdrop, .selection-panel, #empty { display:none !important; }
+            ` : `body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12mm;box-shadow:none}.header{break-inside:avoid}.footer{position:static;margin-top:20px;text-align:center}.buttons,.selection-backdrop,.selection-panel{display:none!important}`;
+            let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe médico - Historia Clínica</title><style>${styles}\n${wordStyles}</style></head><body><main class="doc">${report.headerHtml}${report.patientHtml}<div id="content">${report.contentHtml}</div></main>${report.footerHtml}</body></html>`;
+            if (!forWord) return html;
+
+            // Word no interpreta de forma fiable CSS Grid/Flex. Convertimos esos contenedores en tablas reales.
+            const parsed = new DOMParser().parseFromString(html, 'text/html');
+            const tableFromChildren = (source, columns) => {
+                const items = Array.from(source.children);
+                const table = parsed.createElement('table');
+                table.className = source.className;
+                table.setAttribute('cellspacing', '0');
+                table.setAttribute('cellpadding', '0');
+                const tbody = parsed.createElement('tbody');
+                for (let i = 0; i < items.length; i += columns) {
+                    const tr = parsed.createElement('tr');
+                    for (let j = i; j < Math.min(i + columns, items.length); j++) {
+                        const td = parsed.createElement('td');
+                        if (items[j].classList.contains('f') && items[j].classList.contains('full')) {
+                            td.colSpan = columns;
+                            td.appendChild(items[j].cloneNode(true));
+                            tr.appendChild(td);
+                            break;
+                        }
+                        td.appendChild(items[j].cloneNode(true));
+                        tr.appendChild(td);
+                    }
+                    tbody.appendChild(tr);
+                }
+                table.appendChild(tbody);
+                source.replaceWith(table);
+            };
+            const content = parsed.getElementById('content');
+            Array.from(content.querySelectorAll('.grid, .grid-2, .grid-3, .grid-5, .mental')).reverse().forEach(el => {
+                const columns = el.classList.contains('grid-5') ? 5 : el.classList.contains('grid-3') ? 3 : 2;
+                tableFromChildren(el, columns);
+            });
+            const header = parsed.querySelector('.header');
+            if (header) {
+                const logo = header.querySelector('.logo');
+                const hm = header.querySelector('.hm');
+                const table = parsed.createElement('table');
+                table.className = 'header-table';
+                table.setAttribute('width', '100%'); table.setAttribute('cellspacing', '0'); table.setAttribute('cellpadding', '0');
+                const tbody = parsed.createElement('tbody'); const tr = parsed.createElement('tr');
+                const logoCell = parsed.createElement('td'); logoCell.className = 'logo-cell'; logoCell.setAttribute('width', '110'); logoCell.setAttribute('valign', 'middle');
+                const hmCell = parsed.createElement('td'); hmCell.className = 'info-cell'; hmCell.setAttribute('valign', 'middle'); hmCell.setAttribute('align', 'center');
+                if (logo) {
+                    const img = logo.querySelector('img');
+                    if (img) {
+                        const wordImg = img.cloneNode(true);
+                        wordImg.setAttribute('width', '93'); wordImg.setAttribute('height', '93');
+                        wordImg.setAttribute('style', 'width:70pt;height:70pt;display:block;border:0;');
+                        wordImg.removeAttribute('srcset');
+                        logoCell.appendChild(wordImg);
+                    }
+                }
+                if (hm) Array.from(hm.childNodes).forEach(node => hmCell.appendChild(node.cloneNode(true)));
+                tr.append(logoCell, hmCell); tbody.appendChild(tr); table.appendChild(tbody); header.replaceWith(table);
+            }
+            const patient = parsed.querySelector('.patient');
+            if (patient) {
+                const items = Array.from(patient.children);
+                const table = parsed.createElement('table'); table.className = 'patient-data';
+                table.setAttribute('width', '100%'); table.setAttribute('cellspacing', '0'); table.setAttribute('cellpadding', '0');
+                const tbody = parsed.createElement('tbody'); const tr = parsed.createElement('tr');
+                items.forEach(item => { const td = parsed.createElement('td'); td.className = 'patient-cell'; Array.from(item.childNodes).forEach(node => td.appendChild(node.cloneNode(true))); tr.appendChild(td); });
+                tbody.appendChild(tr); table.appendChild(tbody); patient.replaceWith(table);
+            }
+            // Añade dimensiones explícitas a cualquier otra imagen: Word suele ignorar max-width/max-height.
+            parsed.querySelectorAll('img').forEach(img => {
+                if (!img.hasAttribute('width')) img.setAttribute('width', '93');
+                if (!img.hasAttribute('height')) img.setAttribute('height', '93');
+                img.style.maxWidth = '70pt'; img.style.maxHeight = '70pt';
+            });
+            parsed.documentElement.setAttribute('xmlns:o', 'urn:schemas-microsoft-com:office:office');
+            parsed.documentElement.setAttribute('xmlns:w', 'urn:schemas-microsoft-com:office:word');
+            const office = parsed.createElement('div'); office.className = 'Section1';
+            while (parsed.body.firstChild) office.appendChild(parsed.body.firstChild);
+            parsed.body.appendChild(office);
+            const officeStyle = parsed.createElement('style');
+            officeStyle.textContent = `@page Section1 { size:8.27in 11.69in; margin:0.55in 0.55in 0.65in; mso-header-margin:0.25in; mso-footer-margin:0.3in; } div.Section1 { page:Section1; } table { mso-table-lspace:0pt; mso-table-rspace:0pt; } td { vertical-align:top; }`;
+            parsed.head.appendChild(officeStyle);
+            return '<!DOCTYPE html>\n' + parsed.documentElement.outerHTML;
         }
 
         function printSelectedSections() {
@@ -544,7 +656,7 @@ body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12m
         function downloadSelectedWord() {
             const report = getSelectedReport();
             if (!report) return;
-            const html = reportDocument(report);
+            const html = reportDocument(report, true);
             const blob = new Blob(['\ufeff', html], {type: 'application/msword;charset=utf-8'});
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
