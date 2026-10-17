@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Récipe e Indicaciones Médicas</title>
+    <!-- LIBRERÍA PARA EXPORTAR HTML A DOCX (WORD) -->
+    <script src="https://unpkg.com/html2docx-js/dist/html2docx.bundle.js"></script>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* BANNER DE BOTONES SUPERIOR (SE OCULTA AL IMPRIMIR) */
+        .no-print-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 55px;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-print {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-word {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-word:hover {
+            background-color: #059669;
+        }
+
+        /* HOJA A4 HORIZONTAL EN PANTALLA */
+        .page-sheet {
+            width: 297mm;
+            height: 210mm;
+            background: #ffffff;
+            position: relative;
+            margin-top: 65px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* IMAGEN DE FONDO NUEVA */
+        .background-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 297mm;
+            height: 210mm;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.15; /* Ajusta la opacidad según prefieras para que no opaque el texto */
+            background-image: url('https://drive.google.com/uc?export=view&id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 2 COLUMNAS */
+        .recipe-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 297mm;
+            height: 210mm;
+            z-index: 2;
+            display: table;
+            table-layout: fixed;
+        }
+
+        .recipe-column {
+            display: table-cell;
+            width: 50%;
+            height: 210mm;
+            vertical-align: top;
+            padding: 10mm 14mm 14mm 14mm;
+            position: relative;
+        }
+
+        .recipe-column.left {
+            border-right: 1px dashed #cbd5e1;
+        }
+
+        /* ESTRUCTURA DEL MEMBRETE SUPERIOR */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 3mm;
+        }
+
+        .patient-cell {
+            vertical-align: middle;
+            width: 60%;
+            padding-right: 5px;
+        }
+
+        .logo-cell {
+            vertical-align: middle;
+            text-align: right;
+            width: 40%;
+        }
+
+        .patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8.5pt;
+        }
+
+        .patient-table td {
+            padding: 2px 3px;
+            vertical-align: middle;
+        }
+
+        .label {
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .value {
+            color: #0f172a;
+            border-bottom: 1px dotted #94a3b8;
+            font-weight: 500;
+        }
+
+        .logo-img {
+            max-width: 160px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: inline-block;
+        }
+
+        /* LÍNEA SEPARADORA ROJA */
+        .divider-red {
+            border: none;
+            border-top: 2px solid #ef4444;
+            margin: 0 0 4mm 0;
+        }
+
+        /* TITULOS SECCION DENTRO DEL CUERPO */
+        .section-header {
+            font-size: 11pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4mm;
+            text-transform: capitalize;
+        }
+
+        .content-body {
+            font-size: 9.5pt;
+            line-height: 1.55;
+            color: #1e293b;
+            min-height: 95mm;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* PIE DE PÁGINA */
+        .footer-container {
+            position: absolute;
+            bottom: 8mm;
+            left: 14mm;
+            right: 14mm;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 6px;
+            font-size: 7.5pt;
+            color: #475569;
+        }
+
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .footer-left {
+            width: 58%;
+            vertical-align: top;
+            text-align: left;
+            line-height: 1.35;
+        }
+
+        .footer-right {
+            width: 42%;
+            vertical-align: top;
+            text-align: right;
+            line-height: 1.35;
+        }
+
+        .footer-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 8pt;
+            margin-bottom: 1px;
+        }
+
+        /* REGLAS DE IMPRESIÓN */
+        @media print {
+            .no-print-bar { display: none !important; }
+            body { background: white; }
+            .page-sheet {
+                margin: 0;
+                box-shadow: none;
+                width: 297mm;
+                height: 210mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR DE ACCIONES -->
+    <div class="no-print-bar">
+        <span style="font-size: 14px; font-weight: 600;">Récipe e Indicaciones Médicas</span>
+        <div class="action-buttons">
+            <button class="btn-word" onclick="downloadWord()">📄 Descargar a Word</button>
+            <button class="btn-print" onclick="window.print()">🖨️ Imprimir / PDF</button>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR DOCUMENTO -->
+    <div class="page-sheet" id="document-content">
+        
+        <!-- NUEVA IMAGEN DE FONDO -->
+        <div class="background-image-container"></div>
+
+        <div class="recipe-wrapper">
+            
+            <!-- COLUMNA IZQUIERDA: RÉCIPE -->
+            <div class="recipe-column left">
+                <table class="header-table">
+                    <tr>
+                        <td class="patient-cell">
+                            <table class="patient-table">
+                                <tr>
+                                    <td class="label" style="width: 22%;">Paciente:</td>
+                                    <td class="value" id="param-nombre-1">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">C.I.:</td>
+                                    <td class="value" id="param-cedula-1">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Médico:</td>
+                                    <td class="value" id="param-medico-1">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Fecha:</td>
+                                    <td class="value" id="param-fecha-1">-</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="logo-cell">
+                            <img src="https://drive.google.com/thumbnail?id=1-QlsVpbVlm8ZVGJYyqSaYmkUzxMzyoUu" class="logo-img" alt="Logo">
+                        </td>
+                    </tr>
+                </table>
+
+                <hr class="divider-red">
+
+                <div class="section-header">Récipe:</div>
+                <div class="content-body" id="param-recipe">-</div>
+
+                <div class="footer-container">
+                    <table class="footer-table">
+                        <tr>
+                            <td class="footer-left">
+                                <div class="footer-title" id="param-foot-titulo-1">-</div>
+                                <div id="param-direccion-1">-</div>
+                            </td>
+                            <td class="footer-right">
+                                <div>📞 <span id="param-tel1-1">-</span> / <span id="param-tel2-1">-</span></div>
+                                <div>💬 WhatsApp: <span id="param-ws-1">-</span></div>
+                                <div>✉️ <span id="param-correo-1">-</span> | 🌐 <span id="param-redes-1">-</span></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: INDICACIONES -->
+            <div class="recipe-column right">
+                <table class="header-table">
+                    <tr>
+                        <td class="patient-cell">
+                            <table class="patient-table">
+                                <tr>
+                                    <td class="label" style="width: 22%;">Paciente:</td>
+                                    <td class="value" id="param-nombre-2">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">C.I.:</td>
+                                    <td class="value" id="param-cedula-2">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Médico:</td>
+                                    <td class="value" id="param-medico-2">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Fecha:</td>
+                                    <td class="value" id="param-fecha-2">-</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="logo-cell">
+                            <img src="https://drive.google.com/thumbnail?id=1-QlsVpbVlm8ZVGJYyqSaYmkUzxMzyoUu" class="logo-img" alt="Logo">
+                        </td>
+                    </tr>
+                </table>
+
+                <hr class="divider-red">
+
+                <div class="section-header">Indicaciones:</div>
+                <div class="content-body" id="param-indicaciones">-</div>
+
+                <div class="footer-container">
+                    <table class="footer-table">
+                        <tr>
+                            <td class="footer-left">
+                                <div class="footer-title" id="param-foot-titulo-2">-</div>
+                                <div id="param-direccion-2">-</div>
+                            </td>
+                            <td class="footer-right">
+                                <div>📞 <span id="param-tel1-2">-</span> / <span id="param-tel2-2">-</span></div>
+                                <div>💬 WhatsApp: <span id="param-ws-2">-</span></div>
+                                <div>✉️ <span id="param-correo-2">-</span> | 🌐 <span id="param-redes-2">-</span></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const val = urlParams.get(param);
+            return val ? decodeURIComponent(val.replace(/\+/g, ' ')) : '';
+        }
+
+        function formatToDDMMYYYY(dateString) {
+            if (!dateString || dateString === '-') return '-';
+
+            const cleanDate = dateString.trim();
+
+            if (cleanDate.includes('-')) {
+                const parts = cleanDate.split('-');
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+                    return `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[2]}`;
+                }
+            }
+
+            if (cleanDate.includes('/')) {
+                const parts = cleanDate.split('/');
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) {
+                        return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+                    }
+                    return `${parts[1].padStart(2, '0')}/${parts[0].padStart(2, '0')}/${parts[2]}`;
+                }
+            }
+
+            return cleanDate;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const titulo = getQueryParam('Titulo');
+            const medico = getQueryParam('Medico');
+            
+            const rawFecha = getQueryParam('Fecha');
+            const fecha = formatToDDMMYYYY(rawFecha);
+
+            const nombre = getQueryParam('Nombre');
+            const cedula = getQueryParam('Cedula');
+            const recipe = getQueryParam('Recipe');
+            const indicaciones = getQueryParam('Indicaciones');
+            
+            const direccion = getQueryParam('Direccion');
+            const tel1 = getQueryParam('Tel1') || getQueryParam('Numero+de+telefono+principal');
+            const tel2 = getQueryParam('Tel2') || getQueryParam('Numero+secundario');
+            const whatsapp = getQueryParam('Ws') || getQueryParam('Whatsapp');
+            const redes = getQueryParam('Redes') || getQueryParam('Redes+sociales');
+            const correo = getQueryParam('Correo') || getQueryParam('Correo+electronico');
+
+            const setText = (id, text) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = text && text.trim() !== '' ? text : '-';
+            };
+
+            // Pie de página (Nombre comercial)
+            setText('param-foot-titulo-1', titulo || '');
+            setText('param-foot-titulo-2', titulo || '');
+
+            // Ficha Paciente / Médico (Membrete superior)
+            setText('param-medico-1', medico);
+            setText('param-medico-2', medico);
+            setText('param-fecha-1', fecha);
+            setText('param-fecha-2', fecha);
+            setText('param-nombre-1', nombre);
+            setText('param-nombre-2', nombre);
+            setText('param-cedula-1', cedula);
+            setText('param-cedula-2', cedula);
+
+            // Pie de página
+            setText('param-direccion-1', direccion);
+            setText('param-direccion-2', direccion);
+            setText('param-tel1-1', tel1);
+            setText('param-tel1-2', tel1);
+            setText('param-tel2-1', tel2);
+            setText('param-tel2-2', tel2);
+            setText('param-ws-1', whatsapp);
+            setText('param-ws-2', whatsapp);
+            setText('param-redes-1', redes);
+            setText('param-redes-2', redes);
+            setText('param-correo-1', correo);
+            setText('param-correo-2', correo);
+
+            // Contenidos
+            setText('param-recipe', recipe);
+            setText('param-indicaciones', indicaciones);
+        });
+
+        // EXPORTAR A WORD
+        function downloadWord() {
+            const content = document.getElementById('document-content').innerHTML;
+            const patientName = document.getElementById('param-nombre-1').innerText || 'Paciente';
+            
+            const htmlDocument = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <title>Recipe Medico</title>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>
+            `;
+
+            const converted = html2docx(htmlDocument, {
+                orientation: 'landscape',
+                margins: { top: 720, right: 720, bottom: 720, left: 720 }
+            });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(converted);
+            link.download = `Recipe_${patientName.replace(/\s+/g, '_')}.docx`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
