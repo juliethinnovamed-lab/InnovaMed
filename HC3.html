@@ -37,7 +37,7 @@
             line-height: 1.4;
         }
 
-        /* BANNER DE BOTONES SUPERIOR (ESTILO HC3) */
+        /* BANNER DE BOTONES SUPERIOR (ESTILO HC3 EXACTO) */
         .no-print-bar {
             position: fixed;
             top: 0;
@@ -59,21 +59,22 @@
             gap: 8px;
         }
 
-        /* BOTONES ESTILO HC3 */
-        .btn-hc3 {
+        /* BOTONES COPIADOS EXACTAMENTE DE HC3 */
+        .no-print-bar button {
             border: 0;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--p);
             color: white;
-            padding: 6px 12px;
+            padding: 6px 10px;
             cursor: pointer;
             font-size: 10px;
             font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: background 0.2s ease;
         }
 
-        .btn-hc3:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .no-print-bar button:hover {
+            background: #1a252f;
         }
 
         /* HOJA A4 HORIZONTAL EN PANTALLA */
@@ -131,7 +132,7 @@
             height: 100%;
         }
 
-        /* ESTRUCTURA DEL MEMBRETE SUPERIOR (ESTILO HC3 CON LÍNEA SOBRIA) */
+        /* ESTRUCTURA DEL MEMBRETE SUPERIOR */
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -184,7 +185,7 @@
             display: inline-block;
         }
 
-        /* LÍNEA SEPARADORA SOBRIA (REEMPLAZO DE LA LÍNEA ROJA) */
+        /* LÍNEA SEPARADORA SOBRIA (COLOR --P DE HC3) */
         .divider-sobrio {
             border: none;
             border-top: 2px solid var(--p);
@@ -271,8 +272,8 @@
     <div class="no-print-bar">
         <span style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Récipe e Indicaciones Médicas</span>
         <div class="action-buttons">
-            <button class="btn-hc3" onclick="downloadWord()">Descargar Word</button>
-            <button class="btn-hc3" onclick="window.print()">Imprimir / PDF</button>
+            <button onclick="downloadWord()">Descargar a Word</button>
+            <button onclick="window.print()">Imprimir / PDF</button>
         </div>
     </div>
 
