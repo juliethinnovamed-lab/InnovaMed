@@ -94,21 +94,6 @@
             overflow: hidden;
         }
 
-        /* IMAGEN DE FONDO NUEVA */
-        .background-image-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 297mm;
-            height: 210mm;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.15;
-            background-image: url('https://drive.google.com/uc?export=view&id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3');
-            background-size: cover;
-            background-position: center;
-        }
-
         /* 2 COLUMNAS */
         .recipe-wrapper {
             position: absolute;
@@ -132,6 +117,25 @@
 
         .recipe-column.left {
             border-right: 1px dashed #cbd5e1;
+        }
+
+        /* MARCA DE AGUA CENTRADA EN CADA COLUMNA */
+        .watermark {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%;
+            max-width: 320px;
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .column-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
         }
 
         /* ESTRUCTURA DEL MEMBRETE SUPERIOR */
@@ -273,113 +277,119 @@
 
     <!-- CONTENEDOR DOCUMENTO -->
     <div class="page-sheet" id="document-content">
-        
-        <!-- FONDO DE IMAGEN -->
-        <div class="background-image-container"></div>
-
         <div class="recipe-wrapper">
             
             <!-- COLUMNA IZQUIERDA: RÉCIPE -->
             <div class="recipe-column left">
-                <table class="header-table">
-                    <tr>
-                        <td class="patient-cell">
-                            <table class="patient-table">
-                                <tr>
-                                    <td class="label" style="width: 22%;">Paciente:</td>
-                                    <td class="value" id="param-nombre-1">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="label">C.I.:</td>
-                                    <td class="value" id="param-cedula-1">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="label">Médico:</td>
-                                    <td class="value" id="param-medico-1">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="label">Fecha:</td>
-                                    <td class="value" id="param-fecha-1">-</td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td class="logo-cell">
-                            <img src="https://drive.google.com/thumbnail?id=1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
-                        </td>
-                    </tr>
-                </table>
-
-                <hr class="divider-red">
-
-                <div class="section-header">Récipe:</div>
-                <div class="content-body" id="param-recipe">-</div>
-
-                <div class="footer-container">
-                    <table class="footer-table">
+                <!-- MARCA DE AGUA EN EL FONDO CENTRADO DE ESTA COLUMNA -->
+                <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
+                
+                <div class="column-content">
+                    <table class="header-table">
                         <tr>
-                            <td class="footer-left">
-                                <div class="footer-title" id="param-foot-titulo-1">-</div>
-                                <div id="param-direccion-1">-</div>
+                            <td class="patient-cell">
+                                <table class="patient-table">
+                                    <tr>
+                                        <td class="label" style="width: 22%;">Paciente:</td>
+                                        <td class="value" id="param-nombre-1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">C.I.:</td>
+                                        <td class="value" id="param-cedula-1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Médico:</td>
+                                        <td class="value" id="param-medico-1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Fecha:</td>
+                                        <td class="value" id="param-fecha-1">-</td>
+                                    </tr>
+                                </table>
                             </td>
-                            <td class="footer-right">
-                                <div>📞 <span id="param-tel1-1">-</span> / <span id="param-tel2-1">-</span></div>
-                                <div>💬 WhatsApp: <span id="param-ws-1">-</span></div>
-                                <div>✉️ <span id="param-correo-1">-</span> | 🌐 <span id="param-redes-1">-</span></div>
+                            <td class="logo-cell">
+                                <img src="https://drive.google.com/thumbnail?id=1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
                             </td>
                         </tr>
                     </table>
+
+                    <hr class="divider-red">
+
+                    <div class="section-header">Récipe:</div>
+                    <div class="content-body" id="param-recipe">-</div>
+
+                    <div class="footer-container">
+                        <table class="footer-table">
+                            <tr>
+                                <td class="footer-left">
+                                    <div class="footer-title" id="param-foot-titulo-1">-</div>
+                                    <div id="param-direccion-1">-</div>
+                                </td>
+                                <td class="footer-right">
+                                    <div>📞 <span id="param-tel1-1">-</span> / <span id="param-tel2-1">-</span></div>
+                                    <div>💬 WhatsApp: <span id="param-ws-1">-</span></div>
+                                    <div>✉️ <span id="param-correo-1">-</span> | 🌐 <span id="param-redes-1">-</span></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- COLUMNA DERECHA: INDICACIONES -->
             <div class="recipe-column right">
-                <table class="header-table">
-                    <tr>
-                        <td class="patient-cell">
-                            <table class="patient-table">
-                                <tr>
-                                    <td class="label" style="width: 22%;">Paciente:</td>
-                                    <td class="value" id="param-nombre-2">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="label">C.I.:</td>
-                                    <td class="value" id="param-cedula-2">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="label">Médico:</td>
-                                    <td class="value" id="param-medico-2">-</td>
-                                </tr>
-                                <tr>
-                                    <td class="label">Fecha:</td>
-                                    <td class="value" id="param-fecha-2">-</td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td class="logo-cell">
-                            <img src="https://drive.google.com/thumbnail?id=1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
-                        </td>
-                    </tr>
-                </table>
+                <!-- MARCA DE AGUA EN EL FONDO CENTRADO DE ESTA COLUMNA -->
+                <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
 
-                <hr class="divider-red">
-
-                <div class="section-header">Indicaciones:</div>
-                <div class="content-body" id="param-indicaciones">-</div>
-
-                <div class="footer-container">
-                    <table class="footer-table">
+                <div class="column-content">
+                    <table class="header-table">
                         <tr>
-                            <td class="footer-left">
-                                <div class="footer-title" id="param-foot-titulo-2">-</div>
-                                <div id="param-direccion-2">-</div>
+                            <td class="patient-cell">
+                                <table class="patient-table">
+                                    <tr>
+                                        <td class="label" style="width: 22%;">Paciente:</td>
+                                        <td class="value" id="param-nombre-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">C.I.:</td>
+                                        <td class="value" id="param-cedula-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Médico:</td>
+                                        <td class="value" id="param-medico-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Fecha:</td>
+                                        <td class="value" id="param-fecha-2">-</td>
+                                    </tr>
+                                </table>
                             </td>
-                            <td class="footer-right">
-                                <div>📞 <span id="param-tel1-2">-</span> / <span id="param-tel2-2">-</span></div>
-                                <div>💬 WhatsApp: <span id="param-ws-2">-</span></div>
-                                <div>✉️ <span id="param-correo-2">-</span> | 🌐 <span id="param-redes-2">-</span></div>
+                            <td class="logo-cell">
+                                <img src="https://drive.google.com/thumbnail?id=1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
                             </td>
                         </tr>
                     </table>
+
+                    <hr class="divider-red">
+
+                    <div class="section-header">Indicaciones:</div>
+                    <div class="content-body" id="param-indicaciones">-</div>
+
+                    <div class="footer-container">
+                        <table class="footer-table">
+                            <tr>
+                                <td class="footer-left">
+                                    <div class="footer-title" id="param-foot-titulo-2">-</div>
+                                    <div id="param-direccion-2">-</div>
+                                </td>
+                                <td class="footer-right">
+                                    <div>📞 <span id="param-tel1-2">-</span> / <span id="param-tel2-2">-</span></div>
+                                    <div>💬 WhatsApp: <span id="param-ws-2">-</span></div>
+                                    <div>✉️ <span id="param-correo-2">-</span> | 🌐 <span id="param-redes-2">-</span></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
 
