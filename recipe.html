@@ -185,26 +185,26 @@
             display: inline-block;
         }
 
-        /* LÍNEA SEPARADORA SOBRIA (COLOR --P DE HC3) */
+        /* LÍNEA SEPARADORA SOBRIA */
         .divider-sobrio {
             border: none;
             border-top: 2px solid var(--p);
             margin: 0 0 8px 0;
         }
 
-        /* TÍTULOS DE SECCIÓN ESTILO HC3 */
+        /* TÍTULOS DE SECCIÓN ESTILO HC3 (CON MÁS MARGEN INFERIOR) */
         .section-header {
             color: var(--p);
             font-weight: 700;
             padding: 4px 0;
-            margin-bottom: 4px;
+            margin-bottom: 14px; /* <-- Espacio ampliado debajo del título */
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
             border-bottom: 1px solid var(--p);
         }
 
-        /* CUERPO DEL RÉCIPE / INDICACIONES CON ESPACIO ADICIONAL ARRIBA */
+        /* CUERPO DEL RÉCIPE / INDICACIONES (CON MÁS ESPACIO SUPERIOR) */
         .content-body {
             font-size: 10px;
             line-height: 1.4;
@@ -212,7 +212,7 @@
             min-height: 85mm;
             white-space: pre-wrap;
             word-wrap: break-word;
-            padding-top: 8px; /* <-- Espacio añadido entre la línea superior y el texto */
+            padding-top: 24px; /* <-- Espacio amplio añadido antes de empezar el texto */
         }
 
         /* PIE DE PÁGINA ESTILO HC3 */
