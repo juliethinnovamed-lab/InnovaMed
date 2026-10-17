@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historia Clínica Psiquiátrica</title>
-
+    <title>Récipe e Indicaciones Médicas</title>
+    <!-- LIBRERÍA PARA EXPORTAR HTML A DOCX (WORD) -->
+    <script src="https://unpkg.com/html2docx-js/dist/html2docx.bundle.js"></script>
     <style>
         :root {
             --p: #2b3e50;
@@ -13,117 +13,196 @@
             --m: #57606a;
         }
 
-        * {
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        *, *::before, *::after {
             box-sizing: border-box;
         }
 
-        html, body {
+        body {
             margin: 0;
             padding: 0;
-            background: #f4f6f8;
-            color: #24292f;
             font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            color: #24292f;
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-size: 11px;
             line-height: 1.4;
         }
 
-        body {
-            padding: 15px;
+        /* BANNER DE BOTONES SUPERIOR (SE OCULTA AL IMPRIMIR) */
+        .no-print-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: var(--p);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        .doc {
-            width: 210mm;
-            min-height: 297mm;
-            margin: auto;
-            background: #fff;
-            padding: 15mm 15mm 20mm;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-print {
+            background-color: #2b3e50;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: #1a252f;
+        }
+
+        .btn-word {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-word:hover {
+            background-color: #059669;
+        }
+
+        /* HOJA A4 HORIZONTAL EN PANTALLA */
+        .page-sheet {
+            width: 297mm;
+            height: 210mm;
+            background: #ffffff;
             position: relative;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            border-bottom: 2px solid var(--p);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .logo {
-            width: 60px;
-            height: 60px;
-            flex: 0 0 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-top: 55px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
             overflow: hidden;
         }
 
-        .logo img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        /* 2 COLUMNAS */
+        .recipe-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 297mm;
+            height: 210mm;
+            z-index: 2;
+            display: table;
+            table-layout: fixed;
         }
 
-        .hm {
-            flex: 1;
-            padding: 0 10px;
+        .recipe-column {
+            display: table-cell;
+            width: 50%;
+            height: 210mm;
+            vertical-align: top;
+            padding: 12mm 14mm 14mm 14mm;
+            position: relative;
         }
 
-        .title {
-            font-size: 16px;
+        .recipe-column.left {
+            border-right: 1px dashed var(--b);
+        }
+
+        /* MARCA DE AGUA CENTRADA EN CADA COLUMNA (MISMO ESTILO HC3) */
+        .watermark {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%;
+            max-width: 300px;
+            opacity: 0.10;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .column-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+        }
+
+        /* ESTRUCTURA DEL MEMBRETE SUPERIOR (ESTILO HC3) */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2px solid var(--p);
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .patient-cell {
+            vertical-align: middle;
+            width: 60%;
+            padding-right: 5px;
+        }
+
+        .logo-cell {
+            vertical-align: middle;
+            text-align: right;
+            width: 40%;
+        }
+
+        .patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5px;
+        }
+
+        .patient-table td {
+            padding: 2px 3px;
+            vertical-align: middle;
+            border-bottom: 1px dotted var(--b);
+        }
+
+        .label {
             font-weight: 700;
-            color: var(--p);
-            text-transform: uppercase;
-            margin: 0 0 2px;
-            letter-spacing: 0.5px;
-        }
-
-        .sub {
-            font-size: 10px;
-            font-weight: bold;
             color: var(--m);
-            margin-bottom: 2px;
-        }
-
-        .docline {
-            font-size: 9px;
-            color: var(--m);
-        }
-
-        .patient {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1.2fr 1fr 1.5fr;
-            border-bottom: 1px solid var(--p);
-            padding-bottom: 6px;
-            margin-bottom: 12px;
-        }
-
-        .pi {
-            padding: 2px 6px;
-            min-width: 0;
-        }
-
-        .lab {
-            display: block;
             font-size: 8px;
-            color: var(--m);
             text-transform: uppercase;
-            font-weight: bold;
         }
 
-        .val {
+        .value {
+            color: #24292f;
             font-weight: 600;
-            word-break: break-word;
-            font-size: 10.5px;
+            font-size: 10px;
         }
 
-        .sec {
-            margin: 12px 0;
+        .logo-img {
+            max-width: 120px;
+            max-height: 55px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: inline-block;
         }
 
-        .st {
+        /* TITULOS SECCION DENTRO DEL CUERPO (ESTILO .st DE HC3) */
+        .section-header {
             color: var(--p);
             font-weight: 700;
             padding: 4px 0;
@@ -132,696 +211,321 @@
             text-transform: uppercase;
             letter-spacing: 0.4px;
             border-bottom: 1px solid var(--p);
-            break-after: avoid;
         }
 
-        .sst {
-            color: var(--p);
-            font-weight: 700;
+        .content-body {
             font-size: 10px;
-            padding: 4px 0 2px;
-            margin: 6px 0 3px;
-            break-after: avoid;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 4px 10px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 4px 10px;
-            grid-column: 1 / -1;
-            background: #fcfcfc;
-            border: 1px solid var(--b);
-            padding: 4px 6px;
-            border-radius: 3px;
-        }
-
-        .grid-5 {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 4px 6px;
-            grid-column: 1 / -1;
-            background: #fcfcfc;
-            border: 1px solid var(--b);
-            padding: 4px 6px;
-            border-radius: 3px;
-        }
-
-        .grid-5 .f {
-            border-bottom: none;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 4px 10px;
-            grid-column: 1 / -1;
-            background: #fcfcfc;
-            border: 1px solid var(--b);
-            padding: 4px 6px;
-            border-radius: 3px;
-            margin-bottom: 4px;
-        }
-
-        .f {
-            padding: 3px 2px;
-            break-inside: avoid;
-            min-width: 0;
-            text-align: left;
-            border-bottom: 1px dotted var(--b);
-        }
-
-        .grid-3 .f, .grid-2 .f {
-            border-bottom: none;
-        }
-
-        .f.full {
-            grid-column: 1 / -1;
-        }
-
-        .fl {
-            display: block;
-            color: var(--m);
-            font-size: 8px;
-            font-weight: 700;
-            margin-bottom: 1px;
-            text-align: left;
-            text-transform: uppercase;
-        }
-
-        .fv {
-            white-space: pre-wrap;
-            word-break: break-word;
-            text-align: left;
-            line-height: 1.35;
-            font-size: 10px;
-        }
-
-        .mental {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 10px;
-        }
-
-        .mi {
-            padding: 3px 2px;
-            break-inside: avoid;
-            border-bottom: 1px dotted var(--b);
-        }
-
-        .mil {
-            font-size: 8px;
-            font-weight: 700;
-            color: var(--m);
-            text-transform: uppercase;
-        }
-
-        .miv {
-            white-space: pre-wrap;
-            word-break: break-word;
-            margin-top: 1px;
-            text-align: left;
-            font-size: 10px;
-        }
-
-        .formula {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-
-        .tbl {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 4px 0 8px;
-            font-size: 10px;
-            background: #fff;
-        }
-
-        .tbl th {
-            color: var(--p);
-            font-weight: 700;
-            padding: 4px 6px;
-            border-bottom: 2px solid var(--p);
-            text-align: left;
-            font-size: 9px;
-            text-transform: uppercase;
-            background: transparent;
-        }
-
-        .tbl td {
-            padding: 6px;
-            border-bottom: 1px solid var(--b);
+            line-height: 1.4;
             color: #24292f;
-            word-break: break-word;
-            text-align: left;
-            vertical-align: top;
-            font-size: 10px;
+            min-height: 85mm;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
-        .tbl-familiar {
-            table-layout: fixed;
-            font-size: 8px;
-        }
-
-        .tbl-familiar th {
-            padding: 4px 3px;
-            font-size: 7px;
-            overflow-wrap: anywhere;
-        }
-
-        .tbl-familiar td {
-            padding: 5px 3px;
-            font-size: 8px;
-            overflow-wrap: anywhere;
-        }
-
-        .tbl-familiar th:nth-child(1) { width: 14%; }
-        .tbl-familiar th:nth-child(2) { width: 5%; }
-        .tbl-familiar th:nth-child(3) { width: 7%; }
-        .tbl-familiar th:nth-child(4) { width: 17%; }
-        .tbl-familiar th:nth-child(5) { width: 9%; }
-        .tbl-familiar th:nth-child(6) { width: 9%; }
-        .tbl-familiar th:nth-child(7) { width: 17%; }
-        .tbl-familiar th:nth-child(8) { width: 22%; }
-
-        .tbl-familiar tr {
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-
-        .footer {
-            position: fixed;
-            left: 15mm;
-            right: 15mm;
-            bottom: 6mm;
+        /* PIE DE PÁGINA (ESTILO .footer DE HC3) */
+        .footer-container {
+            position: absolute;
+            bottom: 8mm;
+            left: 14mm;
+            right: 14mm;
             border-top: 1px solid var(--b);
             padding-top: 4px;
-            text-align: center;
-            color: var(--m);
             font-size: 8px;
+            color: var(--m);
             background: #fff;
         }
 
-        .footer span:not(:last-child)::after {
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .footer-left {
+            width: 58%;
+            vertical-align: top;
+            text-align: left;
+            line-height: 1.35;
+        }
+
+        .footer-right {
+            width: 42%;
+            vertical-align: top;
+            text-align: right;
+            line-height: 1.35;
+        }
+
+        .footer-title {
+            font-weight: 700;
+            color: var(--p);
+            font-size: 8.5px;
+            margin-bottom: 1px;
+            text-transform: uppercase;
+        }
+
+        .footer-container span:not(:last-child)::after {
             content: ' | ';
-            margin: 0 4px;
+            margin: 0 3px;
         }
 
-        .buttons {
-            position: fixed;
-            right: 12px;
-            top: 12px;
-            z-index: 20;
-        }
-
-        button {
-            border: 0;
-            border-radius: 4px;
-            background: var(--p);
-            color: white;
-            padding: 6px 10px;
-            cursor: pointer;
-            font-size: 10px;
-            font-weight: bold;
-        }
-
-        .empty {
-            text-align: center;
-            color: var(--m);
-            padding: 20px;
-        }
-
-        @page {
-            size: A4;
-            margin: 10mm 15mm 15mm;
-        }
-
+        /* REGLAS DE IMPRESIÓN */
         @media print {
-            html, body {
-                background: #fff;
-                padding: 0;
-            }
-
-            .doc {
-                width: auto;
-                min-height: 0;
+            .no-print-bar { display: none !important; }
+            body { background: white; padding: 0; }
+            .page-sheet {
                 margin: 0;
-                padding: 0 0 15mm;
                 box-shadow: none;
-            }
-
-            .buttons {
-                display: none;
-            }
-
-            .footer {
-                position: fixed;
-                bottom: 2mm;
-                left: 15mm;
-                right: 15mm;
+                width: 297mm;
+                height: 210mm;
             }
         }
     </style>
 </head>
-
 <body>
 
-    <div class="buttons">
-        <button onclick="window.print()">Imprimir / PDF</button>
+    <!-- BARRA SUPERIOR DE ACCIONES -->
+    <div class="no-print-bar">
+        <span style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Récipe e Indicaciones Médicas</span>
+        <div class="action-buttons">
+            <button class="btn-word" onclick="downloadWord()">📄 Descargar a Word</button>
+            <button class="btn-print" onclick="window.print()">🖨️ Imprimir / PDF</button>
+        </div>
     </div>
 
-    <main class="doc">
+    <!-- CONTENEDOR DOCUMENTO -->
+    <div class="page-sheet" id="document-content">
+        <div class="recipe-wrapper">
+            
+            <!-- COLUMNA IZQUIERDA: RÉCIPE -->
+            <div class="recipe-column left">
+                <!-- MARCA DE AGUA EN EL FONDO CENTRADO DE ESTA COLUMNA -->
+                <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
+                
+                <div class="column-content">
+                    <table class="header-table">
+                        <tr>
+                            <td class="patient-cell">
+                                <table class="patient-table">
+                                    <tr>
+                                        <td class="label" style="width: 22%;">Paciente:</td>
+                                        <td class="value" id="param-nombre-1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">C.I.:</td>
+                                        <td class="value" id="param-cedula-1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Médico:</td>
+                                        <td class="value" id="param-medico-1">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Fecha:</td>
+                                        <td class="value" id="param-fecha-1">-</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="logo-cell">
+                                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
+                            </td>
+                        </tr>
+                    </table>
 
-        <header class="header">
-            <div class="logo" id="logo">
-                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" alt="Logo">
+                    <div class="section-header">Récipe:</div>
+                    <div class="content-body" id="param-recipe">-</div>
+
+                    <div class="footer-container">
+                        <table class="footer-table">
+                            <tr>
+                                <td class="footer-left">
+                                    <div class="footer-title" id="param-foot-titulo-1">-</div>
+                                    <div id="param-direccion-1">-</div>
+                                </td>
+                                <td class="footer-right">
+                                    <div>📞 <span id="param-tel1-1">-</span> / <span id="param-tel2-1">-</span></div>
+                                    <div>💬 WhatsApp: <span id="param-ws-1">-</span></div>
+                                    <div>✉️ <span id="param-correo-1">-</span> | 🌐 <span id="param-redes-1">-</span></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="hm">
-                <h1 class="title" id="titulo"></h1>
-                <div class="sub" id="subtitulo"></div>
-                <div class="docline" id="info-institucion"></div>
+
+            <!-- COLUMNA DERECHA: INDICACIONES -->
+            <div class="recipe-column right">
+                <!-- MARCA DE AGUA EN EL FONDO CENTRADO DE ESTA COLUMNA -->
+                <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
+
+                <div class="column-content">
+                    <table class="header-table">
+                        <tr>
+                            <td class="patient-cell">
+                                <table class="patient-table">
+                                    <tr>
+                                        <td class="label" style="width: 22%;">Paciente:</td>
+                                        <td class="value" id="param-nombre-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">C.I.:</td>
+                                        <td class="value" id="param-cedula-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Médico:</td>
+                                        <td class="value" id="param-medico-2">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Fecha:</td>
+                                        <td class="value" id="param-fecha-2">-</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="logo-cell">
+                                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="section-header">Indicaciones:</div>
+                    <div class="content-body" id="param-indicaciones">-</div>
+
+                    <div class="footer-container">
+                        <table class="footer-table">
+                            <tr>
+                                <td class="footer-left">
+                                    <div class="footer-title" id="param-foot-titulo-2">-</div>
+                                    <div id="param-direccion-2">-</div>
+                                </td>
+                                <td class="footer-right">
+                                    <div>📞 <span id="param-tel1-2">-</span> / <span id="param-tel2-2">-</span></div>
+                                    <div>💬 WhatsApp: <span id="param-ws-2">-</span></div>
+                                    <div>✉️ <span id="param-correo-2">-</span> | 🌐 <span id="param-redes-2">-</span></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </header>
 
-        <div class="patient" id="patient"></div>
-        <div id="content"></div>
-        <div id="empty" class="empty" style="display:none">No se encontraron datos clínicos para mostrar.</div>
-
-    </main>
-
-    <footer class="footer" id="footer"></footer>
+        </div>
+    </div>
 
     <script>
-        (async () => {
-            const q = new URLSearchParams(location.search);
-            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgzwwfxzrDZT_CUAo1ex2bytUMaLzo6H2jzOoUbyw8uuXBXYqfoVWDTrr4-HzrH7uFw/exec';
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const val = urlParams.get(param);
+            return val ? decodeURIComponent(val.replace(/\+/g, ' ')) : '';
+        }
 
-            function render() {
-            const g = k => {
-                if (q.has(k)) return q.get(k) || '';
-                const altKey = k.replace(/\+/g, ' ');
-                if (q.has(altKey)) return q.get(altKey) || '';
-                for (let [key, val] of q.entries()) {
-                    if (key.replace(/\s+/g, '+') === k.replace(/\s+/g, '+')) return val;
+        function formatToDDMMYYYY(dateString) {
+            if (!dateString || dateString === '-') return '-';
+
+            const cleanDate = dateString.trim();
+
+            if (cleanDate.includes('-')) {
+                const parts = cleanDate.split('-');
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+                    return `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[2]}`;
                 }
-                return '';
-            };
+            }
 
-            const C = v => String(v ?? '').trim();
-            const A = k => { const x = g(k); return x === '' ? [] : x.split('|'); };
-            const V = (a, i) => C(a && a[i] !== undefined ? a[i] : '');
+            if (cleanDate.includes('/')) {
+                const parts = cleanDate.split('/');
+                if (parts.length === 3) {
+                    if (parts[0].length === 4) {
+                        return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+                    }
+                    return `${parts[1].padStart(2, '0')}/${parts[0].padStart(2, '0')}/${parts[2]}`;
+                }
+            }
 
-            const FX = v => {
-                const val = C(v);
-                return val.toUpperCase() === 'X' ? 'Sí' : val;
-            };
+            return cleanDate;
+        }
 
-            const E = v => String(v ?? '')
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-
-            const F = (l, v, full = false) => {
-                const val = FX(v);
-                if (!val) return '';
-                return `<div class="f ${full ? 'full' : ''}">${l ? `<span class="fl">${E(l)}</span>` : ''}<div class="fv">${E(val)}</div></div>`;
-            };
-
-            const M = (l, v) => {
-                const val = FX(v);
-                return val ? `<div class="mi"><div class="mil">${E(l)}</div><div class="miv">${E(val)}</div></div>` : '';
-            };
-
-            const SS = (t, h) => h && h.trim() ? `<div class="sst">${E(t)}</div>${h}` : '';
-            const SEC = (t, h) => h && h.trim() ? `<section class="sec"><div class="st">${E(t)}</div>${h}</section>` : '';
-
-            const parseRows = v => {
-                if (!C(v)) return [];
-                return v.split(/\|\||\n|~~/).map(x => x.split('|').map(C)).filter(x => x.some(Boolean));
-            };
-
-            document.getElementById('titulo').textContent = g('Titulo') || 'HISTORIA CLÍNICA PSIQUIÁTRICA';
-            document.getElementById('subtitulo').textContent = g('Subtitulo');
+        document.addEventListener("DOMContentLoaded", function() {
+            const titulo = getQueryParam('Titulo');
+            const medico = getQueryParam('Medico');
             
-            const instInfo = [
-                g('Medico+tratante') || g('Medico tratante') ? `<strong>Médico tratante:</strong> ${g('Medico+tratante') || g('Medico tratante')}` : '',
-                g('Especialidad+Medica') || g('Especialidad Medica') ? `<strong>Especialidad:</strong> ${g('Especialidad+Medica') || g('Especialidad Medica')}` : ''
-            ].filter(Boolean).join(' &nbsp;|&nbsp; ');
-            document.getElementById('info-institucion').innerHTML = instInfo;
+            const rawFecha = getQueryParam('Fecha');
+            const fecha = formatToDDMMYYYY(rawFecha);
 
-            const pi = [
-                ['Paciente', g('Paciente')],
-                ['Sexo', g('Sexo')],
-                ['Cédula', g('Cedula')],
-                ['Edad', g('Edad')],
-                ['Teléfono', g('Telefono')]
-            ].filter(x => C(x[1]));
+            const nombre = getQueryParam('Nombre');
+            const cedula = getQueryParam('Cedula');
+            const recipe = getQueryParam('Recipe');
+            const indicaciones = getQueryParam('Indicaciones');
+            
+            const direccion = getQueryParam('Direccion');
+            const tel1 = getQueryParam('Tel1') || getQueryParam('Numero+de+telefono+principal');
+            const tel2 = getQueryParam('Tel2') || getQueryParam('Numero+secundario');
+            const whatsapp = getQueryParam('Ws') || getQueryParam('Whatsapp');
+            const redes = getQueryParam('Redes') || getQueryParam('Redes+sociales');
+            const correo = getQueryParam('Correo') || getQueryParam('Correo+electronico');
 
-            const patientContainer = document.getElementById('patient');
-            if (pi.length > 0) {
-                patientContainer.innerHTML = pi.map(x => `<div class="pi"><span class="lab">${E(x[0])}</span><span class="val">${E(x[1])}</span></div>`).join('');
-            } else {
-                patientContainer.style.display = 'none';
-            }
-
-            const p1 = A('P1');
-            const p2 = A('P2');
-            const p3 = A('P3');
-            const p7 = A('P7');
-
-            let h = '';
-
-            const datosPersonalesExtra =
-                F('Fecha de ingreso', g('FechaIngreso')) +
-                F('Fecha de nacimiento', g('FechaNacimiento')) +
-                F('Lugar de nacimiento', g('LugarNacimiento')) +
-                F('Dirección del paciente', g('DireccionPaciente')) +
-                F('Estado civil', g('EstadoCivil')) +
-                F('Profesión / Ocupación', g('ProfesionOcupacion')) +
-                F('Escolaridad', g('Escolaridad')) +
-                F('Religión', g('Religion')) +
-                F('Contacto de emergencia', g('ContactoEmergencia'), true);
-            if (datosPersonalesExtra) {
-                h += SEC('Datos personales complementarios', `<div class="grid">${datosPersonalesExtra}</div>`);
-            }
-
-            let x = F('Motivo de consulta', V(p1, 0), true) + F('Enfermedad actual', V(p1, 1), true);
-            let v = F('TA', V(p1, 2)) + F('FC', V(p1, 3)) + F('FR', V(p1, 4)) + F('Circunferencia abdominal', V(p1, 5)) + F('Peso', V(p1, 6)) + F('Talla', V(p1, 7)) + F('IMC', V(p1, 8));
-            if (v) x += SS('Constantes vitales y somatometría', `<div class="grid">${v}</div>`);
-            if (x) h += SEC('Motivo de consulta y enfermedad actual', x);
-
-            let m = '';
-            m += SS('1. Aspecto, porte, conación y actitud', `<div class="mental">${M('Aspecto general', V(p1, 9))}${M('Presentación y vestimenta', V(p1, 10))}${M('Actitud ante la entrevista', V(p1, 11))}${M('Conación / Psicomotricidad', V(p1, 12))}</div>`);
-            m += SS('2. Conciencia y funciones cognitivas', `<div class="mental">${M('Nivel de conciencia', V(p1, 13))}${M('Orientación', V(p1, 14))}${M('Atención', V(p1, 15))}${M('Concentración', V(p1, 16))}${M('Memoria', V(p1, 17))}${M('Cálculo y abstracción', V(p1, 18))}</div>`);
-            m += SS('3. Lenguaje', `<div class="mental">${M('Expresión / Emisión', V(p1, 19))}${M('Comprensión', V(p1, 20))}${M('Velocidad y Ritmo', V(p1, 21))}${M('Alteraciones de la Estructura y Semántica', V(p1, 22))}</div>`);
-            m += SS('4. Afecto y estado de ánimo', `<div class="mental">${M('Expresión o Intensidad', V(p1, 23))}${M('Modulación', V(p1, 24))}${M('Resonante', V(p1, 25))}</div>`);
-            m += SS('5. Pensamiento — curso, forma y contenido', `<div class="mental">${M('Curso / Velocidad', V(p1, 26))}${M('Forma / Lógica', V(p1, 27))}${M('Contenido / Ideación', V(p1, 28))}${M('Ideas sobrevaloradas', V(p1, 29))}${M('Ideas delirantes', V(p1, 30))}${M('Ideas de muerte', V(p1, 31))}${M('Ideación suicida', V(p1, 32))}${M('Ideación suicida activa', V(p1, 33))}${M('Ideas obsesivas / Fóbicas', V(p1, 34))}${M('Ideas de minusvalía / Culpa / Desesperanza', V(p1, 35))}</div>`);
-            m += SS('6. Percepción (Sensopercepción)', `<div class="mental">${M('Alteraciones', V(p1, 36))}</div>`);
-            m += SS('7. Juicio de realidad e introspección (Insight)', `<div class="mental">${M('Juicio de realidad', V(p1, 37))}${M('Introspección (Conciencia de enfermedad)', V(p1, 38))}</div>`);
-            if (m) h += SEC('Examen Mental Actual (EMA)', m);
-
-            let a = '';
-            const per = F('Producto de embarazo', V(p2, 2)) + F('Semanas de embarazo', V(p2, 3)) + F('Respiró y lloró al nacer', V(p2, 4)) + F('Alimentación', V(p2, 5)) + F('Desarrollo psicomotor', V(p2, 6)) + F('Control postural', V(p2, 7)) + F('Sostener la cabeza', V(p2, 8)) + F('Sentarse sin apoyo y ponerse de pie', V(p2, 9)) + F('Locomoción', V(p2, 10)) + F('Gatear', V(p2, 11)) + F('Caminar', V(p2, 12)) + F('Correr y saltar con uno o ambos pies', V(p2, 13)) + F('Equilibrio', V(p2, 14)) + F('Mantenerse estable de pie o sobre un solo pie', V(p2, 15)) + F('Caminar en línea recta', V(p2, 16));
-            if (per) a += SS('Perinatales y desarrollo (menores de 18 años)', `<div class="grid">${per}</div>`);
-            const isNegarAPP = V(p2, 151).trim().toUpperCase() === 'X';
-            if (isNegarAPP) {
-                a += SS('1. Antecedentes Médicos Patológicos (APP)', `<div class="f full"><div class="fv">${E(V(p2, 152) || 'Paciente niega antecedentes médicos patológicos.')}</div></div>`);
-            } else {
-                let appVals = '';
-                const cond = (label, i, iy, it, inota=null) => {
-                    const fields = F(label, V(p2, i)) + F('Año', V(p2, iy)) + F('Tratamiento', V(p2, it)) + (inota !== null ? F('Notas / Especificar', V(p2, inota), true) : '');
-                    return fields ? `<div class="grid-3">${fields}</div>` : '';
-                };
-                const other = (label, iname, iy, it) => {
-                    const fields = F(label, V(p2, iname)) + F('Especificar', V(p2, iname+1)) + F('Año', V(p2, iy)) + F('Tratamiento', V(p2, it));
-                    return fields ? `<div class="grid">${fields}</div>` : '';
-                };
-                let neuro = F('Traumatismo Craneoencefálico (TCE)', V(p2, 20)) + F('Pérdida de conciencia', V(p2, 21)) + F('Duración', V(p2, 22)) + F('Epilepsia / Crisis convulsivas', V(p2, 23)) + F('Tratamiento actual', V(p2, 24)) + F('Notas / Especificar', V(p2, 25), true);
-                neuro += cond('Enfermedad Vascular Cerebral (EVC)', 26, 27, 27, 28) + cond('Deterioro Cognitivo / Demencia', 29, 30, 30, 31) + cond('Cefaleas crónicas / Migraña', 32, 33, 33, 34);
-                neuro += `<div class="grid">${F('Otro trastorno neurológico', V(p2, 35))}${F('Cuál', V(p2, 36))}${F('Tratamiento actual', V(p2, 37))}${F('Notas / Especificar', V(p2, 38), true)}</div>`;
-                if (neuro.trim()) appVals += SS('Neurológicos', neuro);
-                const groups = [
-                    ['Endocrinos / Metabólicos', [['Hipotiroidismo',40,41,42],['Hipertiroidismo',43,44,45],['Diabetes Mellitus Tipo 2',46,47,48],['Diabetes Mellitus Tipo 1',49,50,51],['Síndrome Metabólico / Dislipidemia',52,53,54],['Síndrome de Ovario Poliquístico (SOP)',55,56,57]]],
-                    ['Cardiovasculares', [['Hipertensión Arterial (HTA)',63,64,65],['Cardiopatía Isquémica / Infarto previo',66,67,68],['Insuficiencia Cardíaca',69,70,71]]],
-                    ['Renales', [['Enfermedad Renal Crónica (ERC)',77,78,79],['Insuficiencia Hepática / Cirrosis',80,81,82],['Hepatitis (B o C)',83,84,85],['Lesión renal',86,87,88],['Litiasis renal',89,90,91],['ITU a repetición',92,93,94],['ERC',95,96,97],['Diálisis',98,99,100],['Trasplante',101,102,103]]],
-                    ['Hepáticos y gastrointestinales', [['Hígado graso',109,110,111],['Hepatitis A',112,113,114],['Hepatitis B',115,116,117],['Hepatitis C',118,119,120],['Insuficiencia hepática',121,122,123],['Cirrosis',124,125,126],['Gastritis',127,128,129],['Reflujo gastroesofágico',130,131,132],['Estreñimiento',133,134,135],['Litiasis vesicular',136,137,138]]]
-                ];
-                groups[0][1].push(['Otro',58,60,61]);
-                groups[1][1].push(['Otro',72,74,75]);
-                groups[2][1].push(['Otro',104,106,107]);
-                groups[3][1].push(['Otro',139,141,142]);
-                for (const [title, items] of groups) {
-                    let fields = '';
-                    for (const [label, i, iy, it] of items) {
-                        // En las opciones «Otro», mostrar la respuesta del campo «Cuál» en lugar de «Sí».
-                        const valor = label === 'Otro' ? (V(p2, i + 1) || '') : V(p2, i);
-                        const rowFields = F(label, valor) + F('Año', V(p2, iy)) + F('Tratamiento', V(p2, it));
-                        // No crear el contenedor con bordes cuando los tres campos están vacíos.
-                        if (rowFields) fields += `<div class="grid-3">${rowFields}</div>`;
-                    }
-                    if (fields) appVals += SS(title, fields);
-                }
-                const cirugia = F('Año', V(p2, 144)) + F('Tipo de cirugía / causa', V(p2, 145), true) + F('Cirugía bariátrica', V(p2, 146)) + F('Delirium postoperatorio previo', V(p2, 147));
-                if (cirugia) appVals += SS('Quirúrgicos y hospitalizaciones previas', `<div class="grid">${cirugia}</div>`);
-                const alergias = F('Alergias a medicamentos generales', V(p2, 149), true) + F('Reacciones graves a psicofármacos previos', V(p2, 150), true);
-                if (alergias) appVals += SS('Alergias y reacciones adversas a medicamentos (RAM)', `<div class="grid">${alergias}</div>`);
-                if (appVals) a += SS('1. Antecedentes Médicos Patológicos (APP)', appVals);
-            }
-            let ago = F('Menarca', V(p2, 154)) + F('Ciclos menstruales', V(p2, 155)) + F('Duración y frecuencia', V(p2, 156)) + F('FUM', V(p2, 157));
-            const fo = F('G', V(p2, 159)) + F('P', V(p2, 160)) + F('A', V(p2, 161)) + F('C', V(p2, 162));
-            if (fo) ago += `<div class="f full"><span class="fl">Fórmula Obstétrica</span><div class="formula">${fo}</div></div>`;
-            ago += F('Hijos vivos', V(p2, 163)) + F('Complicaciones obstétricas', V(p2, 164), true) + F('Estado actual', V(p2, 165)) + F('Embarazo actual', V(p2, 166)) + F('Semanas de gestación', V(p2, 167)) + F('Lactancia activa', V(p2, 168)) + F('Uso de anticonceptivos hormonales', V(p2, 169)) + F('Nombre / Tipo', V(p2, 170));
-            const negarAGO = V(p2, 171).trim().toUpperCase() === 'X';
-            if (negarAGO) ago += `<div class="f full"><span class="fl">Paciente niega AGO</span><div class="fv">${E(V(p2, 172) || 'Sin antecedentes ginecoobstétricos patológicos o de riesgo actuales.')}</div></div>`;
-            if (ago) a += SS('Antecedentes ginecoobstétricos (AGO)', `<div class="grid">${ago}</div>`);
-            if (a) h += SEC('Antecedentes personales', a);
-
-            // --- SECCIÓN: ANTECEDENTES PSIQUIÁTRICOS PREVIOS (P3) ---
-            let ps = '';
-            const isPrimeraVez = V(p3, 1).toUpperCase() === 'X';
-            if (isPrimeraVez || C(V(p3, 1))) {
-                ps += SS('3. Antecedentes psiquiátricos previos (APP-Psi)', `<div class="grid">${F('Primera vez en Psiquiatría', V(p3, 1))}${F('Nota primera vez', V(p3, 2), true)}</div>`);
-            }
-
-            const dxPairs = [
-                ['Trastorno Depresivo', 4, 5],
-                ['Trastorno Bipolar', 6, 7],
-                ['Trastornos de Ansiedad', 8, 9],
-                ['Trastorno Obsesivo-Compulsivo (TOC) o trastornos relacionados', 10, 11],
-                ['Trastorno por Estrés Postraumático (TEPT) o del desarrollo/apego', 12, 13],
-                ['Trastorno del Espectro de la Esquizofrenia / Otros trastornos psicóticos', 14, 15],
-                ['Trastorno por Déficit de Atención e Hiperactividad (TDAH)', 16, 17],
-                ['Trastorno del Neurodesarrollo (TEA nivel 1, 2 o 3)', 18, 19],
-                ['Trastornos de la Conducta Alimentaria (Anorexia, Bulimia, PICA, etc.)', 20, 21],
-                ['Trastorno de la Personalidad', 22, 23]
-            ];
-
-            let dxBlocks = '';
-            dxPairs.forEach(([labelTrastorno, idxT, idxE]) => {
-                const valT = V(p3, idxT);
-                const valE = V(p3, idxE);
-                if (valT || valE) {
-                    dxBlocks += `<div class="grid-2">${F(labelTrastorno, valT)}${F('Edad de diagnóstico / Año', valE)}</div>`;
-                }
-            });
-
-            const otroDxVal = V(p3, 24);
-            const otroDx = otroDxVal ? F('Otro diagnóstico psiquiátrico previo', otroDxVal, true) : '';
-
-            let dx = dxBlocks + otroDx;
-            if (dx) ps += SS('a. Historial de Diagnósticos Previos', dx);
-
-            const rows6 = parseRows(g('P6'));
-            if (rows6.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>Grupo Farmacológico</th><th>Nombre del Fármaco</th><th>Tiempo de Uso</th><th>Dosis Máxima</th><th>Motivo de Suspensión</th></tr></thead><tbody>';
-                rows6.forEach(r => {
-                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td></tr>`;
-                });
-                t += '</tbody></table>';
-                ps += SS('b. Historial de Tratamientos Anteriores', t);
-            }
-
-            let tr = F('Psicoterapia', V(p3, 26), true) + F('Enfoque', V(p3, 27)) + F('Duración', V(p3, 28)) + F('Apego', V(p3, 29));
-            if (tr) ps += SS('Historial de Psicoterapia', `<div class="grid">${tr}</div>`);
-
-            let su = F('Historial de Ideación Suicida', V(p3, 31)) + F('Historial de Intentos de Suicidio', V(p3, 32)) + F('Número de intentos', V(p3, 33)) + F('Edad / Año del intento más grave', V(p3, 34)) + F('Método(s)', V(p3, 35), true) + F('Hospitalización', V(p3, 36), true) + F('Conductas de Autolesión no suicidas', V(p3, 37), true);
-            if (su) ps += SS('c. Intentos de Suicidio y Conductas de Autolesión (Sección Crítica)', `<div class="grid">${su}</div>`);
-
-            let inx = F('Hospitalizaciones Psiquiátricas Previas', V(p3, 39), true) + F('Número total', V(p3, 40)) + F('Año y duración del último internamiento', V(p3, 41)) + F('Causa principal', V(p3, 42), true) + F('Tipo de ingreso', V(p3, 43));
-            if (inx) ps += SS('d. Historial de Internamientos Psiquiátricos', `<div class="grid">${inx}</div>`);
-
-            const bioPairs = [
-                ['Terapia Electroconvulsiva (TEC) anterior', 45, 46],
-                ['Estimulación Magnética Transcraneal (EMT) anterior', 47, 48],
-                ['Otro (tDCS, Ketamina / Esketamina IV o Intranasal)', 49, 50]
-            ];
-
-            let bioBlocks = '';
-            bioPairs.forEach(([labelBio, idxB, idxSpec]) => {
-                const valB = V(p3, idxB);
-                const valSpec = V(p3, idxSpec);
-                if (valB || valSpec) {
-                    bioBlocks += `<div class="grid-2">${F(labelBio, valB)}${F('Especificar año, número de sesiones y respuesta', valSpec)}</div>`;
-                }
-            });
-
-            if (bioBlocks) ps += SS('e. Tratamientos Biológicos No Farmacológicos', bioBlocks);
-
-            if (ps) h += SEC('Antecedentes psiquiátricos previos', ps);
-
-            // --- SECCIÓN: ANTECEDENTES HEREDOFAMILIARES (P5 / P7) ---
-            const rows5 = parseRows(g('P5'));
-            if (rows5.length > 0) {
-                let t = '<table class="tbl tbl-familiar"><thead><tr><th>Parentesco</th><th>Edad</th><th>Estado</th><th>Patologías Psiquiátricas y Adicciones</th><th>Intento de suicidio</th><th>Suicidio consumado</th><th>Patologías Médicas Crónicas</th><th>Especificar patologías</th></tr></thead><tbody>';
-                rows5.forEach(r => {
-                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td><td>${E(r[6] || '')}</td><td>${E(r[7] || '')}</td></tr>`;
-                });
-                t += '</tbody></table>';
-                h += SEC('1. Mapeo Dinámico por Familiar', t);
-            } else {
-                const ah = F('Sin antecedentes familiares de importancia', V(p7, 1), true) + F('Reporte', V(p7, 2), true);
-                if (ah) h += SEC('ANTECEDENTES HEREDOFAMILIARES (AHF)', `<div class="grid">${ah}</div>`);
-            }
-
-            // --- SECCIÓN: HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS (P7) ---
-            let hb = '';
-            const hbGeneral =
-                F('Horas promedio de sueño nocturno', V(p7, 7)) +
-                F('Calidad del sueño', V(p7, 8)) +
-                F('Frecuencia de alimentación', V(p7, 10)) +
-                F('Descripción de alimentación', V(p7, 11), true) +
-                F('Frecuencia semanal de ejercicio', V(p7, 13)) +
-                F('Tipo de ejercicio', V(p7, 14)) +
-                F('Uso de pantallas (h/día)', V(p7, 16)) +
-                F('Supervisión de pantallas', V(p7, 17)) +
-                F('Contenido de pantallas', V(p7, 18), true);
-            if (hbGeneral) hb += SS('1. Hábitos Psicobiológicos Generales', `<div class="grid">${hbGeneral}</div>`);
-
-            // "No consume" es un campo de control: nunca se imprime.
-            // La Nota solo se muestra cuando No consume está marcado con X.
-            const noConsumeMarcado = V(p7, 21).toUpperCase() === 'X';
-            const notaNoConsumo = noConsumeMarcado ? F('Nota', V(p7, 22), true) : '';
-            let sust = notaNoConsumo ? `<div class="grid">${notaNoConsumo}</div>` : '';
-
-            // Estas tres respuestas forman un único conjunto visual en una fila.
-            const cafeina =
-                F('Café / Cafeína', V(p7, 23)) +
-                F('Frecuencia y Cantidad', V(p7, 24)) +
-                F('Impacto clínico percibido', V(p7, 25));
-            if (cafeina) sust += `<div class="grid-3">${cafeina}</div>`;
-
-            const renderSubst = (title, iEstatus, iEdad, iFreq, iCant, iFecha, iCrit, iExtra = null) => {
-                const estatus = V(p7, iEstatus);
-                const edad = V(p7, iEdad);
-                const freq = V(p7, iFreq);
-                const cant = V(p7, iCant);
-                const fecha = V(p7, iFecha);
-                const crit = V(p7, iCrit);
-                const critFormato = iCrit === 32 ? crit.replace(/\s*,\s*/g, '\n') : crit;
-                const extra = iExtra !== null ? V(p7, iExtra) : '';
-                if (!estatus && !edad && !freq && !cant && !fecha && !crit && !extra) return '';
-
-                // Los parámetros adicionales conservan su posición: CAGE antes de la tabla;
-                // los criterios clínicos después de ella. La tabla contiene solo los cinco campos comunes.
-                let beforeTable = '';
-                let afterTable = '';
-                if (extra) beforeTable += `<div class="grid">${F('CAGE Automatizado', extra)}</div>`;
-
-                const datosConsumo = F('Estatus de consumo', estatus) +
-                    F('Edad de inicio del consumo', edad) +
-                    F('Frecuencia actual', freq) +
-                    F('Cantidad / Patrón', cant) +
-                    F('Fecha de último consumo', fecha);
-                const tablaConsumo = datosConsumo ? `<div class="grid-5">${datosConsumo}</div>` : '';
-
-                if (crit) afterTable += `<div class="grid">${F('Criterios Clínicos Rápidos', critFormato, true)}</div>`;
-
-                return `<div class="sst" style="margin-top:8px; font-size:9.5px; border-bottom:1px solid var(--b); padding-bottom:2px; text-transform:uppercase; color:var(--p);">${E(title)}</div>${beforeTable}${tablaConsumo}${afterTable}`;
+            const setText = (id, text) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = text && text.trim() !== '' ? text : '-';
             };
 
-            sust += renderSubst('Tabaco / Nicotina', 27, 28, 29, 30, 31, 32);
-            sust += renderSubst('Chimó / Tabaco mascado', 34, 35, 36, 37, 38, 39);
-            sust += renderSubst('Alcohol', 42, 43, 44, 45, 46, 47, 41);
-            sust += renderSubst('Cannabis (Marihuana, THC, CBD)', 49, 50, 51, 52, 53, 54);
-            sust += renderSubst('Estimulantes (Cocaína, crack, anfetaminas, MDMA)', 56, 57, 58, 59, 60, 61);
-            sust += renderSubst('Opioides / Analgésicos (Fentanilo, tramadol, heroína, etc.)', 63, 64, 65, 66, 67, 68);
-            sust += renderSubst('Benzodiacepinas / Sedantes (Sin prescripción médica)', 70, 71, 72, 73, 74, 75);
-            if (sust) hb += SS('2. Consumo y Dependencia de Sustancias', sust);
-            if (hb) h += SEC('HÁBITOS PSICOBIOLÓGICOS Y USO DE SUSTANCIAS', hb);
+            // Pie de página (Nombre comercial)
+            setText('param-foot-titulo-1', titulo || '');
+            setText('param-foot-titulo-2', titulo || '');
 
-            // Diagnóstico temporal: añadir ?debug=1 al final de la URL para verificar
-            // si el navegador recibió los parámetros P3 y P7 desde AppSheet.
-            if (q.get('debug') === '1') {
-                const debugInfo = [
-                    `P3 recibido: ${g('P3') ? 'sí' : 'NO'} (${g('P3').length} caracteres)`,
-                    `P7 recibido: ${g('P7') ? 'sí' : 'NO'} (${g('P7').length} caracteres)`,
-                    `P7 campos separados: ${p7.length}`,
-                    `P7 muestra inicial: ${g('P7').slice(0, 180) || '(vacío)'}`
-                ].join('\n');
-                h += SEC('DIAGNÓSTICO TÉCNICO (solo debug=1)', `<div class="f full"><div class="fv">${E(debugInfo)}</div></div>`);
-            }
+            // Ficha Paciente / Médico (Membrete superior)
+            setText('param-medico-1', medico);
+            setText('param-medico-2', medico);
+            setText('param-fecha-1', fecha);
+            setText('param-fecha-2', fecha);
+            setText('param-nombre-1', nombre);
+            setText('param-nombre-2', nombre);
+            setText('param-cedula-1', cedula);
+            setText('param-cedula-2', cedula);
 
-            // --- CONCLUSIONES DIAGNÓSTICAS ---
-            const rows4 = parseRows(g('P4'));
-            if (rows4.length > 0) {
-                let t = '<table class="tbl"><thead><tr><th>CIE-11 ID</th><th>Tipo de Diagnóstico</th><th>Especificador de Gravedad</th><th>Especificador de Curso / Episodio</th><th>Severidad de la Disfunción de Personalidad</th><th>Rasgos de Dominio Prominentes</th></tr></thead><tbody>';
-                rows4.forEach(r => {
-                    t += `<tr><td>${E((r[0] || '').replace(/^,\s*/, ''))}</td><td>${E(r[1] || '')}</td><td>${E(r[2] || '')}</td><td>${E(r[3] || '')}</td><td>${E(r[4] || '')}</td><td>${E(r[5] || '')}</td></tr>`;
-                });
-                t += '</tbody></table>';
-                h += SEC('CONCLUSIONES DIAGNÓSTICAS (CIE-11)', t);
-            }
+            // Pie de página
+            setText('param-direccion-1', direccion);
+            setText('param-direccion-2', direccion);
+            setText('param-tel1-1', tel1);
+            setText('param-tel1-2', tel1);
+            setText('param-tel2-1', tel2);
+            setText('param-tel2-2', tel2);
+            setText('param-ws-1', whatsapp);
+            setText('param-ws-2', whatsapp);
+            setText('param-redes-1', redes);
+            setText('param-redes-2', redes);
+            setText('param-correo-1', correo);
+            setText('param-correo-2', correo);
 
-            // Campos almacenados directamente en la tabla paciente; no dependen de índices del blob P3.
-            const notasDiagnosticas = F('Notas Diagnósticas y Juicio Clínico', g('NotasDiagnosticas'), true);
-            const impresionDiagnostica = F('Impresión diagnóstica y discusión', g('ImpresionDiagnostica'), true);
-            const textoDiagnostico = notasDiagnosticas + impresionDiagnostica;
-            if (textoDiagnostico) {
-                h += SEC('Notas y juicio clínico', `<div class="grid">${textoDiagnostico}</div>`);
-            }
+            // Contenidos
+            setText('param-recipe', recipe);
+            setText('param-indicaciones', indicaciones);
+        });
 
-            document.getElementById('content').innerHTML = h;
-            if (!h.trim()) document.getElementById('empty').style.display = 'block';
+        // EXPORTAR A WORD
+        function downloadWord() {
+            const content = document.getElementById('document-content').innerHTML;
+            const patientName = document.getElementById('param-nombre-1').innerText || 'Paciente';
+            
+            const htmlDocument = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <title>Recipe Medico</title>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>
+            `;
 
-            const foot = ['Direccion', 'Numero+de+telefono+principal', 'Numero+secundario', 'Whatsapp', 'Redes+sociales', 'Correo+electronico'].map(g).map(C).filter(Boolean);
-            document.getElementById('footer').innerHTML = foot.map(x => `<span>${E(x)}</span>`).join('');
-            }
+            const converted = html2docx(htmlDocument, {
+                orientation: 'landscape',
+                margins: { top: 720, right: 720, bottom: 720, left: 720 }
+            });
 
-            // Recuperar los bloques desde Apps Script. Se aceptan los nombres actuales
-            // y los nombres de columnas VC_Blob_* usados por la versión anterior.
-            const patientId = q.get('id');
-            const putIfPresent = (key, ...values) => {
-                for (const value of values) {
-                    if (value !== undefined && value !== null && String(value) !== '') {
-                        q.set(key, String(value));
-                        return;
-                    }
-                }
-            };
-
-            if (patientId) {
-                // Apps Script devuelve JSONP y exige id, token k y callback.
-                // La versión anterior usaba fetch + JSON y omitía k/callback, por lo que no era compatible.
-                window.InnovamedHC3Receive = data => {
-                    if (!data || data.ok !== true) {
-                        const detail = data && data.error ? data.error : 'Respuesta de datos no válida.';
-                        document.getElementById('content').textContent = 'No se pudieron cargar los datos clínicos desde Apps Script. ' + detail;
-                        document.getElementById('empty').style.display = 'none';
-                        return;
-                    }
-
-                    putIfPresent('P1', data.P1, data.p1, data.VC_Blob_Clinica);
-                    putIfPresent('P2', data.P2, data.p2, data.VC_Blob_Antecedentes);
-                    putIfPresent('P3', data.P3, data.p3, data.VC_Blob_Psiquiatria);
-                    putIfPresent('P4', data.P4, data.p4, data.VC_Blob_Diagnostico, data.VC_Blob_Diagnosticos);
-                    putIfPresent('P5', data.P5, data.p5, data.VC_Blob_MapeoFamiliar);
-                    putIfPresent('P6', data.P6, data.p6, data.VC_Blob_Tratamiento);
-                    putIfPresent('P7', data.P7, data.p7, data.VC_Blob_Habitos);
-                    putIfPresent('NotasDiagnosticas', data.NotasDiagnosticas);
-                    putIfPresent('ImpresionDiagnostica', data.ImpresionDiagnostica);
-                    render();
-                };
-
-                const script = document.createElement('script');
-                script.onerror = () => {
-                    document.getElementById('content').textContent = 'No fue posible conectar con Apps Script. Verifica la URL publicada y los permisos de la aplicación web.';
-                    document.getElementById('empty').style.display = 'none';
-                };
-                script.src = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.includes('?') ? '&' : '?') +
-                    'id=' + encodeURIComponent(patientId) +
-                    '&k=' + encodeURIComponent(q.get('k') || '') +
-                    '&callback=InnovamedHC3Receive';
-                document.head.appendChild(script);
-            } else {
-                // Permite abrir el HTML con parámetros P1–P7 directamente para pruebas.
-                render();
-            }
-        })();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(converted);
+            link.download = `Recipe_${patientName.replace(/\s+/g, '_')}.docx`;
+            link.click();
+        }
     </script>
 </body>
 </html>
