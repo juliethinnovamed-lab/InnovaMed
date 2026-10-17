@@ -558,7 +558,9 @@
                 for (const [title, items] of groups) {
                     let fields = '';
                     for (const [label, i, iy, it] of items) {
-                        const rowFields = F(label, V(p2, i)) + F('Año', V(p2, iy)) + F('Tratamiento', V(p2, it));
+                        // En las opciones «Otro», mostrar la respuesta del campo «Cuál» en lugar de «Sí».
+                        const valor = label === 'Otro' ? (V(p2, i + 1) || '') : V(p2, i);
+                        const rowFields = F(label, valor) + F('Año', V(p2, iy)) + F('Tratamiento', V(p2, it));
                         // No crear el contenedor con bordes cuando los tres campos están vacíos.
                         if (rowFields) fields += `<div class="grid-3">${rowFields}</div>`;
                     }
