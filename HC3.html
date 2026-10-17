@@ -37,7 +37,7 @@
             line-height: 1.4;
         }
 
-        /* BANNER DE BOTONES SUPERIOR (SE OCULTA AL IMPRIMIR) */
+        /* BANNER DE BOTONES SUPERIOR (ESTILO HC3) */
         .no-print-bar {
             position: fixed;
             top: 0;
@@ -56,39 +56,24 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .btn-print {
-            background-color: var(--p);
+        /* BOTONES ESTILO HC3 */
+        .btn-hc3 {
+            border: 0;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            border: 1px solid rgba(255,255,255,0.3);
             padding: 6px 12px;
+            cursor: pointer;
             font-size: 10px;
             font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s ease;
         }
 
-        .btn-print:hover {
-            background-color: #1a252f;
-        }
-
-        .btn-word {
-            background-color: #10b981;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 10px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-word:hover {
-            background-color: #059669;
+        .btn-hc3:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         /* HOJA A4 HORIZONTAL EN PANTALLA */
@@ -146,12 +131,10 @@
             height: 100%;
         }
 
-        /* ESTRUCTURA DEL MEMBRETE SUPERIOR (ESTILO HC3) */
+        /* ESTRUCTURA DEL MEMBRETE SUPERIOR (ESTILO HC3 CON LÍNEA SOBRIA) */
         .header-table {
             width: 100%;
             border-collapse: collapse;
-            border-bottom: 2px solid #2b3e50;
-            padding-bottom: 8px;
             margin-bottom: 8px;
         }
 
@@ -201,7 +184,14 @@
             display: inline-block;
         }
 
-        /* TÍTULOS DE SECCIÓN ESTILO HC3 (.st) */
+        /* LÍNEA SEPARADORA SOBRIA (REEMPLAZO DE LA LÍNEA ROJA) */
+        .divider-sobrio {
+            border: none;
+            border-top: 2px solid var(--p);
+            margin: 0 0 8px 0;
+        }
+
+        /* TÍTULOS DE SECCIÓN ESTILO HC3 */
         .section-header {
             color: var(--p);
             font-weight: 700;
@@ -262,11 +252,6 @@
             text-transform: uppercase;
         }
 
-        .footer-container span:not(:last-child)::after {
-            content: ' | ';
-            margin: 0 3px;
-        }
-
         /* REGLAS DE IMPRESIÓN */
         @media print {
             .no-print-bar { display: none !important; }
@@ -286,8 +271,8 @@
     <div class="no-print-bar">
         <span style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Récipe e Indicaciones Médicas</span>
         <div class="action-buttons">
-            <button class="btn-word" onclick="downloadWord()">📄 Descargar a Word</button>
-            <button class="btn-print" onclick="window.print()">🖨️ Imprimir / PDF</button>
+            <button class="btn-hc3" onclick="downloadWord()">Descargar Word</button>
+            <button class="btn-hc3" onclick="window.print()">Imprimir / PDF</button>
         </div>
     </div>
 
@@ -327,6 +312,8 @@
                             </td>
                         </tr>
                     </table>
+
+                    <hr class="divider-sobrio">
 
                     <div class="section-header">Récipe:</div>
                     <div class="content-body" id="param-recipe">-</div>
@@ -381,6 +368,8 @@
                             </td>
                         </tr>
                     </table>
+
+                    <hr class="divider-sobrio">
 
                     <div class="section-header">Indicaciones:</div>
                     <div class="content-body" id="param-indicaciones">-</div>
