@@ -51,9 +51,9 @@
         }
 
         .logo {
-            width: 120px;
-            height: 120px;
-            flex: 0 0 120px;
+            width: 160px;
+            height: 160px;
+            flex: 0 0 160px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -369,7 +369,7 @@
         .section-option input { margin-top: 1px; }
         .selection-actions { display: flex; flex-wrap: wrap; gap: 8px; }
         .buttons { display: flex; flex-wrap: wrap; gap: 8px; }
-        @media (max-width: 600px) { .selection-backdrop { padding: 10px; } .selection-panel { padding: 16px; max-height: 88vh; } .section-options { grid-template-columns: 1fr; } .logo { width: 90px; height: 90px; flex-basis: 90px; } .header { gap: 6px; } }
+        @media (max-width: 600px) { .selection-backdrop { padding: 10px; } .selection-panel { padding: 16px; max-height: 88vh; } .section-options { grid-template-columns: 1fr; } .logo { width: 115px; height: 115px; flex-basis: 115px; } .header { gap: 6px; } }
 
         button {
             border: 0;
@@ -449,7 +449,7 @@
 
         <header class="header">
             <div class="logo" id="logo">
-                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" alt="Logo">
+                <img src="https://lh3.googleusercontent.com/d/10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" alt="Logo">
             </div>
             <div class="hm">
                 <h1 class="title" id="titulo"></h1>
@@ -527,80 +527,93 @@
         function reportDocument(report, forWord = false) {
             const styles = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('\n');
             const wordStyles = forWord ? `
-                @page Section1 { size: 8.27in 11.69in; margin: 0.55in 0.55in 0.65in 0.55in; mso-header-margin:0.25in; mso-footer-margin:0.3in; }
+                @page Section1 { size:8.27in 11.69in; margin:0.60in 0.65in 0.65in 0.65in; mso-header-margin:0.25in; mso-footer-margin:0.3in; }
                 div.Section1 { page:Section1; }
-                html,body { background:#fff !important; padding:0 !important; margin:0 !important; color:#24292f; font-family:Arial,Helvetica,sans-serif; font-size:9pt; line-height:1.2; }
+                html,body { background:#fff !important; padding:0 !important; margin:0 !important; color:#24292f; font-family:Arial,Helvetica,sans-serif; font-size:10pt; line-height:1.35; }
                 p,div,span { mso-line-height-rule:at-least; }
                 .doc { width:100% !important; min-height:0 !important; margin:0 !important; padding:0 !important; box-shadow:none !important; }
                 table { border-collapse:collapse !important; mso-table-lspace:0pt; mso-table-rspace:0pt; }
-                table.header-table { width:100% !important; table-layout:fixed; border-collapse:collapse !important; border-bottom:1.5pt solid #2b3e50; margin:0 0 8pt !important; }
-                td.logo-cell { width:82pt !important; vertical-align:middle; text-align:center; padding:0 8pt 6pt 0 !important; }
-                td.logo-cell img { display:block; width:70pt !important; height:70pt !important; max-width:70pt !important; max-height:70pt !important; }
-                td.info-cell { width:auto !important; vertical-align:middle; text-align:center; padding:0 4pt 6pt !important; }
-                .title { font-size:13pt !important; line-height:1.15; margin:0 0 3pt !important; }
-                .sub { font-size:9pt !important; margin:0 0 2pt !important; }
-                .docline { font-size:8pt !important; }
-                table.patient-data { width:100% !important; table-layout:fixed; border-collapse:collapse !important; margin:0 0 9pt !important; }
-                .patient-cell { vertical-align:top; padding:3pt 4pt !important; border-bottom:0.5pt solid #d0d7de; }
-                .lab { display:block; font-size:7pt !important; margin-bottom:2pt; }
-                .val { display:block; font-size:8.5pt !important; font-weight:normal !important; overflow-wrap:anywhere; }
-                /* Separación amplia entre secciones para que Word no las muestre conglomeradas. */
-                .sec { margin:18pt 0 20pt !important; padding-bottom:4pt !important; page-break-inside:auto; }
-                .st { font-size:9.5pt !important; padding:3pt 0 !important; margin:0 0 4pt !important; border-bottom:1pt solid #2b3e50; page-break-after:avoid; }
-                .sst { font-size:8.5pt !important; margin:5pt 0 3pt !important; page-break-after:avoid; }
-                .grid, .grid-2, .grid-3, .grid-5, .mental { display:table !important; width:100% !important; table-layout:fixed; border-collapse:collapse; margin:3pt 0 5pt !important; padding:0 !important; background:#fff !important; border:0.5pt solid #d0d7de; }
-                .grid > tbody > tr > td, .grid-2 > tbody > tr > td, .grid-3 > tbody > tr > td, .grid-5 > tbody > tr > td, .mental > tbody > tr > td { vertical-align:top; padding:4pt 5pt; border:0.5pt solid #e0e4e8; }
-                .f, .mi { display:block !important; padding:3pt 2pt !important; border-bottom:0 !important; min-width:0 !important; page-break-inside:avoid; }
-                .fl, .mil { display:block; font-size:7pt !important; margin-bottom:2pt; }
-                .fv, .miv { display:block; font-size:8.5pt !important; line-height:1.25 !important; white-space:pre-wrap; overflow-wrap:anywhere; }
-                .tbl { width:100% !important; border-collapse:collapse !important; table-layout:fixed; font-size:8pt !important; }
-                .tbl th { font-size:7pt !important; padding:4pt 3pt !important; background:#eef3f6 !important; border:0.5pt solid #c7d0d8 !important; }
-                .tbl td { font-size:7.5pt !important; padding:4pt 3pt !important; border:0.5pt solid #d0d7de !important; overflow-wrap:anywhere; }
-                .footer { position:static !important; margin-top:14pt !important; padding-top:5pt !important; border-top:0.5pt solid #d0d7de; text-align:center; font-size:7pt !important; }
+                table.header-table { width:100% !important; table-layout:fixed; border-collapse:collapse !important; border-bottom:1.5pt solid #2b3e50; margin:0 0 12pt !important; }
+                td.logo-cell { width:118pt !important; vertical-align:middle; text-align:center; padding:0 10pt 8pt 0 !important; }
+                td.logo-cell img { display:block; width:105pt !important; height:105pt !important; max-width:105pt !important; max-height:105pt !important; }
+                td.info-cell { width:auto !important; vertical-align:middle; text-align:center; padding:0 4pt 8pt !important; }
+                .title { font-size:14pt !important; line-height:1.15; margin:0 0 4pt !important; }
+                .sub { font-size:10pt !important; margin:0 0 3pt !important; }
+                .docline { font-size:8.5pt !important; }
+                .patient-data { width:100% !important; display:block !important; margin:0 0 14pt !important; padding:0 0 7pt !important; border-bottom:0.5pt solid #d0d7de; font-size:9.5pt !important; }
+                .patient-item { display:inline !important; margin:0 8pt 0 0 !important; }
+                .patient-item strong { font-weight:bold; }
+                .sec { display:block !important; margin:0 0 16pt !important; padding:0 !important; border:0 !important; page-break-inside:auto; }
+                .st { font-size:11pt !important; font-weight:bold !important; color:#174967 !important; padding:0 !important; margin:0 0 7pt !important; border-bottom:0.75pt solid #aebbc5; page-break-after:avoid; }
+                .sst { font-size:10pt !important; font-weight:bold !important; margin:9pt 0 4pt !important; page-break-after:avoid; }
+                .word-line { display:block !important; margin:0 0 5pt !important; padding:0 !important; line-height:1.35 !important; text-align:left !important; page-break-inside:auto; }
+                .word-line strong { font-weight:bold; }
+                .tbl { width:100% !important; border:0 !important; margin:3pt 0 8pt !important; font-size:9.5pt !important; }
+                .tbl th, .tbl td { border:0 !important; background:transparent !important; padding:0 !important; font-size:9.5pt !important; font-weight:normal !important; text-align:left !important; }
+                .footer { position:static !important; margin-top:16pt !important; padding-top:6pt !important; border-top:0.5pt solid #d0d7de; text-align:center; font-size:8pt !important; }
                 .buttons, .selection-backdrop, .selection-panel, #empty { display:none !important; }
             ` : `body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12mm;box-shadow:none}.header{break-inside:avoid}.footer{position:static;margin-top:20px;text-align:center}.buttons,.selection-backdrop,.selection-panel{display:none!important}`;
             let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe médico - Historia Clínica</title><style>${styles}\n${wordStyles}</style></head><body><main class="doc">${report.headerHtml}${report.patientHtml}<div id="content">${report.contentHtml}</div></main>${report.footerHtml}</body></html>`;
             if (!forWord) return html;
 
-            // Word no interpreta de forma fiable CSS Grid/Flex. Convertimos esos contenedores en tablas reales.
+            // Para Word dejamos el contenido clínico corrido: etiquetas y valores separados por comas, sin cuadrículas de celdas.
             const parsed = new DOMParser().parseFromString(html, 'text/html');
-            const tableFromChildren = (source, columns) => {
-                const items = Array.from(source.children);
-                const table = parsed.createElement('table');
-                table.className = source.className;
-                table.setAttribute('cellspacing', '0');
-                table.setAttribute('cellpadding', '0');
-                const tbody = parsed.createElement('tbody');
-                for (let i = 0; i < items.length; i += columns) {
-                    const tr = parsed.createElement('tr');
-                    for (let j = i; j < Math.min(i + columns, items.length); j++) {
-                        const td = parsed.createElement('td');
-                        if (items[j].classList.contains('f') && items[j].classList.contains('full')) {
-                            td.colSpan = columns;
-                            td.appendChild(items[j].cloneNode(true));
-                            tr.appendChild(td);
-                            break;
-                        }
-                        td.appendChild(items[j].cloneNode(true));
-                        tr.appendChild(td);
-                    }
-                    tbody.appendChild(tr);
-                }
-                table.appendChild(tbody);
-                source.replaceWith(table);
-            };
             const content = parsed.getElementById('content');
-            // Insertamos separadores reales entre secciones: Word a veces ignora los márgenes CSS de los div.
-            const topSections = Array.from(content.children).filter(el => el.classList.contains('sec'));
-            topSections.slice(0, -1).forEach(section => {
+            const cleanText = value => String(value || '').replace(/\s+/g, ' ').trim();
+            const fieldMarkup = el => {
+                const label = cleanText(el.querySelector('.fl, .mil')?.textContent || '');
+                const valueNode = el.querySelector('.fv, .miv, .formula');
+                const value = cleanText(valueNode ? valueNode.textContent : el.textContent);
+                if (!value && !label) return '';
+                if (!label) return value;
+                return `<strong>${label.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}:</strong> ${value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}`;
+            };
+            // Convertimos tablas clínicas en líneas de texto legibles, sin cuadrícula ni celdas visibles.
+            Array.from(content.querySelectorAll('table.tbl')).forEach(table => {
+                const headers = Array.from(table.querySelectorAll('thead th')).map(th => cleanText(th.textContent));
+                const rows = Array.from(table.querySelectorAll('tbody tr'));
+                const replacement = parsed.createElement('div');
+                replacement.className = 'word-table-text';
+                rows.forEach((row, index) => {
+                    const values = Array.from(row.children).map(td => cleanText(td.textContent));
+                    const parts = values.map((value, i) => value ? `${headers[i] ? headers[i] + ': ' : ''}${value}` : '').filter(Boolean);
+                    if (parts.length) {
+                        const p = parsed.createElement('p');
+                        p.className = 'word-line';
+                        p.innerHTML = parts.map(part => part.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')).join(', ');
+                        replacement.appendChild(p);
+                    }
+                });
+                if (!replacement.childNodes.length) replacement.textContent = cleanText(table.textContent);
+                table.replaceWith(replacement);
+            });
+            // Aplanamos los bloques de campos a párrafos corridos, conservando títulos y subtítulos.
+            Array.from(content.querySelectorAll('.grid, .grid-2, .grid-3, .grid-5, .mental')).reverse().forEach(container => {
+                const parts = Array.from(container.children).map(child => {
+                    if (child.matches('.f, .mi')) return fieldMarkup(child);
+                    if (child.matches('.word-line')) return cleanText(child.textContent);
+                    return cleanText(child.textContent);
+                }).filter(Boolean);
+                const p = parsed.createElement('p');
+                p.className = 'word-line';
+                p.innerHTML = parts.map(part => part.includes('<strong>') ? part : part.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')).join(', ');
+                container.replaceWith(p);
+            });
+            // Campos sueltos que no estaban dentro de una cuadrícula.
+            Array.from(content.querySelectorAll('.f, .mi')).reverse().forEach(el => {
+                if (!el.isConnected) return;
+                const p = parsed.createElement('p');
+                p.className = 'word-line';
+                p.innerHTML = fieldMarkup(el);
+                el.replaceWith(p);
+            });
+            // Espacio real entre secciones y subtítulos para que Word no dependa solo de márgenes CSS.
+            Array.from(content.children).filter(el => el.classList.contains('sec')).slice(0, -1).forEach(section => {
                 const spacer = parsed.createElement('p');
-                spacer.setAttribute('style', 'margin:0;padding:0;height:18pt;line-height:18pt;mso-line-height-rule:exactly;font-size:1pt;');
+                spacer.className = 'word-line';
+                spacer.setAttribute('style', 'height:12pt;line-height:12pt;margin:0;padding:0;font-size:1pt;');
                 spacer.innerHTML = '&nbsp;';
                 section.after(spacer);
-            });
-            Array.from(content.querySelectorAll('.grid, .grid-2, .grid-3, .grid-5, .mental')).reverse().forEach(el => {
-                const columns = el.classList.contains('grid-5') ? 5 : el.classList.contains('grid-3') ? 3 : 2;
-                tableFromChildren(el, columns);
             });
             const header = parsed.querySelector('.header');
             if (header) {
@@ -610,14 +623,14 @@
                 table.className = 'header-table';
                 table.setAttribute('width', '100%'); table.setAttribute('cellspacing', '0'); table.setAttribute('cellpadding', '0');
                 const tbody = parsed.createElement('tbody'); const tr = parsed.createElement('tr');
-                const logoCell = parsed.createElement('td'); logoCell.className = 'logo-cell'; logoCell.setAttribute('width', '110'); logoCell.setAttribute('valign', 'middle');
+                const logoCell = parsed.createElement('td'); logoCell.className = 'logo-cell'; logoCell.setAttribute('width', '158'); logoCell.setAttribute('valign', 'middle');
                 const hmCell = parsed.createElement('td'); hmCell.className = 'info-cell'; hmCell.setAttribute('valign', 'middle'); hmCell.setAttribute('align', 'center');
                 if (logo) {
                     const img = logo.querySelector('img');
                     if (img) {
                         const wordImg = img.cloneNode(true);
-                        wordImg.setAttribute('width', '93'); wordImg.setAttribute('height', '93');
-                        wordImg.setAttribute('style', 'width:70pt;height:70pt;display:block;border:0;');
+                        wordImg.setAttribute('width', '140'); wordImg.setAttribute('height', '140');
+                        wordImg.setAttribute('style', 'width:105pt;height:105pt;display:block;border:0;');
                         wordImg.removeAttribute('srcset');
                         logoCell.appendChild(wordImg);
                     }
@@ -628,17 +641,19 @@
             const patient = parsed.querySelector('.patient');
             if (patient) {
                 const items = Array.from(patient.children);
-                const table = parsed.createElement('table'); table.className = 'patient-data';
-                table.setAttribute('width', '100%'); table.setAttribute('cellspacing', '0'); table.setAttribute('cellpadding', '0');
-                const tbody = parsed.createElement('tbody'); const tr = parsed.createElement('tr');
-                items.forEach(item => { const td = parsed.createElement('td'); td.className = 'patient-cell'; Array.from(item.childNodes).forEach(node => td.appendChild(node.cloneNode(true))); tr.appendChild(td); });
-                tbody.appendChild(tr); table.appendChild(tbody); patient.replaceWith(table);
+                const p = parsed.createElement('p'); p.className = 'patient-data';
+                p.innerHTML = items.map(item => {
+                    const label = cleanText(item.querySelector('.lab, .fl, strong, b')?.textContent || '');
+                    const value = cleanText(item.querySelector('.val')?.textContent || item.textContent.replace(label, ''));
+                    const text = label ? `<strong>${label.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}:</strong> ${value}` : cleanText(item.textContent);
+                    return `<span class="patient-item">${text}</span>`;
+                }).filter(Boolean).join(' &nbsp; | &nbsp; ');
+                patient.replaceWith(p);
             }
-            // Añade dimensiones explícitas a cualquier otra imagen: Word suele ignorar max-width/max-height.
+            // Mantener dimensiones explícitas del logo para que Word no lo expanda descontroladamente.
             parsed.querySelectorAll('img').forEach(img => {
-                if (!img.hasAttribute('width')) img.setAttribute('width', '93');
-                if (!img.hasAttribute('height')) img.setAttribute('height', '93');
-                img.style.maxWidth = '70pt'; img.style.maxHeight = '70pt';
+                if (!img.hasAttribute('width')) img.setAttribute('width', '140');
+                if (!img.hasAttribute('height')) img.setAttribute('height', '140');
             });
             parsed.documentElement.setAttribute('xmlns:o', 'urn:schemas-microsoft-com:office:office');
             parsed.documentElement.setAttribute('xmlns:w', 'urn:schemas-microsoft-com:office:word');
