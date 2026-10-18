@@ -9,7 +9,8 @@
     <style>
         :root {
             --p: #2b3e50;
-            --b: #d0d7de;
+            --b: #4e929b;
+            --line: #4e929b;
             --m: #57606a;
         }
 
@@ -44,7 +45,7 @@
         .header {
             display: flex;
             align-items: center;
-            border-bottom: 2px solid var(--p);
+            border-bottom: 2px solid var(--line);
             padding-bottom: 10px;
             margin-bottom: 15px;
             text-align: center;
@@ -95,7 +96,7 @@
         .patient {
             display: grid;
             grid-template-columns: 2fr 1fr 1.2fr 1fr 1.5fr;
-            border-bottom: 1px solid var(--p);
+            border-bottom: 1px solid var(--line);
             padding-bottom: 6px;
             margin-bottom: 12px;
         }
@@ -131,7 +132,7 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            border-bottom: 1px solid var(--p);
+            border-bottom: 1px solid var(--line);
             break-after: avoid;
         }
 
@@ -267,7 +268,7 @@
             color: var(--p);
             font-weight: 700;
             padding: 4px 6px;
-            border-bottom: 2px solid var(--p);
+            border-bottom: 2px solid var(--line);
             text-align: left;
             font-size: 9px;
             text-transform: uppercase;
@@ -320,7 +321,7 @@
             left: 15mm;
             right: 15mm;
             bottom: 6mm;
-            border-top: 1px solid var(--b);
+            border-top: 1px solid var(--line);
             padding-top: 4px;
             text-align: center;
             color: var(--m);
@@ -411,6 +412,10 @@
                 display: none !important;
             }
 
+            #content .f.full { grid-column: 1 / -1 !important; width: 100% !important; }
+            #content .f.full .fv { text-align: justify !important; width: 100% !important; }
+            #content .sec { border-color: #4e929b !important; }
+            #content .st, #content .sst { border-color: #4e929b !important; }
             .footer {
                 position: fixed;
                 bottom: 2mm;
@@ -533,24 +538,24 @@
                 p,div,span { mso-line-height-rule:at-least; }
                 .doc { width:100% !important; min-height:0 !important; margin:0 !important; padding:0 !important; box-shadow:none !important; }
                 table { border-collapse:collapse !important; mso-table-lspace:0pt; mso-table-rspace:0pt; }
-                table.header-table { width:100% !important; table-layout:fixed; border-collapse:collapse !important; border-bottom:1.5pt solid #2b3e50; margin:0 0 12pt !important; }
-                td.logo-cell { width:118pt !important; vertical-align:middle; text-align:center; padding:0 10pt 8pt 0 !important; }
-                td.logo-cell img { display:block; width:105pt !important; height:105pt !important; max-width:105pt !important; max-height:105pt !important; }
-                td.info-cell { width:auto !important; vertical-align:middle; text-align:center; padding:0 4pt 8pt !important; }
+                table.header-table { width:100% !important; table-layout:fixed; border-collapse:collapse !important; border-bottom:1.5pt solid #4e929b; margin:0 0 12pt !important; }
+                td.logo-cell { width:145pt !important; vertical-align:middle; text-align:left !important; padding:0 14pt 8pt 0 !important; }
+                td.logo-cell img { display:block; width:125pt !important; height:125pt !important; max-width:125pt !important; max-height:125pt !important; margin-left:0 !important; }
+                td.info-cell { width:auto !important; vertical-align:middle; text-align:center !important; padding:0 18pt 8pt 4pt !important; }
                 .title { font-size:14pt !important; line-height:1.15; margin:0 0 4pt !important; }
                 .sub { font-size:10pt !important; margin:0 0 3pt !important; }
                 .docline { font-size:8.5pt !important; }
-                .patient-data { width:100% !important; display:block !important; margin:0 0 14pt !important; padding:0 0 7pt !important; border-bottom:0.5pt solid #d0d7de; font-size:9.5pt !important; }
+                .patient-data { width:100% !important; display:block !important; margin:0 0 14pt !important; padding:0 0 7pt !important; border-bottom:0.5pt solid #4e929b; font-size:9.5pt !important; }
                 .patient-item { display:inline !important; margin:0 8pt 0 0 !important; }
                 .patient-item strong { font-weight:bold; }
                 .sec { display:block !important; margin:0 0 16pt !important; padding:0 !important; border:0 !important; page-break-inside:auto; }
-                .st { font-size:11pt !important; font-weight:bold !important; color:#174967 !important; padding:0 !important; margin:0 0 7pt !important; border-bottom:0.75pt solid #aebbc5; page-break-after:avoid; }
+                .st { font-size:11pt !important; font-weight:bold !important; color:#174967 !important; padding:0 !important; margin:0 0 7pt !important; border-bottom:0.75pt solid #4e929b; page-break-after:avoid; }
                 .sst { font-size:10pt !important; font-weight:bold !important; margin:9pt 0 4pt !important; page-break-after:avoid; }
-                .word-line { display:block !important; margin:0 0 5pt !important; padding:0 !important; line-height:1.35 !important; text-align:left !important; page-break-inside:auto; }
+                .word-line { display:block !important; margin:0 0 5pt !important; padding:0 !important; line-height:1.35 !important; text-align:justify !important; page-break-inside:auto; }
                 .word-line strong { font-weight:bold; }
                 .tbl { width:100% !important; border:0 !important; margin:3pt 0 8pt !important; font-size:9.5pt !important; }
                 .tbl th, .tbl td { border:0 !important; background:transparent !important; padding:0 !important; font-size:9.5pt !important; font-weight:normal !important; text-align:left !important; }
-                .footer { position:static !important; margin-top:16pt !important; padding-top:6pt !important; border-top:0.5pt solid #d0d7de; text-align:center; font-size:8pt !important; }
+                .footer { position:static !important; margin-top:16pt !important; padding-top:6pt !important; border-top:0.5pt solid #4e929b; text-align:center; font-size:8pt !important; }
                 .buttons, .selection-backdrop, .selection-panel, #empty { display:none !important; }
             ` : `body{background:#fff;padding:0}.doc{width:auto;min-height:0;margin:0;padding:12mm;box-shadow:none}.header{break-inside:avoid}.footer{position:static;margin-top:20px;text-align:center}.buttons,.selection-backdrop,.selection-panel{display:none!important}`;
             let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe médico - Historia Clínica</title><style>${styles}\n${wordStyles}</style></head><body><main class="doc">${report.headerHtml}${report.patientHtml}<div id="content">${report.contentHtml}</div></main>${report.footerHtml}</body></html>`;
@@ -629,8 +634,8 @@
                     const img = logo.querySelector('img');
                     if (img) {
                         const wordImg = img.cloneNode(true);
-                        wordImg.setAttribute('width', '140'); wordImg.setAttribute('height', '140');
-                        wordImg.setAttribute('style', 'width:105pt;height:105pt;display:block;border:0;');
+                        wordImg.setAttribute('width', '167'); wordImg.setAttribute('height', '167');
+                        wordImg.setAttribute('style', 'width:125pt;height:125pt;max-width:125pt;max-height:125pt;object-fit:contain;display:block;border:0;margin:0;');
                         wordImg.removeAttribute('srcset');
                         logoCell.appendChild(wordImg);
                     }
@@ -652,8 +657,8 @@
             }
             // Mantener dimensiones explícitas del logo para que Word no lo expanda descontroladamente.
             parsed.querySelectorAll('img').forEach(img => {
-                if (!img.hasAttribute('width')) img.setAttribute('width', '140');
-                if (!img.hasAttribute('height')) img.setAttribute('height', '140');
+                if (!img.hasAttribute('width')) img.setAttribute('width', '167');
+                if (!img.hasAttribute('height')) img.setAttribute('height', '167');
             });
             parsed.documentElement.setAttribute('xmlns:o', 'urn:schemas-microsoft-com:office:office');
             parsed.documentElement.setAttribute('xmlns:w', 'urn:schemas-microsoft-com:office:word');
@@ -663,6 +668,15 @@
             const officeStyle = parsed.createElement('style');
             officeStyle.textContent = `@page Section1 { size:8.27in 11.69in; margin:0.55in 0.55in 0.65in; mso-header-margin:0.25in; mso-footer-margin:0.3in; } div.Section1 { page:Section1; } table { mso-table-lspace:0pt; mso-table-rspace:0pt; } td { vertical-align:top; }`;
             parsed.head.appendChild(officeStyle);
+            // Word: incluir campos de página actual y total de páginas en el pie.
+            const footer = parsed.querySelector('.footer');
+            if (footer) {
+                footer.style.cssText = 'position:static;margin-top:18pt;padding-top:6pt;border-top:0.5pt solid #4e929b;text-align:center;font-size:8pt;color:#57606a;';
+                const page = parsed.createElement('p');
+                page.style.cssText = 'text-align:right;font-size:8pt;margin:4pt 0 0;';
+                page.innerHTML = 'Pág. <w:fldSimple w:instr="PAGE"><span>1</span></w:fldSimple> de <w:fldSimple w:instr="NUMPAGES"><span>1</span></w:fldSimple>';
+                footer.appendChild(page);
+            }
             return '<!DOCTYPE html>\n' + parsed.documentElement.outerHTML;
         }
 
@@ -672,9 +686,15 @@
             const win = window.open('', '_blank');
             if (!win) { alert('El navegador bloqueó la ventana del informe. Permite las ventanas emergentes para este sitio e inténtalo de nuevo.'); return; }
             win.document.open();
-            win.document.write(reportDocument(report));
+            const docHtml = reportDocument(report).replace('<title>Informe médico - Historia Clínica</title>', '<title>' + getPatientFilename() + '</title>');
+            win.document.write(docHtml);
             win.document.close();
             win.onload = () => { win.focus(); win.print(); };
+        }
+
+        function getPatientFilename() {
+            const patient = document.querySelector('#patient .pi .val')?.textContent?.trim() || new URLSearchParams(location.search).get('Paciente') || 'Paciente';
+            return ('Historia_Clinica_' + patient).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Historia_Clinica_Paciente';
         }
 
         function downloadSelectedWord() {
@@ -685,7 +705,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'Informe_medico_Historia_Clinica.doc';
+            link.download = getPatientFilename() + '.doc';
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -1041,6 +1061,8 @@
             }
 
             document.getElementById('content').innerHTML = h;
+            const patientName = g('Paciente') || 'Paciente';
+            document.title = ('Historia Clínica - ' + patientName).replace(/[\r\n]+/g, ' ').trim();
             if (!document.getElementById('selection-panel').hidden) refreshSectionOptions();
             if (!h.trim()) document.getElementById('empty').style.display = 'block';
 
