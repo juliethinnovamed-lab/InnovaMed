@@ -429,7 +429,7 @@
 <body>
 
     <div class="buttons">
-        <button type="button" onclick="window.print()">Imprimir HC completa / PDF</button>
+        <button type="button" onclick="printFullHistory()">Imprimir HC completa / PDF</button>
         <button type="button" onclick="toggleSectionSelector()">Seleccionar secciones para imprimir</button>
     </div>
 
@@ -525,6 +525,9 @@
             const patient = document.getElementById('patient');
             const header = document.querySelector('.header');
             const cloneHeader = header.cloneNode(true);
+            // Los informes parciales llevan un título propio, independiente del título de la HC completa.
+            const reportTitle = cloneHeader.querySelector('#titulo, .title');
+            if (reportTitle) reportTitle.textContent = 'Informe médico';
             const patientHtml = patient.style.display === 'none' ? '' : patient.outerHTML;
             return {headerHtml: cloneHeader.outerHTML, patientHtml, contentHtml: chosen.map(x => x.outerHTML).join(''), footerHtml: document.getElementById('footer').outerHTML};
         }
@@ -680,13 +683,36 @@
             return '<!DOCTYPE html>\n' + parsed.documentElement.outerHTML;
         }
 
+        function printFullHistory() {
+            const titleNode = document.getElementById('titulo');
+            const originalHeading = titleNode ? titleNode.textContent : '';
+            const originalDocumentTitle = document.title;
+            if (titleNode) titleNode.textContent = 'Historia clínica psiquiátrica';
+            document.title = 'Historia clínica psiquiátrica - ' + (getPatientDisplayName() || 'Paciente');
+            const restore = () => {
+                if (titleNode) titleNode.textContent = originalHeading;
+                document.title = originalDocumentTitle;
+                window.removeEventListener('afterprint', restore);
+            };
+            window.addEventListener('afterprint', restore);
+            window.print();
+            // Respaldo para navegadores que no disparen afterprint inmediatamente.
+            setTimeout(restore, 1500);
+        }
+
+        function getPatientDisplayName() {
+            const fromPatient = document.querySelector('#patient .pi .val, #patient .patient-item .val');
+            const fromParams = new URLSearchParams(location.search).get('Paciente');
+            return (fromPatient?.textContent || fromParams || '').trim();
+        }
+
         function printSelectedSections() {
             const report = getSelectedReport();
             if (!report) return;
             const win = window.open('', '_blank');
             if (!win) { alert('El navegador bloqueó la ventana del informe. Permite las ventanas emergentes para este sitio e inténtalo de nuevo.'); return; }
             win.document.open();
-            const docHtml = reportDocument(report).replace('<title>Informe médico - Historia Clínica</title>', '<title>' + getPatientFilename() + '</title>');
+            const docHtml = reportDocument(report).replace('<title>Informe médico - Historia Clínica</title>', '<title>Informe médico - ' + getPatientDisplayName().replace(/[&<>"']/g, '') + '</title>');
             win.document.write(docHtml);
             win.document.close();
             win.onload = () => { win.focus(); win.print(); };
@@ -714,7 +740,7 @@
 
         (async () => {
             const q = new URLSearchParams(location.search);
-            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgzwwfxzrDZT_CUAo1ex2bytUMaLzo6H2jzOoUbyw8uuXBXYqfoVWDTrr4-HzrH7uFw/exec';
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEI2zkOEQoSYn3ltP9Ea2SfWBsucVBBcltoU-uAN9EHWp6Hx6TIfZjTXyZ1hWHNCPqsQ/exec';
 
             function render() {
             const g = k => {
