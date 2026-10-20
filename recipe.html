@@ -132,7 +132,7 @@
             height: 100%;
         }
 
-        /* ESTRUCTURA DEL MEMBRETE SUPERIOR */
+        /* ESTRUCTURA DEL MEMBRETE SUPERIOR (ALINEADO AL NIVEL EXACTO) */
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -144,13 +144,14 @@
             vertical-align: top;
             text-align: left;
             padding-right: 6px;
+            padding-top: 0;
         }
 
         .doctor-cell-new {
             width: 68%;
             vertical-align: top;
             text-align: left;
-            padding-top: 1px;
+            padding-top: 0; /* <-- Cero espacio superior para que arranque exactamente al nivel del logo */
         }
 
         .logo-img-new {
@@ -160,6 +161,7 @@
             height: auto;
             object-fit: contain;
             display: block;
+            margin-top: 0;
         }
 
         .doc-name {
@@ -167,14 +169,15 @@
             font-weight: bold;
             color: #1e293b;
             margin: 0;
-            line-height: 1.1;
+            padding: 0;
+            line-height: 1;
         }
 
         .doc-info {
             font-size: 9.5px;
             color: #475569;
             line-height: 1.15;
-            margin-top: 1px;
+            margin-top: 2px;
         }
 
         /* TABLA DE DATOS DEL PACIENTE */
