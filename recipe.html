@@ -132,29 +132,54 @@
             height: 100%;
         }
 
-        /* ESTRUCTURA DEL MEMBRETE SUPERIOR */
+        /* NUEVA ESTRUCTURA DEL MEMBRETE SUPERIOR (LOGO IZQUIERDA + DATOS DERECHA) */
         .header-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
-        .patient-cell {
+        .logo-cell-new {
+            width: 32%;
             vertical-align: middle;
-            width: 60%;
-            padding-right: 5px;
+            text-align: left;
+            padding-right: 8px;
         }
 
-        .logo-cell {
+        .doctor-cell-new {
+            width: 68%;
             vertical-align: middle;
-            text-align: right;
-            width: 40%;
+            text-align: left;
         }
 
+        .logo-img-new {
+            max-width: 110px;
+            max-height: 55px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .doc-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 1px 0;
+        }
+
+        .doc-info {
+            font-size: 8.5px;
+            color: #475569;
+            line-height: 1.3;
+        }
+
+        /* TABLA DE DATOS DEL PACIENTE */
         .patient-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 9.5px;
+            margin-top: 4px;
         }
 
         .patient-table td {
@@ -176,35 +201,26 @@
             font-size: 10px;
         }
 
-        .logo-img {
-            max-width: 120px;
-            max-height: 55px;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            display: inline-block;
-        }
-
         /* LÍNEA SEPARADORA SOBRIA */
         .divider-sobrio {
             border: none;
             border-top: 2px solid var(--p);
-            margin: 0 0 8px 0;
+            margin: 6px 0 8px 0;
         }
 
-        /* TÍTULOS DE SECCIÓN ESTILO HC3 (CON MÁS MARGEN INFERIOR) */
+        /* TÍTULOS DE SECCIÓN ESTILO HC3 */
         .section-header {
             color: var(--p);
             font-weight: 700;
             padding: 4px 0;
-            margin-bottom: 14px; /* <-- Espacio ampliado debajo del título */
+            margin-bottom: 14px;
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
             border-bottom: 1px solid var(--p);
         }
 
-        /* CUERPO DEL RÉCIPE / INDICACIONES (CON MÁS ESPACIO SUPERIOR) */
+        /* CUERPO DEL RÉCIPE / INDICACIONES */
         .content-body {
             font-size: 10px;
             line-height: 1.4;
@@ -212,7 +228,7 @@
             min-height: 85mm;
             white-space: pre-wrap;
             word-wrap: break-word;
-            padding-top: 24px; /* <-- Espacio amplio añadido antes de empezar el texto */
+            padding-top: 24px;
         }
 
         /* PIE DE PÁGINA ESTILO HC3 */
@@ -288,31 +304,35 @@
                 <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
                 
                 <div class="column-content">
+                    <!-- NUEVO MEMBRETE SUPERIOR -->
                     <table class="header-table">
                         <tr>
-                            <td class="patient-cell">
-                                <table class="patient-table">
-                                    <tr>
-                                        <td class="label" style="width: 22%;">Paciente:</td>
-                                        <td class="value" id="param-nombre-1">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label">C.I.:</td>
-                                        <td class="value" id="param-cedula-1">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label">Médico:</td>
-                                        <td class="value" id="param-medico-1">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label">Fecha:</td>
-                                        <td class="value" id="param-fecha-1">-</td>
-                                    </tr>
-                                </table>
+                            <td class="logo-cell-new">
+                                <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="logo-img-new" alt="Logo">
                             </td>
-                            <td class="logo-cell">
-                                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
+                            <td class="doctor-cell-new">
+                                <div class="doc-name" id="param-medico-1">-</div>
+                                <div class="doc-info">
+                                    Médico Especialista en Psiquiatría<br>
+                                    MPPS: 145.405 - CMDMC: 39.283<br>
+                                    Rif V26131364-9
+                                </div>
                             </td>
+                        </tr>
+                    </table>
+
+                    <table class="patient-table">
+                        <tr>
+                            <td class="label" style="width: 22%;">Paciente:</td>
+                            <td class="value" id="param-nombre-1">-</td>
+                        </tr>
+                        <tr>
+                            <td class="label">C.I.:</td>
+                            <td class="value" id="param-cedula-1">-</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Fecha:</td>
+                            <td class="value" id="param-fecha-1">-</td>
                         </tr>
                     </table>
 
@@ -344,31 +364,35 @@
                 <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="watermark" alt="Marca de Agua">
 
                 <div class="column-content">
+                    <!-- NUEVO MEMBRETE SUPERIOR -->
                     <table class="header-table">
                         <tr>
-                            <td class="patient-cell">
-                                <table class="patient-table">
-                                    <tr>
-                                        <td class="label" style="width: 22%;">Paciente:</td>
-                                        <td class="value" id="param-nombre-2">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label">C.I.:</td>
-                                        <td class="value" id="param-cedula-2">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label">Médico:</td>
-                                        <td class="value" id="param-medico-2">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label">Fecha:</td>
-                                        <td class="value" id="param-fecha-2">-</td>
-                                    </tr>
-                                </table>
+                            <td class="logo-cell-new">
+                                <img src="https://drive.google.com/thumbnail?id=10uLg1soZ_BwdkdkzkRsHQGxRD5Nkgfl3" class="logo-img-new" alt="Logo">
                             </td>
-                            <td class="logo-cell">
-                                <img src="https://lh3.googleusercontent.com/d/1uGZTuLKjjurxjNOODEeSPy5NES6SIgDQ" class="logo-img" alt="Logo">
+                            <td class="doctor-cell-new">
+                                <div class="doc-name" id="param-medico-2">-</div>
+                                <div class="doc-info">
+                                    Médico Especialista en Psiquiatría<br>
+                                    MPPS: 145.405 - CMDMC: 39.283<br>
+                                    Rif V26131364-9
+                                </div>
                             </td>
+                        </tr>
+                    </table>
+
+                    <table class="patient-table">
+                        <tr>
+                            <td class="label" style="width: 22%;">Paciente:</td>
+                            <td class="value" id="param-nombre-2">-</td>
+                        </tr>
+                        <tr>
+                            <td class="label">C.I.:</td>
+                            <td class="value" id="param-cedula-2">-</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Fecha:</td>
+                            <td class="value" id="param-fecha-2">-</td>
                         </tr>
                     </table>
 
@@ -441,7 +465,7 @@
             const nombre = getQueryParam('Nombre');
             const cedula = getQueryParam('Cedula');
             const recipe = getQueryParam('Recipe');
-            const indicaciones = getQueryParam('Indicaciones');
+            const indications = getQueryParam('Indicaciones');
             
             const direccion = getQueryParam('Direccion');
             const tel1 = getQueryParam('Tel1') || getQueryParam('Numero+de+telefono+principal');
@@ -459,9 +483,11 @@
             setText('param-foot-titulo-1', titulo || '');
             setText('param-foot-titulo-2', titulo || '');
 
-            // Ficha Paciente / Médico (Membrete superior)
+            // Ficha Médico
             setText('param-medico-1', medico);
             setText('param-medico-2', medico);
+
+            // Ficha Fecha y Paciente
             setText('param-fecha-1', fecha);
             setText('param-fecha-2', fecha);
             setText('param-nombre-1', nombre);
@@ -485,7 +511,7 @@
 
             // Contenidos
             setText('param-recipe', recipe);
-            setText('param-indicaciones', indicaciones);
+            setText('param-indicaciones', indications);
         });
 
         // EXPORTAR A WORD
