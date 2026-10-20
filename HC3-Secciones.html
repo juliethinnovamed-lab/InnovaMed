@@ -223,6 +223,29 @@
             font-size: 10px;
         }
 
+        /* Enfermedad actual: párrafo a todo el ancho útil y justificado. */
+        #content .sec > .f.enfermedad-actual {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            text-align: justify !important;
+            float: none !important;
+            clear: both !important;
+        }
+
+        #content .sec > .f.enfermedad-actual > .fv {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            text-align: justify !important;
+            text-justify: inter-word !important;
+            white-space: pre-wrap !important;
+            overflow-wrap: break-word !important;
+            word-break: normal !important;
+        }
+
         .mental {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -438,6 +461,13 @@
                 white-space: pre-wrap !important;
                 overflow-wrap: anywhere !important;
                 word-break: normal !important;
+            }
+            #content .sec > .f.enfermedad-actual,
+            #content .sec > .f.enfermedad-actual > .fv {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                text-align: justify !important;
             }
             #content .f.full { grid-column: 1 / -1 !important; width: 100% !important; }
             #content .f.full .fv { text-align: justify !important; width: 100% !important; }
