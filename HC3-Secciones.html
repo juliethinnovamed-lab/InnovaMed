@@ -223,6 +223,36 @@
             font-size: 10px;
         }
 
+        /* Contenedor propio: evita que Enfermedad actual herede anchos de columnas. */
+        #content .enfermedad-actual-wrap {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            clear: both !important;
+        }
+        #content .enfermedad-actual-wrap > .f,
+        #content .enfermedad-actual-wrap > .f.enfermedad-actual {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+        #content .enfermedad-actual-wrap .fv {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            text-align: justify !important;
+            text-justify: inter-word !important;
+            white-space: pre-wrap !important;
+            overflow-wrap: break-word !important;
+            word-break: normal !important;
+        }
+
         /* Enfermedad actual: bloque independiente que ocupa todo el ancho de la sección. */
         #content > .sec > .f.enfermedad-actual {
             display: block !important;
@@ -493,6 +523,19 @@
             }
             #content .f.full { grid-column: 1 / -1 !important; width: 100% !important; }
             #content .f.full .fv { text-align: justify !important; width: 100% !important; }
+            #content .enfermedad-actual-wrap,
+            #content .enfermedad-actual-wrap > .f,
+            #content .enfermedad-actual-wrap > .f > .fv {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                box-sizing: border-box !important;
+            }
+            #content .enfermedad-actual-wrap .fv {
+                text-align: justify !important;
+                text-justify: inter-word !important;
+            }
             #content .sec { border-color: #4e929b !important; }
             #content .st, #content .sst { border-color: #4e929b !important; }
             .footer {
@@ -911,7 +954,8 @@
                 h += SEC('Datos personales complementarios', `<div class="grid">${datosPersonalesExtra}</div>`);
             }
 
-            let x = F('Motivo de consulta', V(p1, 0), true) + F('Enfermedad actual', V(p1, 1), true);
+            let x = F('Motivo de consulta', V(p1, 0), true) +
+                `<div class="enfermedad-actual-wrap">${F('Enfermedad actual', V(p1, 1), true)}</div>`;
             let v = F('TA', V(p1, 2)) + F('FC', V(p1, 3)) + F('FR', V(p1, 4)) + F('Circunferencia abdominal', V(p1, 5)) + F('Peso', V(p1, 6)) + F('Talla', V(p1, 7)) + F('IMC', V(p1, 8));
             if (v) x += SS('Constantes vitales y somatometría', `<div class="grid">${v}</div>`);
             if (x) h += SEC('Motivo de consulta y enfermedad actual', x);
