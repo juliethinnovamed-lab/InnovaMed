@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/html2docx-js/dist/html2docx.bundle.js"></script>
     <style>
         :root {
-            --p: #4e929b; /* <-- Color actualizado para las líneas principales */
+            --p: #4e929b;
             --b: #d0d7de;
             --m: #57606a;
         }
@@ -25,7 +25,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Times New Roman', Times, serif; /* <-- Tipografía cambiada a Times New Roman */
             background-color: #f4f6f8;
             color: #24292f;
             width: 100vw;
@@ -33,11 +33,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 11px;
+            font-size: 12px;
             line-height: 1.4;
         }
 
-        /* BANNER DE BOTONES SUPERIOR (ESTILO HC3 EXACTO) */
+        /* BANNER DE BOTONES SUPERIOR */
         .no-print-bar {
             position: fixed;
             top: 0;
@@ -59,7 +59,6 @@
             gap: 8px;
         }
 
-        /* BOTONES COPIADOS EXACTAMENTE DE HC3 */
         .no-print-bar button {
             border: 0;
             border-radius: 4px;
@@ -67,10 +66,11 @@
             color: white;
             padding: 6px 10px;
             cursor: pointer;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: background 0.2s ease;
+            font-family: 'Times New Roman', Times, serif;
         }
 
         .no-print-bar button:hover {
@@ -162,14 +162,14 @@
         }
 
         .doc-name {
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: bold;
             color: #1e293b;
             margin: 0 0 1px 0;
         }
 
         .doc-info {
-            font-size: 8.5px;
+            font-size: 9.5px;
             color: #475569;
             line-height: 1.3;
         }
@@ -178,7 +178,7 @@
         .patient-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 9.5px;
+            font-size: 10.5px;
             margin-top: 4px;
         }
 
@@ -189,40 +189,43 @@
         }
 
         .label {
-            font-weight: 700;
+            font-weight: bold;
             color: var(--m);
-            font-size: 8px;
+            font-size: 9px;
             text-transform: uppercase;
         }
 
         .value {
             color: #24292f;
-            font-weight: 600;
-            font-size: 10px;
+            font-weight: bold;
+            font-size: 11px;
         }
 
-        /* LÍNEA SEPARADORA CON EL NUEVO COLOR */
+        /* LÍNEA SEPARADORA CON EXTREMOS OVALADOS / REDONDEADOS */
         .divider-sobrio {
             border: none;
-            border-top: 2px solid var(--p);
+            height: 3px;
+            background-color: var(--p);
+            border-radius: 4px; /* <-- Extremos ovalados */
             margin: 6px 0 8px 0;
         }
 
-        /* TÍTULOS DE SECCIÓN */
+        /* TÍTULOS DE SECCIÓN CON LÍNEA OVALADA EN LOS EXTREMOS */
         .section-header {
             color: var(--p);
-            font-weight: 700;
-            padding: 4px 0;
+            font-weight: bold;
+            padding: 4px 0 6px 0;
             margin-bottom: 14px;
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            border-bottom: 1px solid var(--p);
+            border-bottom: 2px solid var(--p);
+            border-radius: 0 0 4px 4px; /* <-- Extremos inferiores ovalados */
         }
 
         /* CUERPO DEL RÉCIPE / INDICACIONES */
         .content-body {
-            font-size: 10px;
+            font-size: 11px;
             line-height: 1.4;
             color: #24292f;
             min-height: 85mm;
@@ -239,7 +242,7 @@
             right: 14mm;
             border-top: 1px solid var(--b);
             padding-top: 4px;
-            font-size: 8px;
+            font-size: 9px;
             color: var(--m);
             background: #fff;
         }
@@ -264,9 +267,9 @@
         }
 
         .footer-title {
-            font-weight: 700;
+            font-weight: bold;
             color: var(--p);
-            font-size: 8.5px;
+            font-size: 9.5px;
             margin-bottom: 1px;
             text-transform: uppercase;
         }
@@ -336,7 +339,7 @@
                         </tr>
                     </table>
 
-                    <hr class="divider-sobrio">
+                    <div class="divider-sobrio"></div>
 
                     <div class="section-header">Récipe:</div>
                     <div class="content-body" id="param-recipe">-</div>
@@ -396,7 +399,7 @@
                         </tr>
                     </table>
 
-                    <hr class="divider-sobrio">
+                    <div class="divider-sobrio"></div>
 
                     <div class="section-header">Indicaciones:</div>
                     <div class="content-body" id="param-indicaciones">-</div>
