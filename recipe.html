@@ -54,6 +54,31 @@
             box-shadow: 0 3px 15px rgba(0,0,0,0.08);
         }
 
+        .bar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* ESTILO DEL CHECKBOX EN LA BARRA SUPERIOR */
+        .print-toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #e2e8f0;
+            user-select: none;
+        }
+
+        .print-toggle-label input {
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+            accent-color: var(--p);
+        }
+
         .action-buttons {
             display: flex;
             gap: 8px;
@@ -132,7 +157,7 @@
             height: 100%;
         }
 
-        /* ESTRUCTURA DEL MEMBRETE SUPERIOR (ALINEADO AL NIVEL EXACTO) */
+        /* ESTRUCTURA DEL MEMBRETE SUPERIOR */
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -151,7 +176,7 @@
             width: 68%;
             vertical-align: top;
             text-align: left;
-            padding-top: 0; /* <-- Cero espacio superior para que arranque exactamente al nivel del logo */
+            padding-top: 0;
         }
 
         .logo-img-new {
@@ -297,7 +322,13 @@
 
     <!-- BARRA SUPERIOR DE ACCIONES -->
     <div class="no-print-bar">
-        <span style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Récipe e Indicaciones Médicas</span>
+        <div class="bar-left">
+            <span style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Récipe e Indicaciones</span>
+            <label class="print-toggle-label">
+                <input type="checkbox" id="toggle-fecha-recipe" checked onchange="actualizarVisibilidadFecha()">
+                Fecha en Récipe (Izquierda)
+            </label>
+        </div>
         <div class="action-buttons">
             <button onclick="downloadWord()">Descargar a Word</button>
             <button onclick="window.print()">Imprimir / PDF</button>
@@ -340,6 +371,10 @@
                             <td class="value" id="param-cedula-1">-</td>
                         </tr>
                         <tr>
+                            <td class="label">Edad:</td>
+                            <td class="value" id="param-edad-1">-</td>
+                        </tr>
+                        <tr id="row-fecha-recipe">
                             <td class="label">Fecha:</td>
                             <td class="value" id="param-fecha-1">-</td>
                         </tr>
@@ -368,7 +403,7 @@
                 </div>
             </div>
 
-            <!-- COLUMNA DERECHA: INDICACIONES -->
+            <!-- COLUMNA DERECHA: INDICACIONES (SIEMPRE LLEVA FECHA) -->
             <div class="recipe-column right">
                 <img src="https://drive.google.com/thumbnail?id=1xRKiLrN5iETE31Dppp0JB-QKD1BUSeUK" class="watermark" alt="Marca de Agua">
 
@@ -398,6 +433,10 @@
                         <tr>
                             <td class="label">C.I.:</td>
                             <td class="value" id="param-cedula-2">-</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Edad:</td>
+                            <td class="value" id="param-edad-2">-</td>
                         </tr>
                         <tr>
                             <td class="label">Fecha:</td>
@@ -464,6 +503,14 @@
             return cleanDate;
         }
 
+        function actualizarVisibilidadFecha() {
+            const rowFecha = document.getElementById('row-fecha-recipe');
+            const checkbox = document.getElementById('toggle-fecha-recipe');
+            if (rowFecha && checkbox) {
+                rowFecha.style.display = checkbox.checked ? '' : 'none';
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             const titulo = getQueryParam('Titulo');
             const medico = getQueryParam('Medico');
@@ -472,6 +519,7 @@
             const fecha = formatToDDMMYYYY(rawFecha);
 
             const nombre = getQueryParam('Nombre');
+            const edad = getQueryParam('Edad');
             const cedula = getQueryParam('Cedula');
             const recipe = getQueryParam('Recipe');
             const indications = getQueryParam('Indicaciones');
@@ -496,11 +544,13 @@
             setText('param-medico-1', medico);
             setText('param-medico-2', medico);
 
-            // Ficha Fecha y Paciente
+            // Ficha Fecha, Edad y Paciente
             setText('param-fecha-1', fecha);
             setText('param-fecha-2', fecha);
             setText('param-nombre-1', nombre);
             setText('param-nombre-2', nombre);
+            setText('param-edad-1', edad);
+            setText('param-edad-2', edad);
             setText('param-cedula-1', cedula);
             setText('param-cedula-2', cedula);
 
