@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Récipe e Indicaciones Médicas</title>
+    <title id="document-title">Récipe e Indicaciones Médicas</title>
     <!-- LIBRERÍA PARA EXPORTAR HTML A DOCX (WORD) -->
     <script src="https://unpkg.com/html2docx-js/dist/html2docx.bundle.js"></script>
     <style>
@@ -15,14 +15,14 @@
 
         @page {
             size: A4 landscape;
-            margin: 0;
+            margin: 0mm;
         }
 
         *, *::before, *::after {
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             font-family: 'Times New Roman', Times, serif;
@@ -60,7 +60,6 @@
             gap: 15px;
         }
 
-        /* ESTILO DEL CHECKBOX EN LA BARRA SUPERIOR */
         .print-toggle-label {
             display: flex;
             align-items: center;
@@ -130,7 +129,7 @@
             width: 50%;
             height: 210mm;
             vertical-align: top;
-            padding: 12mm 14mm 14mm 14mm;
+            padding: 10mm 12mm 10mm 12mm;
             position: relative;
         }
 
@@ -246,7 +245,7 @@
             color: var(--p);
             font-weight: bold;
             padding: 4px 0 6px 0;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
@@ -259,18 +258,18 @@
             font-size: 11px;
             line-height: 1.4;
             color: #24292f;
-            min-height: 85mm;
+            min-height: 95mm;
             white-space: pre-wrap;
             word-wrap: break-word;
-            padding-top: 24px;
+            padding-top: 18px;
         }
 
         /* PIE DE PÁGINA */
         .footer-container {
             position: absolute;
-            bottom: 8mm;
-            left: 14mm;
-            right: 14mm;
+            bottom: 4mm;
+            left: 12mm;
+            right: 12mm;
             border-top: 1px solid var(--b);
             padding-top: 4px;
             font-size: 9px;
@@ -305,15 +304,26 @@
             text-transform: uppercase;
         }
 
-        /* REGLAS DE IMPRESIÓN */
+        /* CONFIGURACIÓN MÁXIMA PARA IMPRESIÓN Y PDF */
         @media print {
-            .no-print-bar { display: none !important; }
-            body { background: white; padding: 0; }
+            html, body {
+                width: 297mm !important;
+                height: 210mm !important;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .no-print-bar { 
+                display: none !important; 
+            }
             .page-sheet {
-                margin: 0;
-                box-shadow: none;
-                width: 297mm;
-                height: 210mm;
+                margin: 0 !important;
+                box-shadow: none !important;
+                width: 297mm !important;
+                height: 210mm !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
             }
         }
     </style>
@@ -403,7 +413,7 @@
                 </div>
             </div>
 
-            <!-- COLUMNA DERECHA: INDICACIONES (SIEMPRE LLEVA FECHA) -->
+            <!-- COLUMNA DERECHA: INDICACIONES -->
             <div class="recipe-column right">
                 <img src="https://drive.google.com/thumbnail?id=1xRKiLrN5iETE31Dppp0JB-QKD1BUSeUK" class="watermark" alt="Marca de Agua">
 
@@ -536,7 +546,11 @@
                 if (el) el.innerText = text && text.trim() !== '' ? text : '-';
             };
 
-            // Pie de página (Nombre comercial)
+            // ASIGNAR NOMBRE AL TÍTULO DEL DOCUMENTO PARA GUARDADO PDF CON NOMBRE DEL PACIENTE
+            const cleanName = nombre && nombre.trim() !== '' ? nombre.trim().replace(/\s+/g, '_') : 'Paciente';
+            document.title = `Recipe_e_Indicaciones_${cleanName}`;
+
+            // Pie de página
             setText('param-foot-titulo-1', titulo || '');
             setText('param-foot-titulo-2', titulo || '');
 
@@ -573,10 +587,11 @@
             setText('param-indicaciones', indications);
         });
 
-        // EXPORTAR A WORD
+        // EXPORTAR A WORD CON EL NOMBRE DEL PACIENTE
         function downloadWord() {
             const content = document.getElementById('document-content').innerHTML;
             const patientName = document.getElementById('param-nombre-1').innerText || 'Paciente';
+            const cleanName = patientName !== '-' ? patientName.trim().replace(/\s+/g, '_') : 'Paciente';
             
             const htmlDocument = `
                 <!DOCTYPE html>
@@ -598,7 +613,7 @@
 
             const link = document.createElement('a');
             link.href = URL.createObjectURL(converted);
-            link.download = `Recipe_${patientName.replace(/\s+/g, '_')}.docx`;
+            link.download = `Recipe_${cleanName}.docx`;
             link.click();
         }
     </script>
