@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title id="document-title">Solicitud de Laboratorio - Récipe Médico</title>
+    <script src="https://unpkg.com/html2docx-js/dist/html2docx.bundle.js"></script>
+    <style>
+        :root {
+            --p: #4e929b;
+            --b: #d0d7de;
+            --m: #57606a;
+        }
+
+        @page {
+            size: letter;
+            margin: 0mm;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body { 
+            font-family: 'Times New Roman', Times, serif; 
+            background-color: #f4f6f8; 
+            padding: 20px; 
+            color: #24292f; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-size: 11.5px;
+            line-height: 1.4;
+        }
+
+        .document-container { 
+            background-color: white; 
+            width: 215.9mm; /* Ancho Carta */
+            min-height: 279.4mm; /* Alto Carta */
+            margin: 20px auto; 
+            padding: 12mm 14mm 14mm 14mm; 
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08); 
+            box-sizing: border-box; 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* BANNER DE BOTONES SUPERIOR */
+        .no-print-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #2b3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            z-index: 9999;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .no-print-bar button {
+            border: 0;
+            border-radius: 4px;
+            background: #2b3e50;
+            color: white;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background 0.2s ease;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .no-print-bar button:hover {
+            background: #1a252f;
+        }
+
+        /* MEMBRETE SUPERIOR ESTILO PSIQUIATRÍA */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2px;
+            border: none;
+        }
+
+        .logo-cell-new {
+            width: 32%;
+            vertical-align: top;
+            text-align: left;
+            padding-right: 6px;
+            padding-top: 0;
+        }
+
+        .doctor-cell-new {
+            width: 68%;
+            vertical-align: top;
+            text-align: left;
+            padding-top: 0;
+        }
+
+        .logo-img-new {
+            max-width: 110px;
+            max-height: 55px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 0;
+        }
+
+        .doc-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .doc-info {
+            font-size: 9.5px;
+            color: #475569;
+            line-height: 1.15;
+            margin-top: 2px;
+        }
+
+        /* MARCA DE AGUA CENTRAL */
+        .watermark {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%;
+            max-width: 380px;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-body-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* DATOS DEL PACIENTE */
+        .patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10.5px;
+            margin-top: 4px;
+        }
+
+        .patient-table td {
+            padding: 2px 3px;
+            vertical-align: middle;
+            border-bottom: 1px dotted var(--b);
+        }
+
+        .label {
+            font-weight: bold;
+            color: var(--m);
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+
+        .value {
+            color: #24292f;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        /* LÍNEA SEPARADORA OVALADA */
+        .divider-sobrio {
+            border: none;
+            height: 3px;
+            background-color: var(--p);
+            border-radius: 4px;
+            margin: 6px 0 10px 0;
+        }
+
+        .title-doc { 
+            text-align: center; 
+            font-size: 13pt; 
+            font-weight: bold; 
+            color: var(--p);
+            text-transform: uppercase; 
+            margin: 12px 0 16px 0;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--p);
+            border-radius: 0 0 4px 4px;
+            padding-bottom: 5px;
+        }
+
+        /* GRILLA DE LABORATORIOS */
+        .labs-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            align-items: start; 
+        }
+        
+        table.lab-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 12pt; 
+            font-size: 10pt; 
+        }
+        
+        table.lab-table th, table.lab-table td { 
+            border: 1px solid var(--b); 
+            padding: 4px 8px; 
+        }
+        
+        table.lab-table th { 
+            background-color: #f8fafc; 
+            color: var(--p);
+            font-weight: bold; 
+            text-align: left; 
+            font-size: 9.5pt;
+            text-transform: uppercase;
+        }
+
+        .check-cell { 
+            width: 30px; 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 11pt; 
+            color: var(--p);
+        }
+
+        /* PIE DE PÁGINA / FIRMA */
+        footer { 
+            margin-top: auto; 
+            padding-top: 40px; 
+            padding-bottom: 10px; 
+            text-align: center; 
+            width: 100%; 
+        }
+        
+        .signature-line { 
+            width: 240px; 
+            border-top: 2px solid var(--p); 
+            border-radius: 4px;
+            margin: 0 auto 5px; 
+        }
+
+        @media print { 
+            @page { margin: 0; size: letter; } 
+            .no-print { display: none !important; } 
+            body { background-color: white; padding: 0; margin: 0; } 
+            .document-container { 
+                box-shadow: none; 
+                margin: 0; 
+                width: 100% !important; 
+                padding: 12mm 14mm; 
+                min-height: 100vh; 
+            } 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR DE ACCIONES -->
+    <div class="no-print-bar no-print">
+        <span style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Solicitud de Exámenes de Laboratorio</span>
+        <div class="action-buttons">
+            <button onclick="downloadWord()">Descargar a Word</button>
+            <button onclick="window.print()">Imprimir / PDF</button>
+        </div>
+    </div>
+
+    <div id="exportContent" class="document-container">
+        <!-- MARCA DE AGUA -->
+        <img src="https://drive.google.com/thumbnail?id=1xRKiLrN5iETE31Dppp0JB-QKD1BUSeUK" class="watermark" alt="Marca de Agua">
+
+        <div class="content-body-wrapper">
+            <!-- MEMBRETE SUPERIOR -->
+            <table class="header-table">
+                <tr>
+                    <td class="logo-cell-new">
+                        <img src="https://drive.google.com/thumbnail?id=1xRKiLrN5iETE31Dppp0JB-QKD1BUSeUK" class="logo-img-new" alt="Logo">
+                    </td>
+                    <td class="doctor-cell-new">
+                        <div class="doc-name" id="param-medico">-</div>
+                        <div class="doc-info">
+                            Médico Especialista en Psiquiatría<br>
+                            MPPS: 145.405 - CMDMC: 39.283<br>
+                            Rif V26131364-9
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- DATOS DEL PACIENTE -->
+            <table class="patient-table">
+                <tr>
+                    <td class="label" style="width: 15%;">Paciente:</td>
+                    <td class="value" id="val-Nombre">-</td>
+                    <td class="label" style="width: 12%; text-align: right;">Fecha:</td>
+                    <td class="value" id="val-Fecha" style="width: 18%; text-align: right;">-</td>
+                </tr>
+                <tr>
+                    <td class="label">C.I.:</td>
+                    <td class="value" id="val-Cedula" colspan="3">-</td>
+                </tr>
+                <tr>
+                    <td class="label">Edad:</td>
+                    <td class="value" id="val-Edad" colspan="3">-</td>
+                </tr>
+            </table>
+
+            <div class="divider-sobrio"></div>
+
+            <div class="title-doc">Solicitud de Exámenes de Laboratorio</div>
+
+            <!-- GRILLA DE LABORATORIOS -->
+            <div class="labs-grid">
+                <div>
+                    <table class="lab-table">
+                        <tr><th colspan="2">Hematología</th></tr>
+                        <tr><td class="check-cell" id="val-Hemato"></td><td>Hematología Completa</td></tr>
+                    </table>
+                    
+                    <table class="lab-table">
+                        <tr><th colspan="2">Química Sanguínea</th></tr>
+                        <tr><td class="check-cell" id="val-Glicemia"></td><td>Glicemia en Ayunas</td></tr>
+                        <tr><td class="check-cell" id="val-Urea"></td><td>Urea</td></tr>
+                        <tr><td class="check-cell" id="val-Creatinina"></td><td>Creatinina</td></tr>
+                        <tr><td class="check-cell" id="val-Tgo"></td><td>TGO (AST)</td></tr>
+                        <tr><td class="check-cell" id="val-Tgp"></td><td>TGP (ALT)</td></tr>
+                    </table>
+                </div>
+
+                <div>
+                    <table class="lab-table">
+                        <tr><th colspan="2">Serología & Otros</th></tr>
+                        <tr><td class="check-cell" id="val-Hiv"></td><td>HIV</td></tr>
+                        <tr><td class="check-cell" id="val-Vdrl"></td><td>VDRL</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <footer>
+                <div class="signature-line"></div>
+                <p style="margin:0; font-size:10pt; font-weight: bold; color: var(--m);">Firma y Sello Médico</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        function formatearFecha(strFecha) {
+            if (!strFecha || strFecha.toLowerCase() === "null") return "-";
+            let fechaLimpia = strFecha.split(' ')[0].split('T')[0];
+            let partes = fechaLimpia.split(/[-/]/);
+            if (partes.length === 3) {
+                if (partes[0].length === 4) {
+                    return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
+                } else if (partes[2].length === 4) {
+                    return `${partes[0].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[2]}`;
+                }
+            }
+            return strFecha;
+        }
+
+        function procesarCampo(paramKeys, elementId, esFecha = false) {
+            let valor = null;
+            if (Array.isArray(paramKeys)) {
+                for (let key of paramKeys) {
+                    valor = params.get(key);
+                    if (valor) break;
+                }
+            } else {
+                valor = params.get(paramKeys);
+            }
+            const el = document.getElementById(elementId);
+            if (el) {
+                if (esFecha) {
+                    el.innerText = formatearFecha(valor);
+                } else {
+                    el.innerText = (valor && valor.toLowerCase() !== "null") ? valor : "-";
+                }
+            }
+        }
+
+        function setCheck(id, param) {
+            let val = params.get(param);
+            if (val && val.trim() !== "") {
+                let cleanVal = val.toUpperCase().trim();
+                if (cleanVal === 'X' || cleanVal === 'YES' || cleanVal === 'TRUE' || cleanVal === 'Y' || cleanVal === '1') {
+                    const el = document.getElementById(id);
+                    if(el) el.innerText = 'X';
+                }
+            }
+        }
+
+        // Cargar datos de cabecera
+        procesarCampo(['Medico'], 'param-medico');
+        procesarCampo(['Fecha'], 'val-Fecha', true);
+        procesarCampo(['Nombre'], 'val-Nombre');
+        procesarCampo(['Cedula'], 'val-Cedula');
+        procesarCampo(['Edad'], 'val-Edad');
+
+        // Título dinámico para PDF con el nombre del paciente
+        const nombrePaciente = params.get('Nombre') || 'Paciente';
+        const cleanName = nombrePaciente !== '-' ? nombrePaciente.trim().replace(/\s+/g, '_') : 'Paciente';
+        document.title = `Laboratorio_${cleanName}`;
+
+        // Cargar estados de casillas (checks)
+        setCheck('val-Hemato', 'Hemato');
+        setCheck('val-Glicemia', 'Glicemia');
+        setCheck('val-Urea', 'Urea');
+        setCheck('val-Creatinina', 'Creatinina');
+        setCheck('val-Tgo', 'Tgo');
+        setCheck('val-Tgp', 'Tgp');
+        setCheck('val-Hiv', 'Hiv');
+        setCheck('val-Vdrl', 'Vdrl');
+
+        // EXPORTAR A WORD
+        function downloadWord() {
+            const content = document.getElementById('exportContent').innerHTML;
+            const htmlDocument = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <title>Solicitud de Laboratorio</title>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>
+            `;
+
+            const converted = html2docx(htmlDocument, {
+                orientation: 'portrait',
+                margins: { top: 720, right: 720, bottom: 720, left: 720 }
+            });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(converted);
+            link.download = `Laboratorio_${cleanName}.docx`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
