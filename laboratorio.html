@@ -309,11 +309,7 @@
                         <div class="doc-title-main" id="param-titulo"></div>
                         <div class="doc-name" id="param-medico"></div>
                         <div class="doc-info" id="param-subtitulo"></div>
-                        <div class="doc-info">
-                            MPPS: 145.405 - CMDMC: 39.283<br>
-                            Rif V26131364-9<br>
-                            <span id="param-direccion"></span>
-                        </div>
+                        <div class="doc-info" id="param-direccion"></div>
                     </td>
                 </tr>
             </table>
@@ -383,11 +379,11 @@
             let partes = fechaLimpia.split(/[-/]/);
             
             if (partes.length === 3) {
-                // Si viene como YYYY-MM-DD -> invertimos a DD/MM/YYYY
+                // Si viene como YYYY-MM-DD -> DD/MM/YYYY
                 if (partes[0].length === 4) {
                     return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
                 } 
-                // Si viene como MM/DD/YYYY (como estaba pasando 10/17/2026), lo corregimos a DD/MM/YYYY
+                // Si viene como MM/DD/YYYY -> DD/MM/YYYY
                 else if (partes[2].length === 4) {
                     return `${partes[1].padStart(2, '0')}/${partes[0].padStart(2, '0')}/${partes[2]}`;
                 }
@@ -426,7 +422,7 @@
             }
         }
 
-        // Cargar datos de cabecera, membrete y paciente
+        // Cargar datos de cabecera, membrete y paciente dinámicamente
         procesarCampo(['Titulo'], 'param-titulo');
         procesarCampo(['Medico'], 'param-medico');
         procesarCampo(['Subtitulo'], 'param-subtitulo');
