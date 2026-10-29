@@ -39,7 +39,7 @@
             background-color: white; 
             width: 215.9mm; 
             min-height: 279.4mm; 
-            margin: 65px auto 20px auto; /* Espacio para la barra superior */
+            margin: 65px auto 20px auto; 
             padding: 12mm 14mm 12mm 14mm; 
             box-shadow: 0 3px 15px rgba(0,0,0,0.08); 
             box-sizing: border-box; 
@@ -121,11 +121,20 @@
             margin-top: 0;
         }
 
+        .doc-title-main {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--p);
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.1;
+        }
+
         .doc-name {
             font-size: 14px;
             font-weight: bold;
             color: #1e293b;
-            margin: 0;
+            margin: 1px 0 0 0;
             padding: 0;
             line-height: 1.1;
         }
@@ -297,11 +306,13 @@
                         <img src="https://drive.google.com/thumbnail?id=1xRKiLrN5iETE31Dppp0JB-QKD1BUSeUK" class="logo-img-new" alt="Logo">
                     </td>
                     <td class="doctor-cell-new">
+                        <div class="doc-title-main" id="param-titulo"></div>
                         <div class="doc-name" id="param-medico"></div>
+                        <div class="doc-info" id="param-subtitulo"></div>
                         <div class="doc-info">
-                            Médico Especialista en Psiquiatría<br>
                             MPPS: 145.405 - CMDMC: 39.283<br>
-                            Rif V26131364-9
+                            Rif V26131364-9<br>
+                            <span id="param-direccion"></span>
                         </div>
                     </td>
                 </tr>
@@ -372,14 +383,13 @@
             let partes = fechaLimpia.split(/[-/]/);
             
             if (partes.length === 3) {
-                // Si viene como YYYY-MM-DD (estándar de bases de datos)
+                // Si viene como YYYY-MM-DD -> invertimos a DD/MM/YYYY
                 if (partes[0].length === 4) {
                     return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
                 } 
-                // Si ya viene con otro orden pero el tercero es el año
+                // Si viene como MM/DD/YYYY (como estaba pasando 10/17/2026), lo corregimos a DD/MM/YYYY
                 else if (partes[2].length === 4) {
-                    // Verificamos si el primer elemento es un mes (>12) o asumimos DD/MM/AAAA
-                    return `${partes[0].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[2]}`;
+                    return `${partes[1].padStart(2, '0')}/${partes[0].padStart(2, '0')}/${partes[2]}`;
                 }
             }
             return strFecha;
@@ -400,7 +410,7 @@
                 if (esFecha) {
                     el.innerText = formatearFecha(valor);
                 } else {
-                    el.innerText = (valor && valor.toLowerCase() !== "null" && valor.trim() !== "") ? valor : "-";
+                    el.innerText = (valor && valor.toLowerCase() !== "null" && valor.trim() !== "") ? valor : "";
                 }
             }
         }
@@ -416,8 +426,11 @@
             }
         }
 
-        // Cargar datos de cabecera y paciente
+        // Cargar datos de cabecera, membrete y paciente
+        procesarCampo(['Titulo'], 'param-titulo');
         procesarCampo(['Medico'], 'param-medico');
+        procesarCampo(['Subtitulo'], 'param-subtitulo');
+        procesarCampo(['Direccion'], 'param-direccion');
         procesarCampo(['Fecha'], 'val-Fecha', true);
         procesarCampo(['Nombre'], 'val-Nombre');
         procesarCampo(['Cedula'], 'val-Cedula');
