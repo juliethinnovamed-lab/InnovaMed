@@ -20,24 +20,26 @@
             box-sizing: border-box;
         }
 
-        body { 
+        html, body { 
             font-family: 'Times New Roman', Times, serif; 
             background-color: #f4f6f8; 
-            padding: 20px; 
+            padding: 0; 
+            margin: 0;
             color: #24292f; 
+            width: 100vw;
+            min-height: 100vh;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             font-size: 11.5px;
             line-height: 1.4;
-            margin: 0;
         }
 
         .document-container { 
             background-color: white; 
             width: 215.9mm; 
             min-height: 279.4mm; 
-            margin: 20px auto; 
+            margin: 65px auto 20px auto; /* Espacio para la barra superior */
             padding: 12mm 14mm 12mm 14mm; 
             box-shadow: 0 3px 15px rgba(0,0,0,0.08); 
             box-sizing: border-box; 
@@ -125,7 +127,7 @@
             color: #1e293b;
             margin: 0;
             padding: 0;
-            line-height: 1;
+            line-height: 1.1;
         }
 
         .doc-info {
@@ -261,13 +263,13 @@
         @media print { 
             @page { margin: 0; size: letter; } 
             .no-print { display: none !important; } 
-            body { background-color: white; padding: 0; margin: 0; } 
+            html, body { background-color: white; padding: 0; margin: 0; width: 215.9mm; height: 279.4mm; } 
             .document-container { 
                 box-shadow: none; 
-                margin: 0; 
-                width: 100% !important; 
-                padding: 12mm 14mm; 
+                margin: 0 !important; 
+                width: 215.9mm !important; 
                 min-height: 279.4mm !important; 
+                padding: 12mm 14mm !important; 
             } 
         }
     </style>
@@ -295,7 +297,7 @@
                         <img src="https://drive.google.com/thumbnail?id=1xRKiLrN5iETE31Dppp0JB-QKD1BUSeUK" class="logo-img-new" alt="Logo">
                     </td>
                     <td class="doctor-cell-new">
-                        <div class="doc-name" id="param-medico">-</div>
+                        <div class="doc-name" id="param-medico"></div>
                         <div class="doc-info">
                             Médico Especialista en Psiquiatría<br>
                             MPPS: 145.405 - CMDMC: 39.283<br>
@@ -368,12 +370,15 @@
             if (!strFecha || strFecha.toLowerCase() === "null") return "-";
             let fechaLimpia = strFecha.split(' ')[0].split('T')[0];
             let partes = fechaLimpia.split(/[-/]/);
+            
             if (partes.length === 3) {
+                // Si viene como YYYY-MM-DD (estándar de bases de datos)
                 if (partes[0].length === 4) {
-                    // Formato AAAA-MM-DD -> DD/MM/AAAA correcto
                     return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
-                } else {
-                    // Formato DD-MM-AAAA o MM-DD-AAAA
+                } 
+                // Si ya viene con otro orden pero el tercero es el año
+                else if (partes[2].length === 4) {
+                    // Verificamos si el primer elemento es un mes (>12) o asumimos DD/MM/AAAA
                     return `${partes[0].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[2]}`;
                 }
             }
@@ -395,7 +400,7 @@
                 if (esFecha) {
                     el.innerText = formatearFecha(valor);
                 } else {
-                    el.innerText = (valor && valor.toLowerCase() !== "null") ? valor : "-";
+                    el.innerText = (valor && valor.toLowerCase() !== "null" && valor.trim() !== "") ? valor : "-";
                 }
             }
         }
