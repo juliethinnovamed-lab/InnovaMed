@@ -92,27 +92,28 @@
         .header-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 25px; /* Dos espacios de separación respecto al paciente */
+            margin-bottom: 25px;
             border: none;
         }
 
         .logo-cell-new {
-            width: 32%;
+            width: 28%; /* Ajustado para dar más aire al centro */
             vertical-align: middle;
             text-align: left;
             padding-right: 6px;
         }
 
         .doctor-cell-new {
-            width: 68%;
+            width: 72%;
             vertical-align: middle;
-            text-align: center; /* Membrete centrado */
+            text-align: center; 
             padding-top: 0;
+            padding-right: 45px; /* Desplazamiento sutil para compensar el logo y centrar visualmente */
         }
 
         .logo-img-new {
-            max-width: 120px; /* Logo 10px más grande (original 110px) */
-            max-height: 65px;
+            max-width: 125px; /* Logo 5px más grande */
+            max-height: 70px;
             width: auto;
             height: auto;
             object-fit: contain;
@@ -121,7 +122,7 @@
         }
 
         .doc-title-main {
-            font-size: 21px; /* Letra 10pt más grande aproximadamente en escala visual */
+            font-size: 21px;
             font-weight: bold;
             color: var(--p);
             text-transform: uppercase;
@@ -130,7 +131,7 @@
         }
 
         .doc-name {
-            font-size: 24px; /* Letra 10pt más grande */
+            font-size: 24px;
             font-weight: bold;
             color: #1e293b;
             margin: 2px 0;
@@ -139,7 +140,7 @@
         }
 
         .doc-info {
-            font-size: 16px; /* Letra 10pt más grande */
+            font-size: 16px;
             color: #475569;
             line-height: 1.15;
             margin-top: 2px;
